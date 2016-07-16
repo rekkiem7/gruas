@@ -98,6 +98,7 @@ body{
 	<div class="container">
     <div class="row">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
+        	<center><img class="animated fadeInDown" src="<?php echo base_url();?>imagenes/logo_titan.png" alt="" width="50%" height="30%"></center>
             <div class="account-wall animated fadeInDown">
                 <img class="profile-img" src="<?php echo base_url();?>imagenes/grua.png" alt="">
                 <p class="profile-name">Grúas Pacheco</p><br>
@@ -113,3 +114,10 @@ body{
         </div>
     </div>
 </div>
+
+<BR>
+<div class="animated fadeInUp">
+<center><p style="color:#ffffff">&copy 2016 Titan Development Solutions - Todos los derechos reservados</p></center>
+</div>
+</body>
+</html>
