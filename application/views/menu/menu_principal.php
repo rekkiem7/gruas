@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;Grúas Pacheco</a>
+      <a class="navbar-brand" href="<?php echo site_url('Home/index')?>"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;Grúas Pacheco</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -17,7 +17,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>&nbsp;Administración <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="#" class="animated fadeInDown">Definición de Usuarios</a></li>
+            <li><a href="<?php echo site_url('Usuario/index')?>" class="animated fadeInDown">Definición de Usuarios</a></li>
           </ul>
         </li>
         <li class="dropdown">
