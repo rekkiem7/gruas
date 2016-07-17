@@ -1,3 +1,4 @@
+
 <style>
 body{
 	background-image: url("imagenes/login_wall.jpg");
@@ -102,9 +103,10 @@ body{
             <div class="account-wall animated fadeInDown">
                 <img class="profile-img" src="<?php echo base_url();?>imagenes/grua.png" alt="">
                 <p class="profile-name">Grúas Pacheco</p><br>
-                <form class="form-signin">
+                <form class="form-signin"  method="post" action="<?php echo site_url("login/index") ?>">
                 <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Nombre de Usuario" required><br>
-                <input type="password" class="form-control" placeholder="Password" required>
+                <input type="password" class="form-control" id="pass" name="pass" placeholder="Password" required>
+               <?php if($error){?><div class="alert alert-danger" role="alert"><strong>Atención:&nbsp;</strong><?php echo $error;?></div><?php }?>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">
                     Ingresar</button>
                 
