@@ -11,6 +11,5 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <link href="<?php echo base_url();?>plugins/animate/animate.css" rel="stylesheet"> 
     <script src="<?php echo base_url();?>plugins/jquery/jquery-2.2.4.js"></script>
     <script src="<?php echo base_url();?>plugins/jquery/jquery-2.2.4.min.js"></script>
-    <script src="<?php echo base_url();?>plugins/bootstrap/js/bootstrap.js"></script>
     <script src="<?php echo base_url();?>plugins/bootstrap/js/bootstrap.min.js"></script>
 </head>

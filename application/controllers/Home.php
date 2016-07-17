@@ -12,6 +12,7 @@ class Home extends CI_Controller {
 	{
 		$this->load->view('librerias');	
 		$this->load->view('menu/menu_principal');
+		$this->load->view('home/dashboard');
 		$this->load->view('footer');	
 	}
 }
