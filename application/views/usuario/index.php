@@ -24,7 +24,7 @@
                 			<td><?php echo $row->nombre_usuario?></td>
                 			<td><?php echo $row->nombre_tipo?></td>
                 			<td style="text-align:center"><button class="btn btn-primary"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button></td>
-                			<td style="text-align:center"><button class="btn btn-danger"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></td>
+                			<td style="text-align:center"><button class="btn btn-danger" onclick="eliminar_usuario(<?php echo $row->id?>)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></td>
                 		</tr>
                 <?php
                 	} 
@@ -50,7 +50,7 @@
           </div>
           <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 control-label">Usuario</label>
           <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 input-group" style="margin-bottom: 25px">
-            <input type="text" class="form-control required" id="usuario" name="usuario" placeholder="Usuario de acceso"/>
+            <input type="text" class="form-control required" id="usuario" name="usuario" onblur="verificar_usuario();" placeholder="Usuario de acceso"/>
           </div>
           <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12 control-label">Password</label>
           <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 input-group" style="margin-bottom: 25px">
@@ -81,6 +81,51 @@
 <!--Modal-->
 </body>
 <script>
+function eliminar_usuario(id)
+{
+
+  swal({   title: "¿Desea eliminar el usuario?",   text: "El usuario no tendrá acceso al sistema una vez eliminado",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#CC0000",   confirmButtonText: "Eliminar",   cancelButtonText: "Cancelar",   closeOnConfirm: true,   closeOnCancel: true }, function(isConfirm){   if (isConfirm) {
+        $.ajax({
+            type:"POST",
+            url:"<?php echo site_url('Usuario/eliminar_usuario');?>",
+            data:{usuario:id},
+            success:function(data)
+            {
+              if(data==1)
+              {
+                 swal("Usuario Eliminado", "El usuario ha sido eliminado correctamente", "success");
+                 setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Usuario/index');?>","_self");}, 1500);
+              }
+              else
+              {
+                swal("Error", "Se ha producido un error al eliminar el usuario, por favor inténtelo nuevamente", "error");
+              }
+            }
+      });
+    }
+  });
+}
+function verificar_usuario()
+{
+  var usuario=$('#usuario').val();
+  if(usuario!='' || usuario.length!=0)
+  {
+      $.ajax({
+            type:"POST",
+            url:"<?php echo site_url('Usuario/verificar_usuario');?>",
+            data:{usuario:usuario},
+            success:function(data)
+            {
+              if(data==1)
+              {
+                $('#usuario').val('');
+                $('#usuario').focus();
+                swal("Usuario Existente", "El nombre de usuario ya se encuentra utilizado por otra cuenta.", "info");
+              }
+            }
+      });
+  }
+}
 function add_usuario()
 {
   var nombre=$('#nombre').val();
@@ -121,6 +166,9 @@ function add_usuario()
                       if(data==1)
                       {
                         swal("Usuario Creado", "El usuario ha sido creado exitosamente", "success");
+                        $('#popup_AgregarUsuario').modal('hide');
+                        setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Usuario/index');?>","_self");}, 1500);
+                        
                       }
                       else
                       {
@@ -135,6 +183,10 @@ function add_usuario()
 }
 function agregar_usuario()
 {
+  $('#nombre').val('');
+  $('#usuario').val('');
+  $('#password').val('');
+  $('#tipo').val(0);
   $('#popup_AgregarUsuario').modal();
 }
 $(document).ready(function()

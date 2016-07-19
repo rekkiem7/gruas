@@ -6,6 +6,7 @@ class Model_Usuario extends CI_Model {
 	   $this -> db -> select('u.id,u.nombre,u.nombre_usuario,t.nombre as nombre_tipo');
 	   $this -> db -> from('usuario u');
 	   $this -> db -> join('tipo_usuario t', 'u.tipousuario = t.id','INNER');
+	   $this -> db -> where('u.estado',1);
 	   $query = $this -> db -> get();
 	   if($query -> num_rows() >0)
 	   {
@@ -34,5 +35,19 @@ class Model_Usuario extends CI_Model {
 	{
 		$this->db->insert('usuario', $data); 
 		return $this->db->insert_id();	 	
+	}
+
+	function verificar_usuario($usuario)
+	{
+		$this->db->where('nombre_usuario',$usuario);
+		$query=$this->db->get('usuario');
+		return $query->result();
+	}
+
+	function update_usuario($data,$usuario)
+	{
+		$this->db->where('id', $usuario);
+		$update=$this->db->update('usuario', $data); 
+		return $update;
 	}
 }

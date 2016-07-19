@@ -35,4 +35,33 @@ class Usuario extends CI_Controller {
 			echo 0;
 		}
 	}
+
+	public function verificar_usuario()
+	{
+		$usuario=$_POST['usuario'];
+		$existe=$this->model_usuario->verificar_usuario($usuario);
+		if($existe)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}
+
+	public function eliminar_usuario()
+	{
+		$usuario=$_POST['usuario'];
+		$data=["estado"=>0];
+		$update=$this->model_usuario->update_usuario($data,$usuario);
+		if($update)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}
 }

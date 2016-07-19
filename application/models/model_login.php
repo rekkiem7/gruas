@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Model_Login extends CI_Model {
 	function VerificarUsuario($usuario,$pass)
 	{
-	   $this -> db -> select('id, nombre_usuario,clave,tipousuario');
+	   $this -> db -> select('id,nombre, nombre_usuario,clave,tipousuario');
 	   $this -> db -> from('usuario');
 	   $this -> db -> where('nombre_usuario', $usuario);
 	   $this -> db -> where('clave', $pass);
