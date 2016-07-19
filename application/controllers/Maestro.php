@@ -96,4 +96,91 @@ class Maestro extends CI_Controller {
 			echo 0;
 		}
 	}
+
+	public function maquinas()
+	{
+		$this->load->view('librerias');	
+		$this->load->view('menu/menu_principal');
+		$datos["maquinas"]=$this->model_maestro->select_maquinas();
+		$this->load->view('maestros/maquinas/index',$datos);
+		$this->load->view('footer');	
+	}
+
+	public function add_maquina()
+	{
+		$folio=$_POST['folio'];
+		$patente=$_POST['patente'];
+		$tipo=$_POST['tipo'];
+		$capacidad=$_POST['capacidad'];
+		$valorHora=$_POST['valorHora'];
+		$minimoHora=$_POST['minimoHora'];
+		$recargo=$_POST['recargo'];
+		$comision=$_POST['comision'];
+
+		$data=["Folio"=>$folio,"Patente"=>$patente,"Tipo"=>$tipo,"Capacidad"=>$capacidad,"ValorHora"=>$valorHora,"MinimoHora"=>$minimoHora,"Recargo"=>$recargo,"Comision"=>$comision];
+
+		$insert=$this->model_maestro->insert_maquina($data);
+		if($insert)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}
+
+	public function delete_maquina()
+	{
+		$id=$_POST['id'];
+		$data=["estado"=>0];
+		$update=$this->model_maestro->update_maquina($id,$data);
+		if($update)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}
+
+	public function info_maquina()
+	{
+		$id=$_POST['id'];
+		$datos=$this->model_maestro->info_maquina($id);
+		if($datos)
+		{
+			echo json_encode($datos);
+		}
+		else
+		{
+			echo 0;
+		}
+	}
+
+	public function update_maquina()
+	{
+		$id=$_POST['id'];
+		$folio=$_POST['folio'];
+		$patente=$_POST['patente'];
+		$tipo=$_POST['tipo'];
+		$capacidad=$_POST['capacidad'];
+		$valorHora=$_POST['valorHora'];
+		$minimoHora=$_POST['minimoHora'];
+		$recargo=$_POST['recargo'];
+		$comision=$_POST['comision'];
+
+		$data=["Folio"=>$folio,"Patente"=>$patente,"Tipo"=>$tipo,"Capacidad"=>$capacidad,"ValorHora"=>$valorHora,"MinimoHora"=>$minimoHora,"Recargo"=>$recargo,"Comision"=>$comision];
+
+		$update=$this->model_maestro->update_maquina($id,$data);
+		if($update)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}
 }
