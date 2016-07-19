@@ -70,4 +70,30 @@ class Maestro extends CI_Controller {
 			echo 0;
 		}
 	}
+
+	public function update_cliente()
+	{
+		$id=$_POST['id'];
+		$rut=$_POST['rut'];
+		$nombre=$_POST['nombre'];
+		$direccion=$_POST['direccion'];
+		$giro=$_POST['giro'];
+		$fono=$_POST['fono'];
+		$fono2=$_POST['fono2'];
+		$fax=$_POST['fax'];
+		$ciudad=$_POST['ciudad'];
+		$comuna=$_POST['comuna'];
+		$contacto=$_POST['contacto'];
+
+		$data=["CodiClien"=>$rut,"Nombre"=>$nombre,"Direccion"=>$direccion,"Giro"=>$giro,"Fono"=>$fono,"Fono2"=>$fono2,"Fax"=>$fax,"CiudadDesp"=>$ciudad,"Comuna"=>$comuna,"Contacto"=>$contacto];
+		$update=$this->model_maestro->update_cliente($id,$data);
+		if($update)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}
 }

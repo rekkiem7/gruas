@@ -215,6 +215,7 @@
       </div>
       <div class="modal-body">
       	  <div class="row">
+      	  <input type="hidden" id="id_edit" name="id_edit">
       		<div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
 	          <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">R.U.T</label>
 	          <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
@@ -293,6 +294,84 @@
 <!--Modal-->
 </body>
 <script>
+function update_cliente()
+{
+	var id=$('#id_edit').val();
+	var rut=$('#rut_edit').val();
+	var nombre=$('#nombre_edit').val();
+	var direccion=$('#direccion_edit').val();
+	var giro=$('#giro_edit').val();
+	var fono=$('#fono_edit').val();
+	var fono2=$('#fono2_edit').val();
+	var fax=$('#fax_edit').val();
+	var ciudad=$('#ciudad_edit').val();
+	var comuna=$('#comuna_edit').val();
+	var contacto=$('#contacto_edit').val();
+
+	if(rut=='')
+	{
+		swal("RUT Faltante", "Debe ingresar el rut del cliente", "info");
+	}
+	else
+	{
+		if(nombre=='')
+		{
+			swal("Nombre Faltante", "Debe ingresar el nombre del cliente", "info");
+		}
+		else
+		{
+			if(direccion=='')
+			{
+				swal("Dirección Faltante", "Debe ingresar la dirección del cliente", "info");
+			}
+			else
+			{
+				if(fono=='')
+				{
+					swal("Teléfono Faltante", "Debe ingresar el teléfono del cliente", "info");
+				}
+				else
+				{
+					if(ciudad=='')
+					{	
+						swal("Ciudad Faltante", "Debe ingresar la ciudad del cliente", "info");
+					}
+					else
+					{
+						if(comuna=='')
+						{
+							swal("Comuna Faltante", "Debe ingresar la comuna del cliente", "info");
+						}
+						else
+						{
+							$.ajax({
+			                    type:"POST",
+			                    url:"<?php echo site_url('Maestro/update_cliente');?>",
+			                    data:{id:id,rut:rut,nombre:nombre,direccion:direccion,giro:giro,fono:fono,fono2:fono2,fax:fax,ciudad:ciudad,comuna:comuna,contacto:contacto},
+			                    success:function(data)
+			                    {
+			                      if(data==1)
+			                      {
+			                        swal("Cliente Actualizado", "El cliente ha sido actualizado correctamente", "success");
+			                        $('#popup_EditarCliente').modal('hide');
+			                        setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Maestro/clientes');?>","_self");}, 1500);
+			                        
+			                      }
+			                      else
+			                      {
+			                          swal("Error", "Problema al intentar actualizar el cliente, por favor inténtelo nuevamente", "error");
+			                      }
+			                    }
+			                });	
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+}
 
 function editar_cliente(id)
 {
@@ -305,6 +384,7 @@ function editar_cliente(id)
             	if(data!=0)
             	{
             		var datos=JSON.parse(data);
+            		$('#id_edit').val(id);
             		$('#rut_edit').val(datos[0]["CodiClien"]);
             		$('#nombre_edit').val(datos[0]["Nombre"]);
             		$('#direccion_edit').val(datos[0]["Direccion"]);
@@ -444,7 +524,7 @@ function add_cliente()
 			                      }
 			                      else
 			                      {
-			                          swal("Error", "Problema al intentar actualizar el usuario, por favor inténtelo nuevamente", "error");
+			                          swal("Error", "Problema al intentar registrar el cliente, por favor inténtelo nuevamente", "error");
 			                      }
 			                    }
 			                });
