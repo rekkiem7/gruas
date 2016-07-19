@@ -50,6 +50,21 @@ class Usuario extends CI_Controller {
 		}
 	}
 
+	public function verificar_usuario2()
+	{
+		$id=$_POST['id'];
+		$usuario=$_POST['usuario'];
+		$existe=$this->model_usuario->verificar_usuario2($id,$usuario);
+		if($existe)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}
+
 	public function eliminar_usuario()
 	{
 		$usuario=$_POST['usuario'];
@@ -63,5 +78,39 @@ class Usuario extends CI_Controller {
 		{
 			echo 0;
 		}
+	}
+
+	public function info_usuario()
+	{
+		$usuario=$_POST['usuario'];
+		$datos=$this->model_usuario->info_usuario($usuario);
+		if($datos)
+		{
+			echo json_encode($datos);
+		}
+		else
+		{
+			echo 0;
+		}
+	}
+
+	public function update_usuario()
+	{
+		$id=$_POST['id'];
+		$nombre=$_POST['nombre'];
+		$usuario=$_POST['usuario'];
+		$pass=$_POST['password'];
+		$tipo=$_POST['tipo'];
+		$data=array("nombre"=>$nombre,"nombre_usuario"=>$usuario,"clave"=>$pass,"tipousuario"=>$tipo);
+		$update=$this->model_usuario->update_usuario($data,$id);
+		if($update)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+
 	}
 }
