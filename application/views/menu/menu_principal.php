@@ -167,7 +167,7 @@ h1,
                 <li><a href="#">Listado</a></li>
                 <li class="divider"></li>
                 <li class="dropdown-header">Facturación</li>
-                <li><a href="#">Facturación por OT</a></li>
+                <li><a href="<?php echo site_url('Facturacion/index')?>">Facturación por OT</a></li>
                 <li><a href="#">Anulación de Factura</a></li>
                 <li><a href="#">Listados</a></li>
               </ul>
