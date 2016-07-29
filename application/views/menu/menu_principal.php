@@ -12,6 +12,8 @@ h1,
   color: #404041;
 }
 
+
+
 .navbar-nav>li>.dropdown-menu {
   margin-top: 20px;
   border-top-left-radius: 4px;
@@ -33,6 +35,7 @@ h1,
   width: 100%;
   box-shadow: none;
   -webkit-box-shadow: none;
+  background-color: #000000;
 }
 
 .mega-dropdown-menu:before {
@@ -72,14 +75,14 @@ h1,
   clear: both;
   font-weight: normal;
   line-height: 1.428571429;
-  color: #999;
+  color: #ffffff;
   white-space: normal;
 }
 
 .mega-dropdown-menu > li ul > li > a:hover,
 .mega-dropdown-menu > li ul > li > a:focus {
   text-decoration: none;
-  color: #444;
+  color: #428bca;
   background-color: #f5f5f5;
 }
 
@@ -99,7 +102,7 @@ h1,
 </style>
 
 <div class="container">
-  <nav class="navbar navbar-default">
+  <nav class="navbar navbar-inverse">
     <div class="navbar-header">
       <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".js-navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
@@ -128,12 +131,12 @@ h1,
                     <!-- End Item -->
                     <div class="item">
                       <a href="#"><img src="http://placehold.it/254x150/ef5e55/f5f5f5/&text=New+Collection" class="img-responsive" alt="product 2"></a>
-                      <h4><small>Gold sandals with shiny touch</small></h4>
+                      <h4><small>Titan Development Solutions</small></h4>
                     </div>
                     <!-- End Item -->
                     <div class="item">
                       <a href="#"><img src="http://placehold.it/254x150/2ecc71/f5f5f5/&text=New+Collection" class="img-responsive" alt="product 3"></a>
-                      <h4><small>Denin jacket stamped</small></h4>
+                      <h4 style="color:#ffffff"><small>Titan Development Solutions</small></h4>
                     </div>
                     <!-- End Item -->
                   </div>
