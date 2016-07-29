@@ -52,8 +52,17 @@
 	  		</div>
 	  	<!--------------------------TAB 2 -----------------------------!-->
 	  		<div id="tab2" class="tab-pane fade">
-	    		<h3>Menu 1</h3>
-	    		<p>Some content in menu 1.</p>
+	    		<br><h4>Rango Ordenes de Trabajo</h4>
+	    		<br><br>
+	    		<table>
+	    		<tr>
+	    			<td>Desde:</td>
+	    			<td style="padding-left:10px"><input type="text" id="desde" name="desde" class="form-control"/></td>
+	    			<td style="padding-left:10px">Hasta:</td>
+	    			<td style="padding-left:10px"><input type="text" id="hasta" name="hasta" class="form-control"/></td>
+	    		</tr>
+	    		</table><br><br>
+	    		<button class="btn btn-primary">Cargar Ordenes de Trabajo</button>
 	  		</div>
 	  	<!--------------------------TAB 3 -----------------------------!-->	
 	  		<div id="tab3" class="tab-pane fade">
@@ -62,8 +71,9 @@
 	  		</div>
 	  	<!--------------------------TAB 4 -----------------------------!-->
 	  		<div id="tab4" class="tab-pane fade">
-	    		<h3>Menu 3</h3>
-	    		<p>Some content in menu 3.</p>
+	  			<br>Ingrese el texto del mensaje que desea agregar en la factura
+	    		<br><br>
+	    		<textarea cols="100" rows="10"></textarea>
 	  		</div>
 		</div>
 	</div>
