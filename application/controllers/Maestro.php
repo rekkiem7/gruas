@@ -183,4 +183,165 @@ class Maestro extends CI_Controller {
 			echo 0;
 		}
 	}
+
+	public function operarios()
+	{
+		$this->load->view('librerias');	
+		$this->load->view('menu/menu_principal');
+		$datos["operarios"]=$this->model_maestro->select_operarios();
+		$datos["tiposoperarios"]=$this->model_maestro->select_tiposoperarios();
+		$this->load->view('maestros/operarios/index',$datos);
+		$this->load->view('footer');	
+	}	
+	public function info_operario()
+	{
+		$id=$_POST['id'];
+		$datos=$this->model_maestro->info_operario($id);
+		if($datos)
+		{
+			echo json_encode($datos);
+		}
+		else
+		{
+			echo 0;
+		}
+	}	
+	public function add_operario()
+	{
+		$rut=$_POST['rut'];
+		$nombre=$_POST['nombre'];
+		$direccion=$_POST['direccion'];
+		$comuna=$_POST['comuna'];
+		$ciudad=$_POST['ciudad'];
+		$tipo=$_POST['tipo'];
+		$estado = 1;
+
+		$data=["Rut"=>$rut,"Nombre"=>$nombre,"Direccion"=>$direccion,"Comuna"=>$comuna,"Ciudad"=>$ciudad,"Tipo"=>$tipo,"Estado"=>$estado];
+		$insert=$this->model_maestro->insert_operario($data);
+		if($insert)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}	
+	public function update_operario()
+	{
+		$id=$_POST['id'];
+		$rut=$_POST['rut'];
+		$nombre=$_POST['nombre'];
+		$direccion=$_POST['direccion'];
+		$comuna=$_POST['comuna'];
+		$ciudad=$_POST['ciudad'];
+		$tipo=$_POST['tipo'];
+		$estado=1;
+
+		$data=["Rut"=>$rut,"Nombre"=>$nombre,"Direccion"=>$direccion,"Comuna"=>$comuna,"Ciudad"=>$ciudad,"Tipo"=>$tipo,"Estado"=>$estado];
+		$update=$this->model_maestro->update_operario($id,$data);
+		if($update)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}	
+	public function delete_operario()
+	{
+		$id=$_POST['id'];
+		$data=["estado"=>0];
+		$update=$this->model_maestro->update_operario($id,$data);
+		if($update)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}	
+
+	public function razonessociales()
+	{
+		$this->load->view('librerias');	
+		$this->load->view('menu/menu_principal');
+		$datos["razonessociales"]=$this->model_maestro->select_razonessociales();
+		$this->load->view('maestros/razonessociales/index',$datos);
+		$this->load->view('footer');	
+	}	
+	public function info_razonsocial()
+	{
+		$id=$_POST['id'];
+		$datos=$this->model_maestro->info_razonsocial($id);
+		if($datos)
+		{
+			echo json_encode($datos);
+		}
+		else
+		{
+			echo 0;
+		}
+	}	
+	public function add_razonsocial()
+	{
+		$rut=$_POST['rut'];
+		$razonsocial=$_POST['razonsocial'];
+		$rubro=$_POST['rubro'];
+		$direccion=$_POST['direccion'];
+		$casilla=$_POST['casilla'];
+		$fono=$_POST['fono'];
+		$ciudad=$_POST['ciudad'];
+		$estado = 1;
+
+		$data=["Rut"=>$rut,"Razonsocial"=>$razonsocial,"Rubro"=>$rubro,"Direccion"=>$direccion,"Casilla"=>$casilla,"Fono"=>$fono,"Ciudad"=>$ciudad,"Estado"=>$estado];
+		$insert=$this->model_maestro->insert_razonsocial($data);
+		if($insert)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}	
+	public function update_razonsocial()
+	{
+		$id=$_POST['id'];
+		$rut=$_POST['rut'];
+		$razonsocial=$_POST['razonsocial'];
+		$rubro=$_POST['rubro'];
+		$direccion=$_POST['direccion'];
+		$casilla=$_POST['casilla'];
+		$fono=$_POST['fono'];
+		$ciudad=$_POST['ciudad'];
+		$estado=1;
+
+		$data=["Rut"=>$rut,"Razonsocial"=>$razonsocial,"Rubro"=>$rubro,"Direccion"=>$direccion,"Casilla"=>$casilla,"Fono"=>$fono,"Ciudad"=>$ciudad,"Estado"=>$estado];
+		$update=$this->model_maestro->update_razonsocial($id,$data);
+		if($update)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}	
+	public function delete_razonsocial()
+	{
+		$id=$_POST['id'];
+		$data=["estado"=>0];
+		$update=$this->model_maestro->update_razonsocial($id,$data);
+		if($update)
+		{
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+	}	
 }

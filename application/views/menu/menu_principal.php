@@ -25,8 +25,8 @@
           <ul class="dropdown-menu">
             <li><a href="<?php echo site_url('Maestro/clientes')?>" class="animated fadeInDown">Maestros Clientes</a></li>
             <li><a href="<?php echo site_url('Maestro/maquinas')?>" class="animated fadeInDown">Maestros Máquinas</a></li>
-            <li><a href="#" class="animated fadeInDown">Maestros Operarios</a></li>
-            <li><a href="#" class="animated fadeInDown">Maestros Razón Social</a></li>
+            <li><a href="<?php echo site_url('Maestro/operarios')?>" class="animated fadeInDown">Maestros Operarios</a></li>
+            <li><a href="<?php echo site_url('Maestro/razonessociales')?>" class="animated fadeInDown">Maestros Razón Social</a></li>
           </ul>
         </li>
         <li class="dropdown">

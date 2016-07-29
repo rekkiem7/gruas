@@ -82,4 +82,101 @@ class Model_Maestro extends CI_Model {
 	     return false;
 	   }
 	}
+	function select_operarios()
+	{
+	   $this->db->where('estado',1);
+	   $query=$this->db->get('operario');
+	   if($query -> num_rows() >0)
+	   {
+	     return $query->result();
+	   }
+	   else
+	   {
+	     return false;
+	   }
+	}
+	function select_tiposoperarios()
+	{
+		$query = $this->db->query("SELECT * FROM tipo_usuario WHERE id>3 ");
+	   	if($query -> num_rows() >0)
+	   	{
+	    	return $query->result();
+	   	}
+	   	else
+	   	{
+	    	return false;
+	   	}
+	}	
+
+	function info_operario($id)
+	{
+		$query = $this->db->query("
+			SELECT 
+			A.id, A.Rut, A.Nombre, A.Direccion, A.Comuna, A.Ciudad, B.id AS Tipoid, B.nombre AS Tiponombre 
+			FROM operario A 
+			INNER JOIN tipo_usuario B ON A.Tipo=B.id 
+			WHERE A.id=$id 
+		");
+	   	if($query -> num_rows() >0)
+	   	{
+	    	return $query->result();
+	   	}
+	   	else
+	   	{
+	    	return false;
+	   	}
+	}	
+	function insert_operario($data)
+	{
+		$this->db->insert('operario', $data); 
+		return $this->db->insert_id();	 	
+	}	
+	function update_operario($id,$data)
+	{
+		$this->db->where('id', $id);
+		$update=$this->db->update('operario', $data); 
+		return $update;
+	}	
+
+	function select_razonessociales()
+	{
+	   $this->db->where('estado',1);
+	   $query=$this->db->get('razonsocial');
+	   if($query -> num_rows() >0)
+	   {
+	     return $query->result();
+	   }
+	   else
+	   {
+	     return false;
+	   }
+	}
+	function info_razonsocial($id)
+	{
+		$query = $this->db->query("
+			SELECT 
+			*
+			FROM razonsocial
+			WHERE id=$id 
+		");
+	   	if($query -> num_rows() >0)
+	   	{
+	    	return $query->result();
+	   	}
+	   	else
+	   	{
+	    	return false;
+	   	}
+	}	
+	function insert_razonsocial($data)
+	{
+		$this->db->insert('razonsocial', $data); 
+		return $this->db->insert_id();	 	
+	}	
+	function update_razonsocial($id,$data)
+	{
+		$this->db->where('id', $id);
+		$update=$this->db->update('razonsocial', $data); 
+		return $update;
+	}	
 }
