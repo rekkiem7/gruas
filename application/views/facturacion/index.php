@@ -62,12 +62,28 @@
 	    			<td style="padding-left:10px"><input type="text" id="hasta" name="hasta" class="form-control"/></td>
 	    		</tr>
 	    		</table><br><br>
-	    		<button class="btn btn-primary">Cargar Ordenes de Trabajo</button>
+	    		<button class="btn btn-primary" onclick="cargar_ordenes()">Cargar Ordenes de Trabajo</button>
 	  		</div>
 	  	<!--------------------------TAB 3 -----------------------------!-->	
 	  		<div id="tab3" class="tab-pane fade">
-	    		<h3>Menu 2</h3>
-	    		<p>Some content in menu 2.</p>
+	    		<div class="table-responsive">
+	    			<table id="detalle" class="table table-bordered table-hover">
+	                <thead>
+	                <tr>
+	                  <th>Item</th>
+	                  <th>N° O.Trabajo</th>
+	                  <th>H.Normales</th>
+	                  <th>H.Recargo</th>
+	                  <th>Valor H.N</th>
+	                  <th>Valor H.R</th>
+	                  <th>Valor Total</th>
+	                  <th>Borrar</th>
+	                </tr>
+	                </thead>
+	                <tbody>
+	                </tbody>
+	                </table>
+	    		</div>
 	  		</div>
 	  	<!--------------------------TAB 4 -----------------------------!-->
 	  		<div id="tab4" class="tab-pane fade">
@@ -75,14 +91,88 @@
 	    		<br><br>
 	    		<textarea cols="100" rows="10"></textarea>
 	  		</div>
-		</div>
+		</div><br><br>
+		<div class="col-lg-12 col-md-12"><center><button class="btn btn-primary">Guardar Factura</button></center></div>
 	</div>
 </div>
 <script>
+function cargar_ordenes()
+{
+	var desde=$('#desde').val();
+	var hasta=$('#hasta').val();
+	 $.ajax({
+            type:"POST",
+            url:"<?php echo site_url('Facturacion/cargar_ordenes');?>",
+            data:{desde:desde,hasta:hasta},
+            success:function(data)
+            {
+            	 if(data!=0)
+            	 {
+            	 	alert("hay OTS");
+            	 }	
+            	 else
+            	 {
+            	 	swal("Atención", "No se han encontrado Ordenes de Trabajo dentro del rango seleccionado", "info");
+            	 }
+            }
+    });
+}
 $(document).ready(function()
 {
 	$('#datepicker').datepicker({
       autoclose: true
     });
+
+
+  $('#detalle').DataTable({
+      "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": false,
+      "info": false,
+      "autoWidth": true,
+      "language": {
+            "search":"Buscar:",
+            "lengthMenu": "Ver _MENU_ registros por página",
+            "zeroRecords": "<center>No se encontraron registros</center>",
+            "info": "_END_ de _TOTAL_ registros",
+            "infoEmpty": "No se encontraron registros",
+            "infoFiltered": "(Filtrados _TOTAL_ de _MAX_ total registros)",
+            "paginate":{
+              "previous":"Anterior",
+              "next":"Siguiente"
+            }
+        },      
+    });
+
+  $('#rut').keypress(function(e) {
+    if(e.which == 13) {
+    	var rut=$('#rut').val();
+
+        $.ajax({
+            type:"POST",
+            url:"<?php echo site_url('Facturacion/verifica_cliente');?>",
+            data:{rut:rut},
+            success:function(data)
+            {
+            	 if(data!=0)
+            	 {
+            	 	var datos=JSON.parse(data);
+            	 	$('#identidad').val(datos[0]["Nombre"]);
+            	 	$('#direccion').val(datos[0]["Direccion"]);
+            	 	$('#giro').val(datos[0]["Giro"]);
+            	 	$('#telefono').val(datos[0]["Fono"]);
+            	 	$('#ciudad').val(datos[0]["CiudadDesp"]);
+
+            	 }	
+            	 else
+            	 {
+            	 	swal("Atención", "El rut ingresado no se encuentra asociado a ningún cliente", "info");
+            	 }
+            }
+        });
+    }
+	});
+
 });
 </script>
