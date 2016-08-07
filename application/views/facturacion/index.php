@@ -7,8 +7,22 @@
 	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
 	<strong>Fecha de Factura</strong><input type="text" class="form-control pull-right" id="datepicker" value="<?php echo date('d/m/Y')?>">
 	</div> 
+	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+	<strong>Razón Social</strong>
+	<select class="form-control" id="razon_social" name="razon_social">
+		<option value="0">Seleccione...</option>
+		<?php
+		foreach($razon_social as $row)
+		{
+		?>
+		<option value="<?php echo $row->Rut?>"><?php echo '( '.$row->Rut.' )'.$row->Razonsocial?></option>
+		<?php
+		}
+		?>
+	</select>
+	</div> 
 	</div>
-	<br><br><br><br>
+	<br><br><br><br><br>
 		<ul class="nav nav-tabs">
 	  		<li class="active"><a data-toggle="tab" href="#tab1">Identificación</a></li>
 	  		<li><a data-toggle="tab" href="#tab2">Ordenes de Trabajo</a></li>
@@ -62,7 +76,26 @@
 	    			<td style="padding-left:10px"><input type="text" id="hasta" name="hasta" class="form-control"/></td>
 	    		</tr>
 	    		</table><br><br>
-	    		<button class="btn btn-primary" onclick="cargar_ordenes()">Cargar Ordenes de Trabajo</button>
+	    		<button class="btn btn-primary" onclick="cargar_ordenes()">Cargar Ordenes de Trabajo</button><br><br>
+	    		<div id="detalle0_tabla" style="display:none">
+	    		<table id="detalle0" class="table table-bordered table-hover">
+	                <thead>
+	                <tr>
+	                  <th>N° O.Trabajo</th>
+	                  <th>RUT</th>
+	                  <th>Cliente</th>
+	                  <th>H.Normales</th>
+	                  <th>H.Recargo</th>
+	                  <th>Valor H.N</th>
+	                  <th>Valor H.R</th>
+	                  <th>Valor Total</th>
+	                  <th>Seleccionar</th>
+	                </tr>
+	                </thead>
+	                <tbody>
+	                </tbody>
+	            </table>
+	        	</div>
 	  		</div>
 	  	<!--------------------------TAB 3 -----------------------------!-->	
 	  		<div id="tab3" class="tab-pane fade">
@@ -98,24 +131,75 @@
 <script>
 function cargar_ordenes()
 {
+	var razon_social=$('#razon_social').val();
+	var rut=$('#rut').val();
 	var desde=$('#desde').val();
 	var hasta=$('#hasta').val();
-	 $.ajax({
-            type:"POST",
-            url:"<?php echo site_url('Facturacion/cargar_ordenes');?>",
-            data:{desde:desde,hasta:hasta},
-            success:function(data)
-            {
-            	 if(data!=0)
-            	 {
-            	 	alert("hay OTS");
-            	 }	
-            	 else
-            	 {
-            	 	swal("Atención", "No se han encontrado Ordenes de Trabajo dentro del rango seleccionado", "info");
-            	 }
-            }
-    });
+	if(razon_social==0)
+	{
+		swal("Campo Faltante", "Debe seleccionar la razón social", "info");
+	}
+	else
+	{
+		if(rut=='')
+		{
+			swal("Campo Faltante", "Debe ingresar el rut del cliente", "info");
+		}
+		else
+		{
+			if(desde=='')
+			{
+				swal("Campo Faltante", "Debe ingresar el numero de OT (desde) como mínimo limite de búsqueda", "info");
+			}
+			else
+			{
+				if(hasta=='')
+				{
+					swal("Campo Faltante", "Debe ingresar el numero de OT (hasta) como máximo limite de búsqueda", "info");
+				}
+				else
+				{
+					$('#detalle0_tabla').slideUp();
+					var t = $('#detalle0').DataTable();
+    					t.clear().draw();
+					$.ajax({
+					            type:"POST",
+					            url:"<?php echo site_url('Facturacion/cargar_ordenes');?>",
+					            data:{desde:desde,hasta:hasta,razon:razon_social,rut:rut},
+					            success:function(data)
+					            {
+					            	 if(data!=0)
+					            	 {
+					            	 	var info_total=new Array();
+					            	 	var datos=JSON.parse(data);
+					            	 	for(var i=0;i<datos.length;i++)
+					            	 	{
+					            	 		var botton='<button class="btn btn-success" onclick="seleccionar_OT('+datos[i]["id"]+');"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>'
+					            	 		var info=[datos[i]["OTNumero"],datos[i]["OTRut"],datos[i]["OTNombre"],datos[i]["ServicioHN"],datos[i]["ServicioHR"],datos[i]["ServicioHNValor"],datos[i]["ServicioHRValor"],datos[i]["ServicioValorTotalNeto"],botton];
+					            	 		info_total.push(info);
+					            	 	}
+					            	 	t.rows.add(info_total).draw();
+					            	 	$('#detalle0_tabla').slideDown();
+					            	 }	
+					            	 else
+					            	 {
+					            	 	swal("Atención", "No se han encontrado Ordenes de Trabajo dentro del rango seleccionado", "info");
+					            	 }
+					            }
+					    });
+				}
+			}
+		}
+	}
+	
+	 
+}
+
+function seleccionar_OT(id)
+{
+	var table = $('#detalle0').DataTable();
+	 table.row('.selected').remove().draw( false );
+  
 }
 $(document).ready(function()
 {
@@ -123,7 +207,37 @@ $(document).ready(function()
       autoclose: true
     });
 
+   $('#detalle0 tbody').on( 'focus', 'tr', function () {
+   	var table = $('#detalle0').DataTable();
+        if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    } );
 
+  $('#detalle0').DataTable({
+      "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": false,
+      "info": false,
+      "autoWidth": true,
+      "language": {
+            "search":"Buscar:",
+            "lengthMenu": "Ver _MENU_ registros por página",
+            "zeroRecords": "<center>No se encontraron registros</center>",
+            "info": "_END_ de _TOTAL_ registros",
+            "infoEmpty": "No se encontraron registros",
+            "infoFiltered": "(Filtrados _TOTAL_ de _MAX_ total registros)",
+            "paginate":{
+              "previous":"Anterior",
+              "next":"Siguiente"
+            }
+        },      
+    }); 
   $('#detalle').DataTable({
       "paging": false,
       "lengthChange": false,

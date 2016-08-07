@@ -17,11 +17,26 @@ class Model_Facturacion extends CI_Model {
 	   }
 	}
 
-	function select_ordenes($desde,$hasta)
+	function select_ordenes($desde,$hasta,$razon,$rut)
 	{
 	   $this->db->where('OTNumero>=',$desde);
 	   $this->db->where('OTNumero<=',$hasta);
+	   $this->db->where('OTRazonSocial',$razon);
+	   $this->db->where('OTRut',$rut);
 	   $query=$this->db->get('ordendetrabajo');
+	   if($query -> num_rows() >0)
+	   {
+	     return $query->result();
+	   }
+	   else
+	   {
+	     return false;
+	   }
+	}
+
+	function select_razonSocial()
+	{
+		$query=$this->db->get('razonsocial');
 	   if($query -> num_rows() >0)
 	   {
 	     return $query->result();

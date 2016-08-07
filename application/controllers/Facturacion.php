@@ -12,7 +12,8 @@ class Facturacion extends CI_Controller {
 	{
 		$this->load->view('librerias');	
 		$this->load->view('menu/menu_principal');
-		$this->load->view('facturacion/index');
+		$datos['razon_social']=$this->model_facturacion->select_razonSocial();
+		$this->load->view('facturacion/index',$datos);
 		$this->load->view('footer');	
 	}
 
@@ -34,7 +35,9 @@ class Facturacion extends CI_Controller {
 	{
 		$desde=$_POST['desde'];
 		$hasta=$_POST['hasta'];
-		$ot=$this->model_facturacion->select_ordenes($desde,$hasta);
+		$razon=$_POST['razon'];
+		$rut  =$_POST['rut'];
+		$ot=$this->model_facturacion->select_ordenes($desde,$hasta,$razon,$rut);
 		if($ot)
 		{
 			echo json_encode($ot);

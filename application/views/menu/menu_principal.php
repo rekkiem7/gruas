@@ -161,7 +161,7 @@ h1,
             <li class="col-sm-3">
               <ul>
                 <li class="dropdown-header">Orden de Trabajo</li>
-                <li><a href="#">Ingresar Orden de Trabajo</a></li>
+                <li><a href="<?php echo site_url('Ordendetrabajo/index')?>">Ingresar Orden de Trabajo</a></li>
                 <li><a href="#">Modificar Orden de Trabajo</a></li>
                 <li><a href="#">Eliminar Orden de Trabajo</a></li>
                 <li><a href="#">Listado</a></li>
