@@ -117,6 +117,34 @@
 	                </tbody>
 	                </table>
 	    		</div>
+	    		<div>
+	    			<table>
+	    				<tr>
+	    					<td><strong>Total Neto</strong></td>
+	    					<td style="padding-left:10px"><input type="number" class="form-control" id="total_neto" name="total_neto" value="0" readonly/></td>
+	    				</tr>
+	    				<tr>
+	    					<td style="padding-top:10px"><strong>Descuento</strong></td>
+	    					<td style="padding-left:10px;padding-top:10px"><input type="number" id="descuento" name="descuento" class="form-control" value="0"/></td>
+	    				</tr>
+	    				<tr>
+	    					<td style="padding-top:10px"><strong>Anticipo</strong></td>
+	    					<td style="padding-left:10px;padding-top:10px"><input type="number" id="anticipo" name="anticipo" class="form-control" value="0"/></td>
+	    				</tr>
+	    				<tr>
+	    					<td style="padding-top:10px"><strong>Total con Descuento</strong></td>
+	    					<td style="padding-left:10px;padding-top:10px"><input type="number" id="total_descuento" name="total_descuento" class="form-control" readonly value="0"/></td>
+	    				</tr>
+	    				<tr>
+	    					<td style="padding-top:10px"><strong>19% I.V.A</strong></td>
+	    					<td style="padding-left:10px;padding-top:10px"><input type="number" id="iva" name="iva" class="form-control" readonly value="0"/></td>
+	    				</tr>
+	    				<tr>
+	    					<td style="padding-top:10px"><strong>Total a Pagar:</strong></td>
+	    					<td style="padding-left:10px;padding-top:10px"><input type="number" id="total_final" name="total_final" class="form-control" readonly value="0"/></td>
+	    				</tr>
+	    			</table>
+	    		</diV>
 	  		</div>
 	  	<!--------------------------TAB 4 -----------------------------!-->
 	  		<div id="tab4" class="tab-pane fade">
@@ -129,6 +157,7 @@
 	</div>
 </div>
 <script>
+
 function cargar_ordenes()
 {
 	var razon_social=$('#razon_social').val();
@@ -172,10 +201,17 @@ function cargar_ordenes()
 					            	 {
 					            	 	var info_total=new Array();
 					            	 	var datos=JSON.parse(data);
-					            	 	for(var i=0;i<datos.length;i++)
+					      			    for(var i=0;i<datos.length;i++)
 					            	 	{
-					            	 		var botton='<button class="btn btn-success" onclick="seleccionar_OT('+datos[i]["id"]+');"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>'
-					            	 		var info=[datos[i]["OTNumero"],datos[i]["OTRut"],datos[i]["OTNombre"],datos[i]["ServicioHN"],datos[i]["ServicioHR"],datos[i]["ServicioHNValor"],datos[i]["ServicioHRValor"],datos[i]["ServicioValorTotalNeto"],botton];
+					            	 		var oculto1='<input type="hidden" id="OT'+datos[i]["id"]+'" name="OT'+datos[i]["id"]+'" value="'+datos[i]["OTNumero"]+'"/>';
+					            	 		oculto1+='<input type="hidden" id="HN'+datos[i]["id"]+'" name="HN'+datos[i]["id"]+'" value="'+datos[i]["ServicioHN"]+'"/>';
+					            	 		oculto1+='<input type="hidden" id="HR'+datos[i]["id"]+'" name="HR'+datos[i]["id"]+'" value="'+datos[i]["ServicioHR"]+'"/>';
+					            	 		oculto1+='<input type="hidden" id="VHN'+datos[i]["id"]+'" name="VHN'+datos[i]["id"]+'" value="'+datos[i]["ServicioHNValor"]+'"/>';
+					            	 		oculto1+='<input type="hidden" id="VHR'+datos[i]["id"]+'" name="VHR'+datos[i]["id"]+'" value="'+datos[i]["ServicioHRValor"]+'"/>';
+					            	 		oculto1+='<input type="hidden" id="HT'+datos[i]["id"]+'" name="HT'+datos[i]["id"]+'" value="'+datos[i]["ServicioValorTotalNeto"]+'"/>';
+
+					            	 		var botton='<button class="btn btn-success" onclick="seleccionar_OT('+datos[i]["id"]+','+i+');"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>'
+					            	 		var info=[datos[i]["OTNumero"],datos[i]["OTRut"],datos[i]["OTNombre"],datos[i]["ServicioHN"],datos[i]["ServicioHR"],datos[i]["ServicioHNValor"],datos[i]["ServicioHRValor"],datos[i]["ServicioValorTotalNeto"],botton+oculto1];
 					            	 		info_total.push(info);
 					            	 	}
 					            	 	t.rows.add(info_total).draw();
@@ -195,11 +231,77 @@ function cargar_ordenes()
 	 
 }
 
-function seleccionar_OT(id)
+function seleccionar_OT(id,i)
 {
+
+	var x = $('#detalle').DataTable();
+	var ot=$('#OT'+id).val();
+	var hn=$('#HN'+id).val();
+	var hr=$('#HR'+id).val();
+	var vhn=$('#VHN'+id).val();
+	var vhr=$('#VHR'+id).val();
+	var ht=$('#HT'+id).val();
+	var botton='<button class="btn btn-danger" onclick="eliminar_ot_detalle('+id+');"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>';
+	var contador=1;
+	$('.ot_trabajo').each(function()
+	{
+		contador=contador+1;
+	});
+
+	var oculto='<input type="hidden" class="ot_trabajo" name="OT_SELECTED'+id+'"  id="OT_SELECTED'+id+'" value="'+ot+'"/><input type="hidden" name="OT_SELECTED_VALOR'+id+'"  id="OT_SELECTED_VALOR'+id+'" value="'+ht+'"/>';
+	/**************Calculo******************/
+	var total_neto=$('#total_neto').val();
+	total_neto=parseInt(ht)+ parseInt(total_neto);
+    $('#total_neto').val(total_neto);
+
+    var descuento=$('#descuento').val();
+    var anticipo=$('#anticipo').val();
+    var total_desc=parseInt(descuento)+parseInt(anticipo);
+    $('#total_descuento').val(total_desc);
+
+    var total_parcial=parseInt(total_neto)-parseInt(total_desc);
+    var iva=total_parcial*0.19;
+    $('#iva').val(iva);
+    var total_final=total_parcial+iva;
+    $('#total_final').val(total_final);
+    /**************************************/
+	var fila=[contador,ot+oculto,hn,hr,vhn,vhr,ht,botton];
+	x.row.add(fila).draw();
 	var table = $('#detalle0').DataTable();
-	 table.row('.selected').remove().draw( false );
+	table.row('.selected').remove().draw( false );
   
+}
+
+function eliminar_ot_detalle(id)
+{
+    var valor=$('#OT_SELECTED_VALOR'+id).val();
+    /**************Calculo******************/
+	var total_neto=$('#total_neto').val();
+	total_neto=parseInt(total_neto)-parseInt(valor);
+    $('#total_neto').val(total_neto);
+
+    var descuento=$('#descuento').val();
+    var anticipo=$('#anticipo').val();
+    var total_desc=parseInt(descuento)+parseInt(anticipo);
+    $('#total_descuento').val(total_desc);
+
+    var total_parcial=parseInt(total_neto)-parseInt(total_desc);
+    var iva=total_parcial*0.19;
+    if(iva<0)
+    {
+    	iva=0;
+    }
+    $('#iva').val(iva);
+    var total_final=total_parcial+iva;
+    if(total_final<0)
+    {
+    total_final=0;	
+    }
+    $('#total_final').val(total_final);
+    /**************************************/
+
+	var table = $('#detalle').DataTable();
+	table.row('.selected').remove().draw( false );
 }
 $(document).ready(function()
 {
@@ -209,6 +311,17 @@ $(document).ready(function()
 
    $('#detalle0 tbody').on( 'focus', 'tr', function () {
    	var table = $('#detalle0').DataTable();
+        if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    } );
+
+    $('#detalle tbody').on( 'focus', 'tr', function () {
+   	var table = $('#detalle').DataTable();
         if ( $(this).hasClass('selected') ) {
             $(this).removeClass('selected');
         }
@@ -287,6 +400,65 @@ $(document).ready(function()
         });
     }
 	});
+
+  $('#descuento').change(function()
+  {
+  	var total_neto=$('#total_neto').val();	
+    var descuento=$('#descuento').val();
+    if(descuento=='')
+    {
+    	$('#descuento').val(0);
+    	descuento=0;
+    }
+    var anticipo=$('#anticipo').val();
+    var total_desc=parseInt(descuento)+parseInt(anticipo);
+    $('#total_descuento').val(total_desc);
+
+    var total_parcial=parseInt(total_neto)-parseInt(total_desc);
+    var iva=total_parcial*0.19;
+    if(iva<0)
+    {
+    	iva=0;
+    }
+    $('#iva').val(iva);
+    var total_final=total_parcial+iva;
+    if(total_final<0)
+    {
+    total_final=0;	
+    }
+    $('#total_final').val(total_final);
+    /**************************************/
+  });
+
+  $('#anticipo').change(function()
+  {
+  	var total_neto=$('#total_neto').val();	
+    var descuento=$('#descuento').val();
+    var anticipo=$('#anticipo').val();
+    if(anticipo=='')
+    {
+    	$('#anticipo').val(0);
+    	anticipo=0;
+    }
+    
+    var total_desc=parseInt(descuento)+parseInt(anticipo);
+    $('#total_descuento').val(total_desc);
+
+    var total_parcial=parseInt(total_neto)-parseInt(total_desc);
+    var iva=total_parcial*0.19;
+    if(iva<0)
+    {
+    	iva=0;
+    }
+    $('#iva').val(iva);
+    var total_final=total_parcial+iva;
+    if(total_final<0)
+    {
+    total_final=0;	
+    }
+    $('#total_final').val(total_final);
+    /**************************************/
+  });
 
 });
 </script>
