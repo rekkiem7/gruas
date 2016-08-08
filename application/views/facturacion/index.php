@@ -1,3 +1,8 @@
+<style>
+.color_rojo{
+	border-color: #CC0000;
+}
+</style>
 <body>
 <div class="container">
 	<div class="animated fadeInRight"><center><h4>Facturación Cliente - Factura por Grupo de OT</h4></center>
@@ -36,19 +41,19 @@
 	    		<table width="100%">
 	    			<tr>
 	    				<td width="10%">Señores</td>
-	    				<td width="40%" colspan="3"><input type="text" class="form-control" id="identidad" name="identidad" readonly/></td>
+	    				<td width="40%" colspan="3"><input type="text" class="form-control requerido" id="identidad" name="identidad" readonly/></td>
 	    				<td width="15%" style="padding-left:10px">O. de Compra N°</td>
-	    				<td width="35%"><input type="text" class="form-control" id="orden_compra" name="orden_compra" readonly/></td>
+	    				<td width="35%"><input type="text" class="form-control" id="orden_compra" name="orden_compra" /></td>
 	    			</tr>
 	    			<tr >
 	    				<td width="10%" style="padding-top:20px">Dirección</td>
-	    				<td width="40%" style="padding-top:20px" colspan="3"><input type="text" class="form-control" id="direccion" name="direccion" readonly/></td>
+	    				<td width="40%" style="padding-top:20px" colspan="3"><input type="text" class="form-control requerido" id="direccion" name="direccion" readonly/></td>
 	    				<td width="15%" style="padding-left:10px;padding-top:20px">Condición de Venta</td>
-	    				<td width="35%" style="padding-top:20px"><input type="text" class="form-control" id="condicion" name="condicion" readonly/></td>
+	    				<td width="35%" style="padding-top:20px"><input type="text" class="form-control requerido" id="condicion" name="condicion" /></td>
 	    			</tr>
 	    			<tr>
 	    				<td width="10%" style="padding-top:20px">R.U.T</td>
-	    				<td style="padding-top:20px"><input type="text" class="form-control" id="rut" name="rut" /></td>
+	    				<td style="padding-top:20px"><input type="text" class="form-control requerido" id="rut" name="rut" /></td>
 	    				<td style="padding-top:20px;padding-left:10px;">Giro</td>
 	    				<td  style="padding-top:20px"><input type="text" class="form-control" id="giro" name="giro" readonly/></td>
 	    				<td width="15%" style="padding-left:10px;padding-top:20px">Facturado Por</td>
@@ -153,11 +158,48 @@
 	    		<textarea cols="100" rows="10"></textarea>
 	  		</div>
 		</div><br><br>
-		<div class="col-lg-12 col-md-12"><center><button class="btn btn-primary">Guardar Factura</button></center></div>
+		<div class="col-lg-12 col-md-12"><center><button class="btn btn-primary" onclick="Guardar_Factura();">Guardar Factura</button></center></div>
 	</div>
 </div>
 <script>
+function Guardar_Factura()
+{
+	var cont_requerido=0;
+	var cont_ot=0;
+	$('.requerido').each(function()
+	{
+		if($(this).val()=='')
+		{
+			cont_requerido=cont_requerido+1;
+			$(this).addClass("color_rojo");
+		}
+		else
+		{
+			$(this).removeClass("color_rojo");
+		}
+	});
 
+	if(cont_requerido>0)
+	{
+		swal("Campo Faltante", "Debe llenar los campos faltantes", "info");
+	}
+	else
+	{
+		$('.ot_trabajo').each(function()
+		{
+			cont_ot=cont_ot+1;
+		});
+
+		if(cont_ot==0)
+		{
+			swal("Sin Ordenes de Trabajo", "Debe ingresar las ordenes de trabajo", "info");
+		}
+		else
+		{
+			alert("guardando");
+		}
+	}
+}
 function cargar_ordenes()
 {
 	var razon_social=$('#razon_social').val();
