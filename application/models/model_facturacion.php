@@ -36,7 +36,7 @@ class Model_Facturacion extends CI_Model {
 
 	function select_razonSocial()
 	{
-		$query=$this->db->get('razonsocial');
+	   $query=$this->db->get('razonsocial');
 	   if($query -> num_rows() >0)
 	   {
 	     return $query->result();
@@ -45,5 +45,40 @@ class Model_Facturacion extends CI_Model {
 	   {
 	     return false;
 	   }
+	}
+
+	function ultima_factura()
+	{
+	   $this->db->order_by('NumeroFactura', 'DESC');
+	   $this->db->limit(1);
+	   $query=$this->db->get('facturas_emitidas');
+	   if($query -> num_rows() >0)
+	   {
+	     return $query->result();
+	   }
+	   else
+	   {
+	     return false;
+	   }
+	}
+
+	function existe_factura($factura)
+	{
+	   $this->db->where('NumeroFactura',$factura);
+	   $query=$this->db->get('facturas_emitidas');
+	   if($query -> num_rows() >0)
+	   {
+	     return $query->result();
+	   }
+	   else
+	   {
+	     return false;
+	   }
+	}
+
+	function insert_factura($data)
+	{
+		$this->db->insert('facturas_emitidas', $data); 
+		return $this->db->insert_id();	 
 	}
 }

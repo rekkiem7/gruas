@@ -155,7 +155,7 @@
 	  		<div id="tab4" class="tab-pane fade">
 	  			<br>Ingrese el texto del mensaje que desea agregar en la factura
 	    		<br><br>
-	    		<textarea cols="100" rows="10"></textarea>
+	    		<textarea cols="100" rows="10" id="observaciones" name="observaciones"></textarea>
 	  		</div>
 		</div><br><br>
 		<div class="col-lg-12 col-md-12"><center><button class="btn btn-primary" onclick="Guardar_Factura();">Guardar Factura</button></center></div>
@@ -196,7 +196,41 @@ function Guardar_Factura()
 		}
 		else
 		{
-			alert("guardando");
+			var fecha_factura=$('#datepicker').val();
+			var razon=$('#razon_social').val();
+			var rut=$('#rut').val();
+			var nombre_cliente=$('#identidad').val();
+			var direccion=$('#direccion').val();
+			var giro=$('#giro').val();
+			var telefono=$('#telefono').val();
+			var ciudad=$('#ciudad').val();
+			var orden_compra=$('#orden_compra').val();
+			var condicion_venta=$('#condicion').val();
+			var facturado_por=$('#facturado_por').val();
+			var revisado_por=$('#revisado_por').val();
+			var total_neto=$('#total_neto').val();
+			var descuento=$('#descuento').val();
+			var anticipo=$('#anticipo').val();
+			var total_descuento=$('#total_descuento').val();
+			var iva=$('#iva').val();
+			var total_final=$('#total_final').val();
+			var observaciones=$('#observaciones').val();
+			$.ajax({
+					            type:"POST",
+					            url:"<?php echo site_url('Facturacion/guardar_factura');?>",
+					            data:{fecha_factura:fecha_factura,razon:razon,rut:rut,nombre_cliente:nombre_cliente,direccion:direccion,giro:giro,telefono:telefono,ciudad:ciudad,orden_compra:orden_compra,condicion_venta:condicion_venta,facturado_por:facturado_por,revisado_por:revisado_por,total_neto:total_neto,descuento:descuento,anticipo:anticipo,total_descuento:total_descuento,iva:iva,total_final:total_final,observaciones:observaciones},
+					            success:function(data)
+					            {
+					            	if(data!=0)
+					            	{
+					            		swal("Factura Emitida", "Se ha generado la factura N° "+data+ " correctamente", "success");
+					            	}
+					            	else
+					            	{
+					            		swal("Error", "Se ha producido un problema al ingresar la factura, por favor inténtelo nuevamente", "error");
+					            	}
+					            }
+					});
 		}
 	}
 }
