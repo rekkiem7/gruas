@@ -60,18 +60,10 @@ class Facturacion extends CI_Controller {
 		$total_final=$_POST['total_final'];
 		$facturado_por=$_POST['facturado_por'];
 
-		$ultima_factura=$this->model_facturacion->ultima_factura();
-		$nuevo_nro_factura=$ultima_factura[0]->NumeroFactura+1;
+		$nuevo_nro_factura=$this->genera_ultimo_numero();
 		
-		//verifico que no se haya insertado
-		$existe=$this->model_facturacion->existe_factura($nuevo_nro_factura);
 
-		if($existe)
-		{
-
-		}
-		else
-		{
+		
 			$data=["NumeroFactura"=>$nuevo_nro_factura,"RazonSocial"=>$razon,"Fecha"=>$fecha_factura,"RutCliente"=>$rut,"TotalNeto"=>$total_neto,"IVA"=>$iva,"TotalFactura"=>$total_final,"FacturadoPor"=>$facturado_por];	
 
 			$insert=$this->model_facturacion->insert_factura($data);
@@ -83,9 +75,23 @@ class Facturacion extends CI_Controller {
 			{
 				echo 0;
 			}
-		}
-
 		
+	}
 
+	public function genera_ultimo_numero()
+	{
+		$ultima_factura=$this->model_facturacion->ultima_factura();
+		$nuevo_nro_factura=$ultima_factura[0]->NumeroFactura+1;
+		
+		//verifico que no exista una factura con el mismo numero generado
+		$existe=$this->model_facturacion->existe_factura($nuevo_nro_factura);
+		if($existe)
+		{
+			genera_ultimo_numero();
+		}
+		else
+		{
+			return $nuevo_nro_factura;
+		}
 	}
 }
