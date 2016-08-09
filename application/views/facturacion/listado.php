@@ -1,3 +1,33 @@
+<style>
+.modal.modal-wide .modal-dialog{
+    width: 70%;
+}
+
+.modal-wide .modal-body {
+  overflow-y: auto;
+}
+
+@media screen and (max-width: 768px) {
+    
+  .modal.modal-wide .modal-dialog{
+    width: 100%;
+    }
+
+.modal-wide .modal-body {
+  overflow-y: auto;
+    } 
+
+}
+
+#popup_AgregarCliente .modal-body{
+    width: auto;
+    height: auto;
+}
+.brand-primary{
+  background-color: #428bca;
+  color:#ffffff;
+}
+</style>
 <body onload="cargar_facturas();">
 <div class="container">
 	<div class="animated fadeInRight"><center><h4>Listado de Facturas</h4></center>
@@ -25,15 +55,53 @@
     	</div>
 	</div>
 	</div>
+
+  <!--Modal-->
+<div id="popup_Factura" class="modal modal-wide fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" ><div id="titulo_detalle"></div></h4>
+      </div>
+      <div class="modal-body">
+          <table id="detalle" class="table table-bordered table-hover">
+                  <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>N° O.Trabajo</th>
+                    <th>H.Normales</th>
+                    <th>H.Recargo</th>
+                    <th>Valor H.N</th>
+                    <th>Valor H.R</th>
+                    <th>Valor Total</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                  </table>
+         
+      </div>
+      <div class="modal-footer">
+        
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 </div>
 <script>
 function cargar_facturas()
 {
+  $('#loading').modal();
 	$.ajax({
         type:"POST",
         url:"<?php echo site_url('Facturacion/cargar_facturas');?>",
         success:function(data)
         {
+          $('#loading').modal('hide');
         	if(data!=0)
         	{
         		var t = $('#facturas').DataTable();
@@ -52,7 +120,7 @@ function cargar_facturas()
         				datos[i]['Anticipo']=0;
         			}
 
-        			var botton='<button class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>';
+        			var botton='<button class="btn btn-primary" onclick="ver_detalle('+datos[i]['NumeroFactura']+')"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>';
         			var descuento=parseInt(datos[i]['Descuento'])+parseInt(datos[i]['Anticipo']);
         			var info=[datos[i]['NumeroFactura'],datos[i]['RutCliente'],datos[i]['nom_cliente'],"( "+datos[i]['RazonSocial']+" ) "+datos[i]['nom_razon'],datos[i]['TotalNeto'],descuento,datos[i]['IVA'],datos[i]['TotalFactura'],botton];
         			array_final.push(info);
@@ -66,6 +134,44 @@ function cargar_facturas()
         }
     });
 }
+
+function ver_detalle(factura)
+{
+  $('#loading').modal();
+  $.ajax({
+        type:"POST",
+        url:"<?php echo site_url('Facturacion/cargar_ot_facturas');?>",
+        data:{factura:factura},
+        success:function(data)
+        {
+          $('#loading').modal('hide');
+          var t = $('#detalle').DataTable();
+          t.clear().draw();
+          if(data!=0)
+          {
+              var datos=JSON.parse(data);
+              var info_total=new Array();
+              for(var i=0;i<datos.length;i++)
+              {
+                  var item=i+1;
+                  var info=[item,datos[i]["OTNumero"],datos[i]["ServicioHN"],datos[i]["ServicioHR"],datos[i]["ServicioHNValor"],datos[i]["ServicioHRValor"],datos[i]["ServicioValorTotalNeto"]];
+                  info_total.push(info);
+              }
+
+              t.rows.add(info_total).draw();
+              document.getElementById('titulo_detalle').innerHTML="Detalle Factura N° "+factura;
+             $('#popup_Factura').modal();
+          }
+          else
+          {
+              swal("Sin Registros", "No se han encontrado Ordenes de Trabajo asociadas a la factura", "info");
+          }
+          
+        }
+      });
+}
+
+
 $(document).ready(function()
 {
   $('#facturas').DataTable({
@@ -74,6 +180,27 @@ $(document).ready(function()
       "searching": true,
       "ordering": false,
       "info": true,
+      "autoWidth": true,
+      "language": {
+            "search":"Buscar:",
+            "lengthMenu": "Ver _MENU_ registros por página",
+            "zeroRecords": "<center>No se encontraron registros</center>",
+            "info": "_END_ de _TOTAL_ registros",
+            "infoEmpty": "No se encontraron registros",
+            "infoFiltered": "(Filtrados _TOTAL_ de _MAX_ total registros)",
+            "paginate":{
+              "previous":"Anterior",
+              "next":"Siguiente"
+            }
+        },      
+    });
+
+  $('#detalle').DataTable({
+      "paging": false,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": false,
+      "info": false,
       "autoWidth": true,
       "language": {
             "search":"Buscar:",

@@ -12,6 +12,7 @@ class Facturacion extends CI_Controller {
 	{
 		$this->load->view('librerias');	
 		$this->load->view('menu/menu_principal');
+		$this->load->view('loading');
 		$datos['razon_social']=$this->model_facturacion->select_razonSocial();
 		$session_data = $this->session->userdata('logged_in');
 	    $datos['nombre_usuario'] = $session_data['nombre'];
@@ -105,6 +106,7 @@ class Facturacion extends CI_Controller {
 	{
 		$this->load->view('librerias');	
 		$this->load->view('menu/menu_principal');
+		$this->load->view('loading');
 		$this->load->view('facturacion/listado');
 		$this->load->view('footer');
 	}
@@ -112,6 +114,21 @@ class Facturacion extends CI_Controller {
 	public function cargar_facturas()
 	{
 		$datos=$this->model_facturacion->cargar_facturas();
+		if($datos)
+		{
+			echo json_encode($datos);
+		}
+		else
+		{
+			echo 0;
+		}
+	}
+
+	public function cargar_ot_facturas()
+	{
+		$factura=$_POST['factura'];
+
+		$datos=$this->model_facturacion->cargar_ot_factura($factura);
 		if($datos)
 		{
 			echo json_encode($datos);

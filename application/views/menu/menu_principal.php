@@ -125,19 +125,16 @@ h1,
                 <div id="myCarousel" class="carousel slide" data-ride="carousel">
                   <div class="carousel-inner">
                     <div class="item active">
-                      <a href="#"><img src="http://placehold.it/254x150/3498db/f5f5f5/&text=New+Collection" class="img-responsive" alt="product 1"></a>
+                      <a href="http://www.titands.cl"><img src="<?php echo base_url();?>imagenes/titan1.jpg" class="img-responsive" alt="product 1"></a>
                       <h4><small>Titan Development Solutions</small></h4>
                     </div>
                     <!-- End Item -->
                     <div class="item">
-                      <a href="#"><img src="http://placehold.it/254x150/ef5e55/f5f5f5/&text=New+Collection" class="img-responsive" alt="product 2"></a>
+                      <a href="http://www.titands.cl"><img src="<?php echo base_url();?>imagenes/titan2.png" class="img-responsive" alt="product 2"></a>
                       <h4><small>Titan Development Solutions</small></h4>
                     </div>
                     <!-- End Item -->
-                    <div class="item">
-                      <a href="#"><img src="http://placehold.it/254x150/2ecc71/f5f5f5/&text=New+Collection" class="img-responsive" alt="product 3"></a>
-                      <h4 style="color:#ffffff"><small>Titan Development Solutions</small></h4>
-                    </div>
+                 
                     <!-- End Item -->
                   </div>
                   <!-- End Carousel Inner -->

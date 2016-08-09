@@ -198,6 +198,7 @@ function Guardar_Factura()
 		}
 		else
 		{
+			$('#loading').modal();
 			var fecha_factura=$('#datepicker').val();
 			var razon=$('#razon_social').val();
 			var rut=$('#rut').val();
@@ -223,6 +224,7 @@ function Guardar_Factura()
 					            data:{fecha_factura:fecha_factura,razon:razon,rut:rut,nombre_cliente:nombre_cliente,direccion:direccion,giro:giro,telefono:telefono,ciudad:ciudad,orden_compra:orden_compra,condicion_venta:condicion_venta,facturado_por:facturado_por,revisado_por:revisado_por,total_neto:total_neto,descuento:descuento,anticipo:anticipo,total_descuento:total_descuento,iva:iva,total_final:total_final,observaciones:observaciones,array_ot:array_ot},
 					            success:function(data)
 					            {
+					            	$('#loading').modal('hide');
 					            	if(data!=0)
 					            	{
 					            		swal("Factura Emitida", "Se ha generado la factura N° "+data+ " correctamente", "success");
@@ -269,12 +271,14 @@ function cargar_ordenes()
 					$('#detalle0_tabla').slideUp();
 					var t = $('#detalle0').DataTable();
     					t.clear().draw();
+    					$('#loading').modal();
 					$.ajax({
 					            type:"POST",
 					            url:"<?php echo site_url('Facturacion/cargar_ordenes');?>",
 					            data:{desde:desde,hasta:hasta,razon:razon_social,rut:rut},
 					            success:function(data)
 					            {
+					            	$('#loading').modal('hide');
 					            	 if(data!=0)
 					            	 {
 					            	 	var info_total=new Array();

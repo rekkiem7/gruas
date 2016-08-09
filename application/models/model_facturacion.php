@@ -111,4 +111,18 @@ class Model_Facturacion extends CI_Model {
 	     return false;
 	   }
 	}
+
+	function cargar_ot_factura($factura)
+	{
+	   $this->db->where('NumeroFactura',$factura);
+	   $query=$this->db->get('ordendetrabajo');
+	   if($query -> num_rows() >0)
+	   {
+	     return $query->result();
+	   }
+	   else
+	   {
+	     return false;
+	   }
+	}
 }
