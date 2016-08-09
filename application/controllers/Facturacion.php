@@ -13,6 +13,8 @@ class Facturacion extends CI_Controller {
 		$this->load->view('librerias');	
 		$this->load->view('menu/menu_principal');
 		$datos['razon_social']=$this->model_facturacion->select_razonSocial();
+		$session_data = $this->session->userdata('logged_in');
+	    $datos['nombre_usuario'] = $session_data['nombre'];
 		$this->load->view('facturacion/index',$datos);
 		$this->load->view('footer');	
 	}
@@ -59,23 +61,27 @@ class Facturacion extends CI_Controller {
 		$iva=$_POST['iva'];
 		$total_final=$_POST['total_final'];
 		$facturado_por=$_POST['facturado_por'];
-
+		$descuento=$_POST['descuento'];
+		$anticipo=$_POST['anticipo'];
+		$array_ot=$_POST['array_ot'];
 		$nuevo_nro_factura=$this->genera_ultimo_numero();
-		
 
-		
-			$data=["NumeroFactura"=>$nuevo_nro_factura,"RazonSocial"=>$razon,"Fecha"=>$fecha_factura,"RutCliente"=>$rut,"TotalNeto"=>$total_neto,"IVA"=>$iva,"TotalFactura"=>$total_final,"FacturadoPor"=>$facturado_por];	
-
-			$insert=$this->model_facturacion->insert_factura($data);
-			if($insert)
+		$data=["NumeroFactura"=>$nuevo_nro_factura,"RazonSocial"=>$razon,"Fecha"=>$fecha_factura,"RutCliente"=>$rut,"TotalNeto"=>$total_neto,"IVA"=>$iva,"TotalFactura"=>$total_final,"FacturadoPor"=>$facturado_por,"Descuento"=>$descuento,"Anticipo"=>$anticipo];	
+		$insert=$this->model_facturacion->insert_factura($data);
+		if($insert)
+		{
+			for($i=0;$i<count($array_ot);$i++)
 			{
-				echo $nuevo_nro_factura;
+				$OT=$array_ot[$i];
+				$data2=["NumeroFactura"=>$nuevo_nro_factura];
+				$update2=$this->model_facturacion->update_ordendetrabajo($OT,$data2,$razon);
 			}
-			else
-			{
-				echo 0;
-			}
-		
+			echo $nuevo_nro_factura;
+		}
+		else
+		{
+			echo 0;
+		}	
 	}
 
 	public function genera_ultimo_numero()
@@ -87,11 +93,33 @@ class Facturacion extends CI_Controller {
 		$existe=$this->model_facturacion->existe_factura($nuevo_nro_factura);
 		if($existe)
 		{
-			genera_ultimo_numero();
+			$this->genera_ultimo_numero();
 		}
 		else
 		{
 			return $nuevo_nro_factura;
 		}
 	}
+
+	public function listado_factura()
+	{
+		$this->load->view('librerias');	
+		$this->load->view('menu/menu_principal');
+		$this->load->view('facturacion/listado');
+		$this->load->view('footer');
+	}
+
+	public function cargar_facturas()
+	{
+		$datos=$this->model_facturacion->cargar_facturas();
+		if($datos)
+		{
+			echo json_encode($datos);
+		}
+		else
+		{
+			echo 0;
+		}
+	}
+
 }

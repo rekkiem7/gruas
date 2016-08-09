@@ -57,7 +57,7 @@
 	    				<td style="padding-top:20px;padding-left:10px;">Giro</td>
 	    				<td  style="padding-top:20px"><input type="text" class="form-control" id="giro" name="giro" readonly/></td>
 	    				<td width="15%" style="padding-left:10px;padding-top:20px">Facturado Por</td>
-	    				<td width="35%" style="padding-top:20px"><input type="text" class="form-control" id="facturado_por" name="facturado_por" readonly/></td>
+	    				<td width="35%" style="padding-top:20px"><input type="text" class="form-control" id="facturado_por" name="facturado_por" value="<?php echo $nombre_usuario?>" readonly/></td>
 	    			</tr>
 	    			<tr>
 	    				<td width="10%" style="padding-top:20px">Teléfono</td>
@@ -164,6 +164,7 @@
 <script>
 function Guardar_Factura()
 {
+	var array_ot=new Array();
 	var cont_requerido=0;
 	var cont_ot=0;
 	$('.requerido').each(function()
@@ -188,6 +189,7 @@ function Guardar_Factura()
 		$('.ot_trabajo').each(function()
 		{
 			cont_ot=cont_ot+1;
+			array_ot.push($(this).val());
 		});
 
 		if(cont_ot==0)
@@ -218,7 +220,7 @@ function Guardar_Factura()
 			$.ajax({
 					            type:"POST",
 					            url:"<?php echo site_url('Facturacion/guardar_factura');?>",
-					            data:{fecha_factura:fecha_factura,razon:razon,rut:rut,nombre_cliente:nombre_cliente,direccion:direccion,giro:giro,telefono:telefono,ciudad:ciudad,orden_compra:orden_compra,condicion_venta:condicion_venta,facturado_por:facturado_por,revisado_por:revisado_por,total_neto:total_neto,descuento:descuento,anticipo:anticipo,total_descuento:total_descuento,iva:iva,total_final:total_final,observaciones:observaciones},
+					            data:{fecha_factura:fecha_factura,razon:razon,rut:rut,nombre_cliente:nombre_cliente,direccion:direccion,giro:giro,telefono:telefono,ciudad:ciudad,orden_compra:orden_compra,condicion_venta:condicion_venta,facturado_por:facturado_por,revisado_por:revisado_por,total_neto:total_neto,descuento:descuento,anticipo:anticipo,total_descuento:total_descuento,iva:iva,total_final:total_final,observaciones:observaciones,array_ot:array_ot},
 					            success:function(data)
 					            {
 					            	if(data!=0)

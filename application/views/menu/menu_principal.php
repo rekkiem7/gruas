@@ -168,8 +168,7 @@ h1,
                 <li class="divider"></li>
                 <li class="dropdown-header">Facturación</li>
                 <li><a href="<?php echo site_url('Facturacion/index')?>">Facturación por OT</a></li>
-                <li><a href="#">Anulación de Factura</a></li>
-                <li><a href="#">Listados</a></li>
+                <li><a href="<?php echo site_url('Facturacion/listado_factura')?>">Listados</a></li>
               </ul>
             </li>
           </ul>

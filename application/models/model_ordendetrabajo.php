@@ -45,7 +45,7 @@ function select_DetalleOrden($id)
 
 	function select_otnumero($id, $OTRazonSocial)
 	{
-		if($id!=0)
+		if($id!="")
 		{
 	  		$query = $this->db->query("SELECT * FROM ordendetrabajo WHERE id='$id' ");
 	  		$Resultado = $query->result();
