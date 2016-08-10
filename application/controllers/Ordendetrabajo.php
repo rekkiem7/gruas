@@ -81,19 +81,19 @@ class Ordendetrabajo extends CI_Controller
 		$OTRazonSocial=$_POST['OTRazonSocial'];
 		$OTNumero=$_POST['OTNumero'];
 		$OTRut=$_POST['OTRut'];
-		$OTNombre=$_POST['OTNombre'];
+		$OTNombre = $this->model_ordendetrabajo->CargarNombreCliente($OTRut);
 		$OTDireccion=$_POST['OTDireccion'];
 		$OTCiudad=$_POST['OTCiudad'];
 		$OTComuna=$_POST['OTComuna'];
 		$OTTelefono=$_POST['OTTelefono'];
 		$GruaPatente=$_POST['GruaPatente'];
 		$GruaOperadorId=$_POST['GruaOperadorId'];
-		$GruaOperadorNombre=$_POST['GruaOperadorNombre'];
+		$GruaOperadorNombre = $this->model_ordendetrabajo->CargarNombreEmpleado($GruaOperadorId);
 		$GruaAyudanteId=$_POST['GruaAyudanteId'];
-		$GruaAyudanteNombre=$_POST['GruaAyudanteNombre'];
+		$GruaAyudanteNombre = $this->model_ordendetrabajo->CargarNombreEmpleado($GruaAyudanteId);
 		$CamionPatente=$_POST['CamionPatente'];
 		$CamionChoferId=$_POST['CamionChoferId'];
-		$CamionChoferNombre=$_POST['CamionChoferNombre'];
+		$CamionChoferNombre = $this->model_ordendetrabajo->CargarNombreEmpleado($CamionChoferId);
 		$ServicioHorarioMinimo=$_POST['ServicioHorarioMinimo'];
 		$ServicioRecargo=$_POST['ServicioRecargo'];
 		$ServicioDesdeLas=$_POST['ServicioDesdeLas'];
@@ -191,5 +191,13 @@ class Ordendetrabajo extends CI_Controller
 		{
 			echo 0;
 		}
+	}
+
+	public function VerPdf()
+	{
+		$id = $_GET['id'];
+		$Result = $this->model_ordendetrabajo->select_DetalleOrden ($id);
+		$Result["Result"] = json_encode($Result);
+        $this->load->view('ordendetrabajo/VerPdf', $Result);
 	}
 }

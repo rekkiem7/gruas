@@ -73,6 +73,7 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
 </style>
 <body>
 <div class="container">
+        <input type="hidden" id="Dominio" name="Dominio" value="<?=site_url();?>">
         <div class="animated fadeInRight"><center><h4>Ordenes De Trabajo</h4></center></div><br><br>
             <center>
                     <div>
@@ -93,6 +94,7 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
                                             <th>Cliente</th>
                                             <th>Total</th>
                                             <th>Ver</th>
+                                            <th>Pdf</th>
                                             <th>Editar</th>
                                             <th>Eliminar</th>
                                     </tr>
@@ -112,6 +114,11 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
                                             <td style="text-align:center">
                                                 <button class="btn btn-info" onclick="add_ordendetrabajo(<?=$row->id?>,'VerInfo')">
                                                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                                </button>
+                                            </td>
+                                            <td style="text-align:center">
+                                                <button class="btn btn-warning" onclick="add_ordendetrabajo(<?=$row->id?>,'VerPdf')">
+                                                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
                                                 </button>
                                             </td>
                                             <td style="text-align:center">
@@ -159,7 +166,7 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
                         <?php
                             foreach($razonessociales as $lsRazonSocial)
                             {?>
-                                <option value="<?=$lsRazonSocial->id?>"><?=$lsRazonSocial->Rut." - ".$lsRazonSocial->Razonsocial?></option>
+                                <option value="<?=$lsRazonSocial->Rut?>"><?=$lsRazonSocial->Rut." - ".$lsRazonSocial->Razonsocial?></option>
                             <?php
                             }
                         ?>
@@ -180,12 +187,11 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
                         <?php
                             foreach($clientes as $lsClientes)
                             {?>
-                                <option value="<?=$lsClientes->id?>"><?=$lsClientes->CodiClien."-".$lsClientes->Nombre?></option>
+                                <option value="<?=$lsClientes->CodiClien?>"><?=$lsClientes->CodiClien."-".$lsClientes->Nombre?></option>
                             <?php
                             }
                         ?>
                    </select>
-                   <input type="hidden" class="form-control required" id="OTNombre" name="OTNombre" placeholder="Nombre del cliente" />
                </div>
         </div>
         <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
@@ -229,30 +235,26 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
                 <?php
                     foreach($operarios as $lsOperarios)
                     {?>
-                        <option value="<?=$lsOperarios->id?>"><?=$lsOperarios->Rut."-".$lsOperarios->Nombre?></option>
+                        <option value="<?=$lsOperarios->Rut?>"><?=$lsOperarios->Rut."-".$lsOperarios->Nombre?></option>
                     <?php
                     }
                 ?>
            </select>
-              <input type="hidden" class="form-control required" id="GruaOperadorNombre" name="GruaOperadorNombre" placeholder="Nombre del operario"/>
-
           </div>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
           <label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Ayudante</label>
           <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-           <select type="text" class="form-control required" id="GruaAyudanteId" name="GruaAyudanteId" onchange="CargarAyudante();">
+           <select type="text" class="form-control required" id="GruaAyudanteId" name="GruaAyudanteId">
                 <option value="">Seleccionar...</option>
                 <?php
                     foreach($operarios as $lsOperarios)
                     {?>
-                        <option value="<?=$lsOperarios->id?>"><?=$lsOperarios->Rut." - ".$lsOperarios->Nombre?></option>
+                        <option value="<?=$lsOperarios->Rut?>"><?=$lsOperarios->Rut." - ".$lsOperarios->Nombre?></option>
                     <?php
                     }
                 ?>
            </select>
-              <input type="hidden" class="form-control required" id="GruaAyudanteNombre" name="GruaAyudanteNombre" placeholder="Nombre del ayudante"/>
-
           </div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -264,18 +266,16 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Chofer</label>
           <div class="col-lg-8  col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-           <select type="text" class="form-control required" id="CamionChoferId" name="CamionChoferId" onchange="CargarChofer();">
+           <select type="text" class="form-control required" id="CamionChoferId" name="CamionChoferId"">
                 <option value="">Seleccionar...</option>
                 <?php
                     foreach($operarios as $lsOperarios)
                     {?>
-                        <option value="<?=$lsOperarios->id?>"><?=$lsOperarios->Rut."-".$lsOperarios->Nombre?></option>
+                        <option value="<?=$lsOperarios->Rut?>"><?=$lsOperarios->Rut."-".$lsOperarios->Nombre?></option>
                     <?php
                     }
                 ?>
            </select>
-              <input type="hidden" class="form-control required" id="CamionChoferNombre" name="CamionChoferNombre" placeholder="Nombre del ayudante"/>
-
           </div>
         </div>
         <div class="modal-header col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -420,12 +420,9 @@ function CargarReadOnly()
   $('#OTTelefono').attr('readonly', true);
   $('#GruaPatente').attr('readonly', true);
   $('#GruaOperadorId').attr('readonly', true);
-  $('#GruaOperadorNombre').attr('readonly', true);
   $('#GruaAyudanteId').attr('readonly', true);
-  $('#GruaAyudanteNombre').attr('readonly', true);
   $('#CamionPatente').attr('readonly', true);
   $('#CamionChoferId').attr('readonly', true);
-  $('#CamionChoferNombre').attr('readonly', true);
   $('#ServicioHorarioMinimo').attr('readonly', true);
   $('#ServicioRecargo').attr('readonly', true);
   $('#ServicioDesdeLas').attr('readonly', true);
@@ -459,12 +456,9 @@ function QuitarReadOnly()
   $('#OTTelefono').attr('readonly', false);
   $('#GruaPatente').attr('readonly', false);
   $('#GruaOperadorId').attr('readonly', false);
-  $('#GruaOperadorNombre').attr('readonly', false);
   $('#GruaAyudanteId').attr('readonly', false);
-  $('#GruaAyudanteNombre').attr('readonly', false);
   $('#CamionPatente').attr('readonly', false);
   $('#CamionChoferId').attr('readonly', false);
-  $('#CamionChoferNombre').attr('readonly', false);
   $('#ServicioHorarioMinimo').attr('readonly', false);
   $('#ServicioRecargo').attr('readonly', false);
   $('#ServicioDesdeLas').attr('readonly', false);
@@ -516,72 +510,6 @@ function CargarGrua()
       $('#ServicioValorHora').attr('value','');
   }
 }
-function CargarOperador()
-{
-  if(!$('#GruaOperadorId').val())
-  {
-    swal("Importante", "Debe seleccionar un operador valido", "warning");
-  }
-  else
-  {
-    if($('#GruaOperadorId').val())
-      {
-        var GruaOperadorId = document.getElementById('GruaOperadorId').options[document.getElementById('GruaOperadorId').selectedIndex].text;
-        GruaOperadorId = GruaOperadorId.split("-");
-        $('#GruaOperadorNombre').val(GruaOperadorId[1]);
-      }
-      else
-      {
-        $('#GruaOperadorId').val(''); 
-        $('#GruaOperadorNombre').val(''); 
-      }
-  }
-}
-
-
-function CargarChofer()
-{
-  if(!$('#CamionChoferId').val())
-  {
-    swal("Importante", "Debe seleccionar un chofer valido", "warning");
-  }
-  else
-  {
-    if($('#CamionChoferId').val())
-      {
-        var CamionChoferId = document.getElementById('CamionChoferId').options[document.getElementById('CamionChoferId').selectedIndex].text;
-        CamionChoferId = CamionChoferId.split("-");
-        $('#CamionChoferNombre').val(CamionChoferId[1]);
-      }
-      else
-      {
-        $('#CamionChoferId').val(''); 
-        $('#CamionChoferNombre').val(''); 
-      }
-  }
-}
-
-function CargarAyudante()
-{
-  if(!$('#GruaAyudanteId').val())
-  {
-    swal("Importante", "Debe seleccionar un ayudante valido", "warning");
-  }
-  else
-  {
-    if($('#GruaAyudanteId').val())
-      {
-        var GruaAyudanteId = document.getElementById('GruaAyudanteId').options[document.getElementById('GruaAyudanteId').selectedIndex].text;
-        GruaAyudanteId = GruaAyudanteId.split("-");
-        $('#GruaAyudanteNombre').val(GruaAyudanteId[1]);
-      }
-      else
-      {
-        $('#GruaAyudanteId').val(''); 
-        $('#GruaAyudanteNombre').val(''); 
-      }
-  }
-}
 function BuscarRequeridos()
 {
   var errores = 0;
@@ -613,12 +541,9 @@ function limpiar()
  $('#OTTelefono').val('');
  $('#GruaPatente').val('');
  $('#GruaOperadorId').val('');
- $('#GruaOperadorNombre').val('');
  $('#GruaAyudanteId').val('');
- $('#GruaAyudanteNombre').val('');
  $('#CamionPatente').val('');
  $('#CamionChoferId').val('');
- $('#CamionChoferNombre').val('');
  $('#ServicioHorarioMinimo').val('');
  $('#ServicioRecargo').val('');
  $('#ServicioDesdeLas').val('');
@@ -691,12 +616,9 @@ function add_ordendetrabajo(Id, Accion)
                 $('#OTTelefono').val(datos[0]["OTTelefono"]);
                 $('#GruaPatente').val(datos[0]["GruaPatente"]);
                 $('#GruaOperadorId').val(datos[0]["GruaOperadorId"]);
-                $('#GruaOperadorNombre').val(datos[0]["GruaOperadorNombre"]);
                 $('#GruaAyudanteId').val(datos[0]["GruaAyudanteId"]);
-                $('#GruaAyudanteNombre').val(datos[0]["GruaAyudanteNombre"]);
                 $('#CamionPatente').val(datos[0]["CamionPatente"]);
                 $('#CamionChoferId').val(datos[0]["CamionChoferId"]);
-                $('#CamionChoferNombre').val(datos[0]["CamionChoferNombre"]);
                 $('#ServicioHorarioMinimo').val(datos[0]["ServicioHorarioMinimo"]);
                 $('#ServicioRecargo').val(datos[0]["ServicioRecargo"]);
                 $('#ServicioDesdeLas').val(datos[0]["ServicioDesdeLas"]);
@@ -753,12 +675,9 @@ function add_ordendetrabajo(Id, Accion)
                 $('#OTTelefono').val(datos[0]["OTTelefono"]);
                 $('#GruaPatente').val(datos[0]["GruaPatente"]);
                 $('#GruaOperadorId').val(datos[0]["GruaOperadorId"]);
-                $('#GruaOperadorNombre').val(datos[0]["GruaOperadorNombre"]);
                 $('#GruaAyudanteId').val(datos[0]["GruaAyudanteId"]);
-                $('#GruaAyudanteNombre').val(datos[0]["GruaAyudanteNombre"]);
                 $('#CamionPatente').val(datos[0]["CamionPatente"]);
                 $('#CamionChoferId').val(datos[0]["CamionChoferId"]);
-                $('#CamionChoferNombre').val(datos[0]["CamionChoferNombre"]);
                 $('#ServicioHorarioMinimo').val(datos[0]["ServicioHorarioMinimo"]);
                 $('#ServicioRecargo').val(datos[0]["ServicioRecargo"]);
                 $('#ServicioDesdeLas').val(datos[0]["ServicioDesdeLas"]);
@@ -790,6 +709,11 @@ function add_ordendetrabajo(Id, Accion)
           }
         });
   }
+  else if(Accion=='VerPdf')
+  {
+      var dominio = $('#Dominio').val();
+      window.location.replace(dominio+'/Ordendetrabajo/VerPdf?id='+Id);
+  }
   else if(Accion=="GuardarNuevo")
   {
       var IdEditar = $('#IdEditar').val();
@@ -806,12 +730,9 @@ function add_ordendetrabajo(Id, Accion)
           var OTTelefono = $('#OTTelefono').val();
           var GruaPatente = $('#GruaPatente').val();
           var GruaOperadorId = $('#GruaOperadorId').val();
-          var GruaOperadorNombre = $('#GruaOperadorNombre').val();
           var GruaAyudanteId = $('#GruaAyudanteId').val();
-          var GruaAyudanteNombre = $('#GruaAyudanteNombre').val();
           var CamionPatente = $('#CamionPatente').val();
           var CamionChoferId = $('#CamionChoferId').val();
-          var CamionChoferNombre = $('#CamionChoferNombre').val();
           var ServicioHorarioMinimo = $('#ServicioHorarioMinimo').val();
           var ServicioRecargo = $('#ServicioRecargo').val();
           var ServicioDesdeLas = $('#ServicioDesdeLas').val();
@@ -835,7 +756,7 @@ function add_ordendetrabajo(Id, Accion)
             $.ajax({
               type:"POST",
               url:"<?php echo site_url('Ordendetrabajo/add_ordendetrabajo');?>",
-              data:{OTFecha:OTFecha, OTRazonSocial:OTRazonSocial, OTNumero:OTNumero, OTRut:OTRut, OTNombre:OTNombre, OTDireccion:OTDireccion, OTCiudad:OTCiudad, OTComuna:OTComuna, OTTelefono:OTTelefono, GruaPatente:GruaPatente, GruaOperadorId:GruaOperadorId, GruaOperadorNombre:GruaOperadorNombre, GruaAyudanteId:GruaAyudanteId, GruaAyudanteNombre:GruaAyudanteNombre,CamionPatente:CamionPatente, CamionChoferId:CamionChoferId, CamionChoferNombre:CamionChoferNombre, ServicioHorarioMinimo:ServicioHorarioMinimo, ServicioRecargo:ServicioRecargo, ServicioDesdeLas:ServicioDesdeLas, ServicioCondicionPago:ServicioCondicionPago, ServicioSolicitadoPor:ServicioSolicitadoPor, ServicioLugarDeLaFaena:ServicioLugarDeLaFaena, ServicioTipoDeFaena:ServicioTipoDeFaena, ServicioValorHora:ServicioValorHora, ServicioHoraSalidaG:ServicioHoraSalidaG, ServicioHoraLlegadaG:ServicioHoraLlegadaG, ServicioHoraLlegadaF:ServicioHoraLlegadaF, ServicioHoraTerminoF:ServicioHoraTerminoF, ServicioDescuentoColacion:ServicioDescuentoColacion, ServicioHN:ServicioHN, ServicioHNValor:ServicioHNValor, ServicioHR:ServicioHR, ServicioHRValor:ServicioHRValor, ServicioValorTotalNeto:ServicioValorTotalNeto},
+              data:{OTFecha:OTFecha, OTRazonSocial:OTRazonSocial, OTNumero:OTNumero, OTRut:OTRut, OTNombre:OTNombre, OTDireccion:OTDireccion, OTCiudad:OTCiudad, OTComuna:OTComuna, OTTelefono:OTTelefono, GruaPatente:GruaPatente, GruaOperadorId:GruaOperadorId, GruaAyudanteId:GruaAyudanteId, CamionPatente:CamionPatente, CamionChoferId:CamionChoferId, ServicioHorarioMinimo:ServicioHorarioMinimo, ServicioRecargo:ServicioRecargo, ServicioDesdeLas:ServicioDesdeLas, ServicioCondicionPago:ServicioCondicionPago, ServicioSolicitadoPor:ServicioSolicitadoPor, ServicioLugarDeLaFaena:ServicioLugarDeLaFaena, ServicioTipoDeFaena:ServicioTipoDeFaena, ServicioValorHora:ServicioValorHora, ServicioHoraSalidaG:ServicioHoraSalidaG, ServicioHoraLlegadaG:ServicioHoraLlegadaG, ServicioHoraLlegadaF:ServicioHoraLlegadaF, ServicioHoraTerminoF:ServicioHoraTerminoF, ServicioDescuentoColacion:ServicioDescuentoColacion, ServicioHN:ServicioHN, ServicioHNValor:ServicioHNValor, ServicioHR:ServicioHR, ServicioHRValor:ServicioHRValor, ServicioValorTotalNeto:ServicioValorTotalNeto},
               success:function(data)
               {
                 if(data==1)
@@ -874,12 +795,9 @@ function add_ordendetrabajo(Id, Accion)
           var OTTelefono = $('#OTTelefono').val();
           var GruaPatente = $('#GruaPatente').val();
           var GruaOperadorId = $('#GruaOperadorId').val();
-          var GruaOperadorNombre = $('#GruaOperadorNombre').val();
           var GruaAyudanteId = $('#GruaAyudanteId').val();
-          var GruaAyudanteNombre = $('#GruaAyudanteNombre').val();
           var CamionPatente = $('#CamionPatente').val();
           var CamionChoferId = $('#CamionChoferId').val();
-          var CamionChoferNombre = $('#CamionChoferNombre').val();
           var ServicioHorarioMinimo = $('#ServicioHorarioMinimo').val();
           var ServicioRecargo = $('#ServicioRecargo').val();
           var ServicioDesdeLas = $('#ServicioDesdeLas').val();
@@ -903,7 +821,7 @@ function add_ordendetrabajo(Id, Accion)
             $.ajax({
               type:"POST",
               url:"<?php echo site_url('Ordendetrabajo/update_ordendetrabajo');?>",
-              data:{IdEditar:IdEditar, OTFecha:OTFecha, OTRazonSocial:OTRazonSocial, OTNumero:OTNumero, OTRut:OTRut, OTNombre:OTNombre, OTDireccion:OTDireccion, OTCiudad:OTCiudad, OTComuna:OTComuna, OTTelefono:OTTelefono, GruaPatente:GruaPatente, GruaOperadorId:GruaOperadorId, GruaOperadorNombre:GruaOperadorNombre, GruaAyudanteId:GruaAyudanteId, GruaAyudanteNombre:GruaAyudanteNombre,CamionPatente:CamionPatente, CamionChoferId:CamionChoferId, CamionChoferNombre:CamionChoferNombre, ServicioHorarioMinimo:ServicioHorarioMinimo, ServicioRecargo:ServicioRecargo, ServicioDesdeLas:ServicioDesdeLas, ServicioCondicionPago:ServicioCondicionPago, ServicioSolicitadoPor:ServicioSolicitadoPor, ServicioLugarDeLaFaena:ServicioLugarDeLaFaena, ServicioTipoDeFaena:ServicioTipoDeFaena, ServicioValorHora:ServicioValorHora, ServicioHoraSalidaG:ServicioHoraSalidaG, ServicioHoraLlegadaG:ServicioHoraLlegadaG, ServicioHoraLlegadaF:ServicioHoraLlegadaF, ServicioHoraTerminoF:ServicioHoraTerminoF, ServicioDescuentoColacion:ServicioDescuentoColacion, ServicioHN:ServicioHN, ServicioHNValor:ServicioHNValor, ServicioHR:ServicioHR, ServicioHRValor:ServicioHRValor, ServicioValorTotalNeto:ServicioValorTotalNeto},
+              data:{IdEditar:IdEditar, OTFecha:OTFecha, OTRazonSocial:OTRazonSocial, OTNumero:OTNumero, OTRut:OTRut, OTNombre:OTNombre, OTDireccion:OTDireccion, OTCiudad:OTCiudad, OTComuna:OTComuna, OTTelefono:OTTelefono, GruaPatente:GruaPatente, GruaOperadorId:GruaOperadorId,  GruaAyudanteId:GruaAyudanteId, CamionPatente:CamionPatente, CamionChoferId:CamionChoferId, ServicioHorarioMinimo:ServicioHorarioMinimo, ServicioRecargo:ServicioRecargo, ServicioDesdeLas:ServicioDesdeLas, ServicioCondicionPago:ServicioCondicionPago, ServicioSolicitadoPor:ServicioSolicitadoPor, ServicioLugarDeLaFaena:ServicioLugarDeLaFaena, ServicioTipoDeFaena:ServicioTipoDeFaena, ServicioValorHora:ServicioValorHora, ServicioHoraSalidaG:ServicioHoraSalidaG, ServicioHoraLlegadaG:ServicioHoraLlegadaG, ServicioHoraLlegadaF:ServicioHoraLlegadaF, ServicioHoraTerminoF:ServicioHoraTerminoF, ServicioDescuentoColacion:ServicioDescuentoColacion, ServicioHN:ServicioHN, ServicioHNValor:ServicioHNValor, ServicioHR:ServicioHR, ServicioHRValor:ServicioHRValor, ServicioValorTotalNeto:ServicioValorTotalNeto},
               success:function(data)
               {
                 if(data==1)
