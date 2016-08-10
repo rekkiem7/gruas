@@ -47,16 +47,16 @@ function select_DetalleOrden($id)
 	{
 		if($id!=0)
 		{
-	  		$query = $this->db->query("SELECT * FROM ordendetrabajo WHERE id='$id' ");
+	  		$query = $this->db->query("SELECT OTNumero FROM ordendetrabajo WHERE id='$id' ");
 	  		$Resultado = $query->result();
 	  		return $Resultado[0]->OTNumero;
 	  	}
 	  	else
 	  	{
-	  		$query = $this->db->query("SELECT id FROM ordendetrabajo WHERE OTRazonSocial='$OTRazonSocial' ");	
-	  		return ($query->num_rows())+1;
+	  		$query = $this->db->query("SELECT OTNumero FROM ordendetrabajo WHERE OTRazonSocial='$OTRazonSocial' ORDER BY OTNumero DESC Limit 1");	
+	  		$Resultado = $query->result();
+	  		return $Resultado[0]->OTNumero+1;
 	  	}
-	   	
 	}
 	function select_operarios()
 	{

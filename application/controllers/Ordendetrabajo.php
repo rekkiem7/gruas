@@ -88,12 +88,34 @@ class Ordendetrabajo extends CI_Controller
 		$OTTelefono=$_POST['OTTelefono'];
 		$GruaPatente=$_POST['GruaPatente'];
 		$GruaOperadorId=$_POST['GruaOperadorId'];
-		$GruaOperadorNombre = $this->model_ordendetrabajo->CargarNombreEmpleado($GruaOperadorId);
+		if($GruaOperadorId)
+		{
+			$GruaOperadorNombre = $this->model_ordendetrabajo->CargarNombreEmpleado($GruaOperadorId);
+		}
+		else
+		{
+			$GruaOperadorNombre = '';
+		}
 		$GruaAyudanteId=$_POST['GruaAyudanteId'];
-		$GruaAyudanteNombre = $this->model_ordendetrabajo->CargarNombreEmpleado($GruaAyudanteId);
+		if($GruaAyudanteId)
+		{
+			$GruaAyudanteNombre = $this->model_ordendetrabajo->CargarNombreEmpleado($GruaAyudanteId);
+		}
+		else
+		{
+			$GruaAyudanteNombre = '';
+		}
+		
 		$CamionPatente=$_POST['CamionPatente'];
 		$CamionChoferId=$_POST['CamionChoferId'];
-		$CamionChoferNombre = $this->model_ordendetrabajo->CargarNombreEmpleado($CamionChoferId);
+		if($CamionChoferId)
+		{
+			$CamionChoferNombre = $this->model_ordendetrabajo->CargarNombreEmpleado($CamionChoferId);
+		}
+		else
+		{
+			$CamionChoferNombre = '';
+		}
 		$ServicioHorarioMinimo=$_POST['ServicioHorarioMinimo'];
 		$ServicioRecargo=$_POST['ServicioRecargo'];
 		$ServicioDesdeLas=$_POST['ServicioDesdeLas'];

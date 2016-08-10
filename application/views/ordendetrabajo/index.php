@@ -90,7 +90,7 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
                                     <tr>
                                             <th>N° OT</th>
                                             <th>Fecha</th>
-                                            <th>Razon Socila</th>
+                                            <th>Razon Social</th>
                                             <th>Cliente</th>
                                             <th>Total</th>
                                             <th>Ver</th>
@@ -284,7 +284,7 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
           <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Horario Minimo</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioHorarioMinimo" name="ServicioHorarioMinimo" placeholder="En Horas"/>
+              <input type="number" class="form-control required" id="ServicioHorarioMinimo" name="ServicioHorarioMinimo" placeholder="En Horas"/>
             </div>
         </div>
         <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
@@ -296,7 +296,7 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
         <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Desde Las</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioDesdeLas" name="ServicioDesdeLas" placeholder="Horas"/>
+              <input type="time" class="form-control required" id="ServicioDesdeLas" name="ServicioDesdeLas" placeholder="Horas"/>
             </div>
         </div>
         <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
@@ -332,43 +332,45 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Salida Garaje</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioHoraSalidaG" name="ServicioHoraSalidaG" placeholder="HHMM"/>
+              <input type="time" class="form-control required" id="ServicioHoraSalidaG" name="ServicioHoraSalidaG" placeholder="HHMM"/>
             </div>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Llegada Garaje</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioHoraLlegadaG" name="ServicioHoraLlegadaG" placeholder="HHMM"/>
+              <input type="time" class="form-control required" id="ServicioHoraLlegadaG" name="ServicioHoraLlegadaG" placeholder="HHMM"/>
             </div>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Llegada Faena</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioHoraLlegadaF" name="ServicioHoraLlegadaF" placeholder="HHMM"/>
+              <input type="time" class="form-control required" id="ServicioHoraLlegadaF" name="ServicioHoraLlegadaF" placeholder="HHMM"/>
             </div>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Termino Faena</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioHoraTerminoF" name="ServicioHoraTerminoF" placeholder="HHMM"/>
+              <input type="time" class="form-control required" id="ServicioHoraTerminoF" name="ServicioHoraTerminoF" placeholder="HHMM"/>
             </div>
         </div>  
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Descuento Colacion</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioDescuentoColacion" name="ServicioDescuentoColacion" placeholder="HHMM"/>
+              <input type="time" class="form-control required" id="ServicioDescuentoColacion" name="ServicioDescuentoColacion" placeholder="HHMM"/>
             </div>
         </div> 
        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="checkbox" name="CHKCalcularRecargo" id="CHKCalcularRecargo" class="css-checkbox checkbox" onclick="CalcularRecargo();">
-                <label for="CHKCalcularRecargo" class="css-label checkbox" >Calcular Recargo</label>
+              <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.R</label>
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px" onblur="CalcularValorRecargo();">
+              <input type="time" class="form-control required" id="ServicioHR" name="ServicioHR" readonly="" />
+            </div>
             </div>
         </div> 
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.N</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioHN" name="ServicioHN" readonly="" />
+              <input type="number" class="form-control required requerido" id="ServicioHN" name="ServicioHN" readonly="readonly"/>
             </div>
         </div>  
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
@@ -378,21 +380,20 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
             </div>
         </div>   
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.R</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioHR" name="ServicioHR" readonly="" />
-            </div>
+            
+            <input type="checkbox" name="CHKCalcularRecargo" id="CHKCalcularRecargo" class="css-checkbox checkbox" onclick="CalcularRecargo();">
+                <label for="CHKCalcularRecargo" class="css-label checkbox" >Calcular Recargo</label>
         </div>   
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.R Valor</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioHRValor" name="ServicioHRValor" readonly="" />
+              <input type="number" class="form-control required requerido" id="ServicioHRValor" name="ServicioHRValor" readonly="readonly"/>
             </div>
-        </div>                                         
+        </div>   
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Total Valor Neto </label>
+            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label"><button id="Divguardar" type="button" class="btn btn-warning" onclick="CalcularValores()"><span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>&nbsp;Calcular Total Neto</button></label>
                <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <input type="text" class="form-control" id="ServicioValorTotalNeto" name="ServicioValorTotalNeto" placeholder="Total Neto" />
+                   <input type="text" class="form-control" id="ServicioValorTotalNeto" name="ServicioValorTotalNeto" placeholder="Total Neto"  readonly="readonly" />
                </div>
         </div>
       </div>
@@ -436,11 +437,8 @@ function CargarReadOnly()
   $('#ServicioHoraLlegadaF').attr('readonly', true);
   $('#ServicioHoraTerminoF').attr('readonly', true);
   $('#ServicioDescuentoColacion').attr('readonly', true);
-  $('#ServicioHN').attr('readonly', true);
   $('#ServicioHNValor').attr('readonly', true);
   $('#ServicioHR').attr('readonly', true);
-  $('#ServicioHRValor').attr('readonly', true);
-  $('#ServicioValorTotalNeto').attr('readonly', true);
   $('#Divguardar').css('display','none');
 }
 function QuitarReadOnly()
@@ -472,11 +470,8 @@ function QuitarReadOnly()
   $('#ServicioHoraLlegadaF').attr('readonly', false);
   $('#ServicioHoraTerminoF').attr('readonly', false);
   $('#ServicioDescuentoColacion').attr('readonly', false);
-  $('#ServicioHN').attr('readonly', false);
   $('#ServicioHNValor').attr('readonly', false);
   $('#ServicioHR').attr('readonly', false);
-  $('#ServicioHRValor').attr('readonly', false);
-  $('#ServicioValorTotalNeto').attr('readonly', false);
   $('#Divguardar').css('display','block');
 }
 function CargarGrua()
@@ -563,7 +558,7 @@ function limpiar()
  $('#ServicioHN').val('');
  $('#ServicioHNValor').val('');
  $('#ServicioHR').val('');
- $('#ServicioHRValor').val('');
+ $('#ServicioHRValor').val('0');
  $('#ServicioValorTotalNeto').val('');
 }
 function eliminar_ordendetrabajo(id)
@@ -721,6 +716,8 @@ function add_ordendetrabajo(Id, Accion)
       var IdEditar = $('#IdEditar').val();
       if(!IdEditar)
       {
+          CalcularRecargo();
+          CalcularValores();
           var OTFecha = $('#OTFecha').val();
           var OTRazonSocial = $('#OTRazonSocial').val();
           var OTNumero = $('#OTNumero').val();
@@ -937,13 +934,80 @@ function CalcularRecargo()
 {
   if($('#CHKCalcularRecargo').is(':checked')) 
   {
-    alert("ACA SE CALCULA EL RECARGO");
+    if($('#ServicioHR').val() && $('#ServicioValorHora').val())
+    {
+        var Recargo           = $('#ServicioRecargo').val();
+        var HorasRecargo      = $('#ServicioHR').val();
+        var MinutosRecargo    = HorasRecargo.split(':');
+        var ValorHora         = $('#ServicioValorHora').val()
+        HorasRecargo =  Number(MinutosRecargo[0]*60) + Number(MinutosRecargo[1]); 
+        HorasRecargo =  Number(HorasRecargo)/60;
+        var ValoresRecargo =  (Number(Recargo)/100) * Number(ValorHora);
+        ValoresRecargo = Number(HorasRecargo) * Number(ValoresRecargo);
+        $('#ServicioHRValor').val(ValoresRecargo);
+        if($('#ServicioValorTotalNeto').val() && $('#ServicioValorTotalNeto').val()>0)
+        {
+          $('#ServicioValorTotalNeto').val(Number($('#ServicioValorTotalNeto').val())+Number($('#ServicioHRValor').val()) );
+        }   
+    }
+    else
+    {
+      swal("Error", "Debe ingresar las horas H.R y el valor hora de la grua", "error"); 
+      document.getElementById("CHKCalcularRecargo").checked = false;
+        
+    }
   }
   else
   {
-    alert("MO");
+    $('#ServicioHR').val('');
+    $('#ServicioHRValor').val('0');
+    if($('#ServicioValorTotalNeto').val() && $('#ServicioValorTotalNeto').val()>0)
+      {
+        CalcularValores();
+      }
   }
 } 
+function CalcularValores()
+{
+  var DescuentoColacion = $('#ServicioDescuentoColacion').val();
+  var ValorHora         = $('#ServicioValorHora').val();
+  var HoraLlegada       = $('#ServicioHoraLlegadaG').val();
+  var HoraSalida        = $('#ServicioHoraSalidaG').val();
+  if(HoraLlegada && HoraSalida && ValorHora)
+  {
+    $('#ServicioValorHora').removeClass('rellenar');
+    $('#ServicioHoraLlegadaG').removeClass('rellenar');
+    $('#ServicioHoraSalidaG').removeClass('rellenar');
+    var MinutosLlegada    = HoraLlegada.split(':');
+    var MinutosSalida     = HoraSalida.split(':');
+    var MinutosColacion   = DescuentoColacion.split(':');
+    HoraLlegada       = Number(MinutosLlegada[0]*60) +Number(MinutosLlegada[1]);
+    HoraSalida        =  Number(MinutosSalida[0]*60) + Number(MinutosSalida[1]);
+    if(DescuentoColacion) { DescuentoColacion =  Number(MinutosColacion[0]*60) + Number(MinutosColacion[1]); }
+    else { DescuentoColacion = 0; }
+    var ServicioHN = Number(HoraLlegada) - Number(HoraSalida) ;
+    if(DescuentoColacion>ServicioHN)
+    {
+      swal("Error", "El descuento no puede ser superior a las horas HN", "error"); 
+    }
+    else
+    {
+      ServicioHN = Number(ServicioHN) - Number(DescuentoColacion);
+      ServicioHN = Number(ServicioHN)/60;
+      ServicioHN = Math.round(Number(ServicioHN) * 100) / 100;
+      $('#ServicioHN').val(ServicioHN);
+      $('#ServicioHNValor').val(Number(ServicioHN) * Number(ValorHora));
+      $('#ServicioValorTotalNeto').val(Number($('#ServicioHNValor').val()) + Number($('#ServicioHRValor').val()));  
+    }
+  }
+  else
+  {
+    $('#ServicioValorHora').addClass('rellenar');
+    $('#ServicioHoraLlegadaG').addClass('rellenar');
+    $('#ServicioHoraSalidaG').addClass('rellenar');
+    swal("Error", "Debe ingresar los datos solicitados", "error");  
+  }
+}
 $(document).ready(function()
 {
   $('#OTRazonSocial').change(function(event)
@@ -959,7 +1023,7 @@ $(document).ready(function()
       "paging": true,
       "lengthChange": true,
       "searching": true,
-      "ordering": true,
+      "ordering": false,
       "info": true,
       "autoWidth": true,
       "language": {
