@@ -45,7 +45,7 @@ function select_DetalleOrden($id)
 
 	function select_otnumero($id, $OTRazonSocial)
 	{
-		if($id!="")
+		if($id!=0)
 		{
 	  		$query = $this->db->query("SELECT * FROM ordendetrabajo WHERE id='$id' ");
 	  		$Resultado = $query->result();
@@ -86,7 +86,7 @@ function select_DetalleOrden($id)
 
 	function select_clienteinfo($OTRut)
 	{
-	   $query = $this->db->query("SELECT * FROM cliente WHERE id=$OTRut ");
+	   $query = $this->db->query("SELECT * FROM cliente WHERE CodiClien='$OTRut' ");
 	   if($query -> num_rows() >0)
 	   {
 	     return  $query->result();
@@ -116,11 +116,24 @@ function select_DetalleOrden($id)
 		return $this->db->insert_id();	 	
 	}
 
-function update_ordendetrabajo($id,$data)
+	function update_ordendetrabajo($id,$data)
 	{
 		$this->db->where('id', $id);
 		$update=$this->db->update('ordendetrabajo', $data); 
 		return $update;
 	}
 
+	function CargarNombreCliente($Dato)
+	{
+	   $query = $this->db->query("SELECT * FROM cliente WHERE CodiClien='$Dato' ");
+	   $query = $query->result();
+	   return  $query[0]->Nombre;
+	}
+
+	function CargarNombreEmpleado($Dato)
+	{
+	   $query = $this->db->query("SELECT * FROM operario WHERE Rut='$Dato' ");
+	   $query = $query->result();
+	   return  $query[0]->Nombre;
+	}	
 }
