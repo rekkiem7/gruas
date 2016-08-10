@@ -494,6 +494,8 @@ function CargarGrua()
               {
                 var datos=JSON.parse(data);
                 $('#ServicioValorHora').val(datos[0]["ValorHora"]);
+                $('#ServicioHorarioMinimo').val(datos[0]["MinimoHora"]);
+                $('#ServicioRecargo').val(datos[0]["Recargo"]);
               }
               else
               {
