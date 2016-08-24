@@ -2,7 +2,19 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Model_Ordendetrabajo extends CI_Model 
 {
-function select_ordenesdetrabajo()
+	function GenerarReporte($Fecha1, $Fecha2)
+	{
+		$query = $this->db->query("SELECT * FROM ordendetrabajo WHERE OTEstado=1 AND OTFecha BETWEEN '$Fecha1' AND '$Fecha2' ORDER BY OTFecha ASC ");
+	   if($query -> num_rows() >0)
+	   {
+	     return $query->result();
+	   }
+	   else
+	   {
+	     return "ERROR";
+	   }
+	}
+	function select_ordenesdetrabajo()
 	{
 	   $this->db->where('OTEstado',1);
 	   $query=$this->db->get('ordendetrabajo');
@@ -49,13 +61,27 @@ function select_DetalleOrden($id)
 		{
 	  		$query = $this->db->query("SELECT OTNumero FROM ordendetrabajo WHERE id='$id' ");
 	  		$Resultado = $query->result();
-	  		return $Resultado[0]->OTNumero;
+	  		if($Resultado)
+	  		{
+	  			return $Resultado[0]->OTNumero;
+	  		}
+	  		else
+	  		{
+	  			return "1";
+	  		}
 	  	}
 	  	else
 	  	{
 	  		$query = $this->db->query("SELECT OTNumero FROM ordendetrabajo WHERE OTRazonSocial='$OTRazonSocial' ORDER BY OTNumero DESC Limit 1");	
 	  		$Resultado = $query->result();
-	  		return $Resultado[0]->OTNumero+1;
+	  		if($Resultado)
+	  		{
+	  			return $Resultado[0]->OTNumero+1;	
+	  		}
+	  		else
+	  		{
+	  			return "1";
+	  		}
 	  	}
 	}
 	function select_operarios()
@@ -87,6 +113,19 @@ function select_DetalleOrden($id)
 	function select_clienteinfo($OTRut)
 	{
 	   $query = $this->db->query("SELECT * FROM cliente WHERE CodiClien='$OTRut' ");
+	   if($query -> num_rows() >0)
+	   {
+	     return  $query->result();
+	   }
+	   else
+	   {
+	     return "ERROR";
+	   }
+	}
+
+	function select_GruaPatenteFolio($GruaFolio)
+	{
+	   $query = $this->db->query("SELECT * FROM maquina WHERE Folio=$GruaFolio ");
 	   if($query -> num_rows() >0)
 	   {
 	     return  $query->result();

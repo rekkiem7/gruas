@@ -57,10 +57,24 @@ class Ordendetrabajo extends CI_Controller
 		}
 	}	
 
+	public function select_patentegruaFolio()
+	{
+		$GruaFolio = $_POST['GruaFolio'];
+		$GruaFolio = $this->model_ordendetrabajo->select_GruaPatenteFolio($GruaFolio);
+		if ($GruaFolio!="ERROR")
+		{
+			echo json_encode($GruaFolio);
+		}
+		else
+		{
+			echo "ERROR";
+		}
+	}	
+
 	public function VerInfo()
 	{
 		$id = $_POST['Id'];
-		$Result = $this->model_ordendetrabajo->select_DetalleOrden ($id);
+		$Result = $this->model_ordendetrabajo->select_DetalleOrden($id);
 		if ($Result!="ERROR")
 		{
 			echo json_encode($Result);
@@ -70,7 +84,13 @@ class Ordendetrabajo extends CI_Controller
 			echo "ERROR";
 		}
 	}	
-
+	public function ValidarNumeroOt()
+	{
+		$IdEditar		=$_POST['IdEditar'];
+		$OT 			=$_POST['OT'];
+		$RazonSocial 	=$_POST['RazonSocial'];
+		echo $this->model_maestro->ValidarNumeroOt($IdEditar,$OT,$RazonSocial);
+	}
 	public function add_ordendetrabajo()
 	{
 		$sesion = $this->session->userdata('logged_in'); 
@@ -221,5 +241,29 @@ class Ordendetrabajo extends CI_Controller
 		$Result = $this->model_ordendetrabajo->select_DetalleOrden ($id);
 		$Result["Result"] = json_encode($Result);
         $this->load->view('ordendetrabajo/VerPdf', $Result);
+	}
+
+	public function reporte1()
+	{
+		$this->load->view('librerias');	
+		$this->load->view('menu/menu_principal');
+		$this->load->view('ordendetrabajo/reporte1');
+		$this->load->view('footer');	
+	}
+
+	function GenerarReporte()
+	{
+		$Fecha1 = $_POST['Fecha1'];
+		$Fecha2 = $_POST['Fecha2'];
+		$Reporte = $this->model_ordendetrabajo->GenerarReporte($Fecha1, $Fecha2);
+
+		if ($Reporte!="ERROR")
+		{
+			echo json_encode($Reporte);
+		}
+		else
+		{
+			echo "ERROR";
+		}
 	}
 }

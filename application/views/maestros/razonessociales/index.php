@@ -80,7 +80,7 @@
 		        	<div class="col-lg-12 ">
 		         		<label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Rut</label>
 		          		<div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-		            		<input type="text" class="form-control required" id="rut" name="rut" placeholder="Rut de la razon social"/>
+		            		<input type="text" class="form-control required" id="rut" name="rut" placeholder="Rut de la razon social" onblur="ValidarRut();" />
 		          		</div>
 		        	</div>
 		        	<div class="col-lg-12 ">
@@ -104,7 +104,7 @@
 		       		<div class="col-lg-12 ">
 		         		<label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Casilla</label>
 		          		<div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-		            		<input type="text" class="form-control required" id="casilla" name="casilla" placeholder="Casilla de la razon social"/>
+		            		<input type="text" class="form-control" id="casilla" name="casilla" placeholder="Casilla de la razon social"/>
 		          		</div>
 		        	</div> 
 		        	<div class="col-lg-12 ">
@@ -236,6 +236,7 @@
 <!--Modal-->
 </body>
 <script>
+
 function update_razonsocial()
 {
 	var id 			=$('#id_edit').val();
@@ -271,12 +272,6 @@ function update_razonsocial()
 				}
 				else
 				{
-					if(casilla=='')
-					{	
-						swal("Casilla Faltante", "Debe ingresar la casilla de la razon social", "info");
-					}
-					else
-					{
 						if(fono=='')
 						{	
 							swal("Fono Faltante", "Debe ingresar el fono de la razon social", "info");
@@ -310,7 +305,6 @@ function update_razonsocial()
 				                });
 				            }
 			            }
-					}
 				}
 			}
 		}
@@ -434,12 +428,7 @@ function add_razonsocial()
 				}
 				else
 				{
-					if(casilla=='')
-					{	
-						swal("Casilla Faltante", "Debe ingresar la casilla de la razon social", "info");
-					}
-					else
-					{
+					
 						if(fono=='')
 						{	
 							swal("Fono Faltante", "Debe ingresar el fono de la razon social", "info");
@@ -473,7 +462,6 @@ function add_razonsocial()
 				                });
 				            }
 			            }
-					}
 				}
 			}
 		}

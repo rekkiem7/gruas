@@ -114,7 +114,7 @@ class Model_Maestro extends CI_Model {
 			SELECT 
 			A.id, A.Rut, A.Nombre, A.Direccion, A.Comuna, A.Ciudad, B.id AS Tipoid, B.nombre AS Tiponombre 
 			FROM operario A 
-			INNER JOIN tipo_usuario B ON A.Tipo=B.id 
+			LEFT JOIN tipo_usuario B ON A.Tipo=B.id 
 			WHERE A.id=$id 
 		");
 	   	if($query -> num_rows() >0)
@@ -178,5 +178,18 @@ class Model_Maestro extends CI_Model {
 		$this->db->where('id', $id);
 		$update=$this->db->update('razonsocial', $data); 
 		return $update;
+	}	
+	function ValidarNumeroOt($IdEditar,$OT,$RazonSocial)
+	{
+		if($IdEditar)
+		{
+			$query = $this->db->query("SELECT * FROM ordendetrabajo WHERE OTRazonSocial='$RazonSocial' AND OTNumero='$OT' AND id!='$IdEditar' ");
+		   	if($query -> num_rows() >0) { return "ERROR"; } else { return false; }
+		}
+		else
+		{
+			$query = $this->db->query("SELECT * FROM ordendetrabajo WHERE OTRazonSocial='$RazonSocial' AND OTNumero='$OT' ");
+		   	if($query -> num_rows() >0) { return "ERROR"; } else { return false; }
+		}
 	}	
 }

@@ -161,7 +161,7 @@ h1,
                 <li><a href="<?php echo site_url('Ordendetrabajo/index')?>">Ingresar Orden de Trabajo</a></li>
                 <li><a href="#">Modificar Orden de Trabajo</a></li>
                 <li><a href="#">Eliminar Orden de Trabajo</a></li>
-                <li><a href="#">Listado</a></li>
+                <li><a href="<?php echo site_url('Ordendetrabajo/reporte1')?>">Reporte</a></li>
                 <li class="divider"></li>
                 <li class="dropdown-header">Facturación</li>
                 <li><a href="<?php echo site_url('Facturacion/index')?>">Facturación por OT</a></li>

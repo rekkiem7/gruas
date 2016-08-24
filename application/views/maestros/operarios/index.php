@@ -260,53 +260,25 @@ function update_operario()
 		}
 		else
 		{
-			if(direccion=='')
-			{
-				swal("Dirección Faltante", "Debe ingresar la dirección del operario", "info");
-			}
-			else
-			{
-				if(comuna=='')
-				{
-					swal("Comuna Faltante", "Debe ingresar la comuna del operario", "info");
-				}
-				else
-				{
-					if(ciudad=='')
-					{	
-						swal("Ciudad Faltante", "Debe ingresar la ciudad del operario", "info");
-					}
-					else
-					{
-						if(tipo=='')
-						{
-							swal("Tipo Faltante", "Debe seleccionar el tipo del operario", "info");
-						}
-						else
-						{
-							$.ajax({
-			                    type:"POST",
-			                    url:"<?php echo site_url('Maestro/update_operario');?>",
-			                    data:{id:id,rut:rut,nombre:nombre,direccion:direccion,comuna:comuna,ciudad:ciudad,tipo:tipo},
-			                    success:function(data)
-			                    {
-			                      if(data==1)
-			                      {
-			                        swal("Operario Actualizado", "El operario ha sido actualizado correctamente", "success");
-			                        $('#popup_EditarOperario').modal('hide');
-			                        setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Maestro/operarios');?>","_self");}, 1500);
-			                        
-			                      }
-			                      else
-			                      {
-			                          swal("Error", "Problema al intentar actualizar el operarios, por favor inténtelo nuevamente", "error");
-			                      }
-			                    }
-			                });	
-						}
-					}
-				}
-			}
+			$.ajax({
+                type:"POST",
+                url:"<?php echo site_url('Maestro/update_operario');?>",
+                data:{id:id,rut:rut,nombre:nombre,direccion:direccion,comuna:comuna,ciudad:ciudad,tipo:tipo},
+                success:function(data)
+                {
+                  if(data==1)
+                  {
+                    swal("Operario Actualizado", "El operario ha sido actualizado correctamente", "success");
+                    $('#popup_EditarOperario').modal('hide');
+                    setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Maestro/operarios');?>","_self");}, 1500);
+                    
+                  }
+                  else
+                  {
+                      swal("Error", "Problema al intentar actualizar el operarios, por favor inténtelo nuevamente", "error");
+                  }
+                }
+            });	
 		}
 	}
 
@@ -340,6 +312,7 @@ function editar_operario(id)
             }
      });
 }
+
 function ver_operario(id)
 {
 	$.ajax({
@@ -413,53 +386,25 @@ function add_operario()
 		}
 		else
 		{
-			if(direccion=='')
-			{
-				swal("Dirección Faltante", "Debe ingresar la dirección del operario", "info");
-			}
-			else
-			{
-				if(comuna=='')
-				{
-					swal("Comuna Faltante", "Debe ingresar la comuna del operario", "info");
-				}
-				else
-				{
-					if(ciudad=='')
-					{	
-						swal("Ciudad Faltante", "Debe ingresar la ciudad del operario", "info");
-					}
-					else
-					{
-						if(tipo=='')
-						{
-							swal("Tipo Faltante", "Debe seleccionar el tipo del operario", "info");
-						}
-						else
-						{
-							$.ajax({
-			                    type:"POST",
-			                    url:"<?php echo site_url('Maestro/add_operario');?>",
-			                    data:{rut:rut,nombre:nombre,direccion:direccion,comuna:comuna,ciudad:ciudad,tipo:tipo},
-			                    success:function(data)
-			                    {
-			                      if(data==1)
-			                      {
-			                        swal("Operario Registrado", "El operario ha sido ingresado correctamente", "success");
-			                        $('#popup_AgregarOperario').modal('hide');
-			                        setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Maestro/operarios');?>","_self");}, 1500);
-			                        
-			                      }
-			                      else
-			                      {
-			                          swal("Error", "Problema al intentar registrar el operario, por favor inténtelo nuevamente", "error");
-			                      }
-			                    }
-			                });
-						}
-					}
-				}
-			}
+			$.ajax({
+                type:"POST",
+                url:"<?php echo site_url('Maestro/add_operario');?>",
+                data:{rut:rut,nombre:nombre,direccion:direccion,comuna:comuna,ciudad:ciudad,tipo:tipo},
+                success:function(data)
+                {
+                  if(data==1)
+                  {
+                    swal("Operario Registrado", "El operario ha sido ingresado correctamente", "success");
+                    $('#popup_AgregarOperario').modal('hide');
+                    setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Maestro/operarios');?>","_self");}, 1500);
+                    
+                  }
+                  else
+                  {
+                      swal("Error", "Problema al intentar registrar el operario, por favor inténtelo nuevamente", "error");
+                  }
+                }
+            });
 		}
 	}
 }

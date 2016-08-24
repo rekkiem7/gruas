@@ -176,9 +176,10 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
         <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Numero OT</label>
                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <input type="text" class="form-control required requerido" id="OTNumero" name="OTNumero" readonly="readonly" />
+                   <input type="text" class="form-control required requerido" id="OTNumero" name="OTNumero" onblur="ValidarOT();" />
                </div>
         </div>
+        <input type="text" class="form-control required requerido" id="OTNumeroqwqw" name="OTNumeroqwqw" onblur="ValidarRut();" />
         <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Cliente</label>
                <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
@@ -221,6 +222,12 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
           <div class="modal-header col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <h4 class="modal-title">Detalle Grua / Camion</h4>
           </div><div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><br></div>
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Grua Folio</label>
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
+              <input type="text" class="form-control required requerido" id="GruaFolio" name="GruaFolio" placeholder="Folio de la Grua" onblur="CargarGruaFolio();" />
+            </div>
+        </div>
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Grua Patente</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
@@ -290,13 +297,13 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
         <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Recargo</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioRecargo" name="ServicioRecargo" placeholder="%"/>
+              <input type="text" class="form-control required" id="ServicioRecargo" name="ServicioRecargo" placeholder="%" onblur="CarcularHoraDeRecargo();" / >
             </div>
         </div>
         <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Desde Las</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="time" class="form-control required" id="ServicioDesdeLas" name="ServicioDesdeLas" placeholder="Horas"/>
+              <input type="number" class="form-control required" id="ServicioDesdeLas" name="ServicioDesdeLas" placeholder="Horas"/>
             </div>
         </div>
         <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
@@ -323,47 +330,53 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
                    <input type="text" class="form-control required" id="ServicioTipoDeFaena" name="ServicioTipoDeFaena" placeholder="Detalle de la faena" />
                </div>
         </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Valor Hora</label>
-            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioValorHora" name="ServicioValorHora" placeholder="Valor" readonly="" />
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Valor Hora</label>
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
+              <input type="number" class="form-control required" id="ServicioValorHora" name="ServicioValorHora" placeholder="Valor" onblur="CalcularValorHora()" />
             </div>
-        </div> 
+        </div>
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Valor Hora Recargo</label>
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
+              <input type="number" class="form-control required" id="ServicioValorHoraRecargo" name="ServicioValorHoraRecargo" placeholder="Valor" readonly="readonly" onb />
+            </div>
+        </div>
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Salida Garaje</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="time" class="form-control required" id="ServicioHoraSalidaG" name="ServicioHoraSalidaG" placeholder="HHMM"/>
+              <input type="number" class="form-control required" id="ServicioHoraSalidaG" name="ServicioHoraSalidaG" placeholder="HHMM"/>
             </div>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Llegada Garaje</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="time" class="form-control required" id="ServicioHoraLlegadaG" name="ServicioHoraLlegadaG" placeholder="HHMM"/>
+              <input type="number" class="form-control required" id="ServicioHoraLlegadaG" name="ServicioHoraLlegadaG" placeholder="HHMM"/>
             </div>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Llegada Faena</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="time" class="form-control required" id="ServicioHoraLlegadaF" name="ServicioHoraLlegadaF" placeholder="HHMM"/>
+              <input type="number" pattern=".{4,4}" class="form-control required" id="ServicioHoraLlegadaF" name="ServicioHoraLlegadaF" placeholder="HHMM"/>
             </div>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Termino Faena</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="time" class="form-control required" id="ServicioHoraTerminoF" name="ServicioHoraTerminoF" placeholder="HHMM"/>
+              <input type="number" pattern=".{4,4}"  class="form-control required" id="ServicioHoraTerminoF" name="ServicioHoraTerminoF" placeholder="HHMM"/>
             </div>
         </div>  
         <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Descuento Colacion</label>
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="time" class="form-control required" id="ServicioDescuentoColacion" name="ServicioDescuentoColacion" placeholder="HHMM"/>
+              <input type="number" class="form-control required" id="ServicioDescuentoColacion" name="ServicioDescuentoColacion" placeholder="HHMM"/>
             </div>
         </div> 
        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
               <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.R</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px" onblur="CalcularValorRecargo();">
-              <input type="time" class="form-control required" id="ServicioHR" name="ServicioHR" readonly="" />
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
+              <input type="number" class="form-control required" id="ServicioHR" name="ServicioHR" readonly="" />
             </div>
             </div>
         </div> 
@@ -391,7 +404,7 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
             </div>
         </div>   
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label"><button id="Divguardar" type="button" class="btn btn-warning" onclick="CalcularValores()"><span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>&nbsp;Calcular Total Neto</button></label>
+            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label"><button id="Divguardar" type="button" class="btn btn-warning" onclick="CalcularValores()"><span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>&nbsp;Total Neto</button></label>
                <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
                    <input type="text" class="form-control" id="ServicioValorTotalNeto" name="ServicioValorTotalNeto" placeholder="Total Neto"  readonly="readonly" />
                </div>
@@ -408,6 +421,61 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
 <!--Modal-->
 </body>
 <script>
+function ValidarRut( form )
+{
+    var cedula = $('#OTNumeroqwqw').val();
+    array = cedula.split( "" );
+    num = array.length;
+
+    total = 0;
+    digito = (array[9]*1);
+    for( i=0; i < (num-1); i++ )
+    {
+      mult = 0;
+      if ( ( i%2 ) != 0 ) {
+        total = total + ( array[i] * 1 );
+      }
+      else
+      {
+        mult = array[i] * 2;
+        if ( mult > 9 )
+          total = total + ( mult - 9 );
+        else
+          total = total + mult;
+      }
+    }
+    decena = total / 10;
+    decena = Math.floor( decena );
+    decena = ( decena + 1 ) * 10;
+    final = ( decena - total );
+    alert(final);
+    alert(digito);
+    if ( ( final == 10 && digito == 0 ) || ( final == digito ) ) {
+      alert( "La c\xe9dula ES v\xe1lida!!!" );
+      return true;
+    }
+    else
+    {
+      alert( "La c\xe9dula NO es v\xe1lida!!!" );
+      return false;
+    }
+} 
+
+function CalcularValorHora()
+{
+  var ServicioRecargo = $('#ServicioRecargo').val();
+  var ServicioValorHora = $('#ServicioValorHora').val();
+  if(!ServicioRecargo || !ServicioValorHora)
+  {
+      swal("Error", "Se necesita un VALOR DE RECARGO y un VALOR DE HORA para que sea calculado el valor de la HORA DE RECARGO", "error"); 
+  }
+  else
+  {
+    $('#ServicioValorHoraRecargo').val(
+      Number(Number(Number(Number(ServicioRecargo)/100))*Number(ServicioValorHora))+Number(ServicioValorHora)
+    ); 
+  }
+}
 function CargarReadOnly()
 {
   $('#IdEditar').attr('readonly', true);
@@ -474,6 +542,62 @@ function QuitarReadOnly()
   $('#ServicioHR').attr('readonly', false);
   $('#Divguardar').css('display','block');
 }
+function CargarGruaFolio()
+{
+  var GruaFolio = $('#GruaFolio').val();
+  if(GruaFolio)
+  {
+    $.ajax({
+          type:"POST",
+          url:"<?php echo site_url('Ordendetrabajo/select_patentegruaFolio');?>",
+          data:{GruaFolio:GruaFolio},
+          success:function(data)
+          {
+              if(data!="ERROR")
+              {
+                var datos=JSON.parse(data);
+                $('#GruaPatente').val(datos[0]["Patente"]);
+                $('#ServicioValorHora').val(datos[0]["ValorHora"]);
+                $('#ServicioHorarioMinimo').val(datos[0]["MinimoHora"]);
+                $('#ServicioRecargo').val(datos[0]["Recargo"]);
+
+                $('#ServicioValorHoraRecargo').val(
+                Number(Number(Number(Number($('#ServicioRecargo').val())/100))*Number($('#ServicioValorHora').val()))+Number($('#ServicioValorHora').val())
+                );                
+              }
+              else
+              {
+                  swal("Error", "No se encuentra la grua", "error");
+                  $('#GruaPatente').val('');
+                  $('#ServicioValorHora').val('');
+                  $('#ServicioHorarioMinimo').val('');
+                  $('#ServicioRecargo').val('');
+                  $('#GruaFolio').val('');
+                  $('#ServicioValorHoraRecargo').val('');
+              }
+          }
+      });
+  }
+  else
+  {
+      swal("Importante", "Debe ingresar el folio de la grua para buscar la informacion", "warning");
+      $('#ServicioValorHora').attr('value','');
+  }
+}
+function CarcularHoraDeRecargo()
+{
+  if($('#ServicioRecargo').val() && $('#ServicioValorHora').val())
+  {
+    $('#ServicioValorHoraRecargo').val(
+                Number(Number(Number(Number($('#ServicioRecargo').val())/100))*Number($('#ServicioValorHora').val()))+Number($('#ServicioValorHora').val())
+                ); 
+  }
+  else
+  {
+    swal("Importante", "Debe ingresar una grua para obtener el valor del recargo y de la hora de la maquina", "warning");
+      $('#ServicioValorHora').attr('value','');
+  }
+}
 function CargarGrua()
 {
   var GruaPatente = $('#GruaPatente').val();
@@ -491,12 +615,19 @@ function CargarGrua()
                 $('#ServicioValorHora').val(datos[0]["ValorHora"]);
                 $('#ServicioHorarioMinimo').val(datos[0]["MinimoHora"]);
                 $('#ServicioRecargo').val(datos[0]["Recargo"]);
+                $('#ServicioValorHoraRecargo').val(
+                Number(Number(Number(Number($('#ServicioRecargo').val())/100))*Number($('#ServicioValorHora').val()))+Number($('#ServicioValorHora').val())
+                );               
               }
               else
               {
-                  swal("Error", "No se encuentra la patente", "error");
-                  $('#GruaPatente').val('');   
-                  $('#ServicioValorHora').val('');   
+                  swal("Error", "No se encuentra la grua", "error");
+                  $('#GruaPatente').val('');
+                  $('#ServicioValorHora').val('');
+                  $('#ServicioHorarioMinimo').val('');
+                  $('#ServicioRecargo').val('');  
+                  $('#GruaFolio').val('');
+                  $('#ServicioValorHoraRecargo').val('');
               }
           }
       });
@@ -505,6 +636,37 @@ function CargarGrua()
   {
       swal("Importante", "Debe ingresar la patente de la grua", "warning");
       $('#ServicioValorHora').attr('value','');
+  }
+}
+function ValidarOT()
+{
+  var IdEditar = $('#IdEditar').val();
+  var OT = $('#OTNumero').val();
+  var RazonSocial = $('#OTRazonSocial').val();
+  if(!OT || !RazonSocial)
+  {
+    swal("Error", "Debe tener seleccionada una razon social y haber ingresado un numero de OT", "warning");
+  }
+  else
+  {
+    $.ajax({
+        type:"POST",
+        url:"<?php echo site_url('Ordendetrabajo/ValidarNumeroOt');?>",
+        data:{IdEditar:IdEditar, OT:OT, RazonSocial:RazonSocial},
+        success:function(data)
+        {
+          if(data=="OK")
+            {
+               swal("Orden De Trabajo Eliminada", "La Orden De Trabajo ha sido eliminada correctamente", "success");
+               setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Ordendetrabajo/index');?>","_self");}, 1500);
+            }
+            else if(data=="ERROR")
+            {
+              swal("Error", "El numero de OT ya esta en uso", "error");
+              $('#OTNumero').val('');
+            }
+        }
+    });
   }
 }
 function BuscarRequeridos()
@@ -526,8 +688,16 @@ function BuscarRequeridos()
 }
 function limpiar()
 {
-   $('#IdEditar').val('');
- $('#OTFecha').val('');
+  var date = new Date();
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
+  if (month < 10) month = "0" + month;
+  if (day < 10) day = "0" + day;
+  var today = year + "-" + month + "-" + day; 
+ 
+ $('#IdEditar').val('');
+ $('#OTFecha').val(today);
  $('#OTRazonSocial').val('');
  $('#OTNumero').val('');
  $('#OTRut').val('');
@@ -934,27 +1104,46 @@ function CalcularRecargo()
 {
   if($('#CHKCalcularRecargo').is(':checked')) 
   {
-    if($('#ServicioHR').val() && $('#ServicioValorHora').val())
+    if ($('#ServicioDesdeLas').val().length!=4)
     {
-        var Recargo           = $('#ServicioRecargo').val();
-        var HorasRecargo      = $('#ServicioHR').val();
-        var MinutosRecargo    = HorasRecargo.split(':');
-        var ValorHora         = $('#ServicioValorHora').val()
-        HorasRecargo =  Number(MinutosRecargo[0]*60) + Number(MinutosRecargo[1]); 
-        HorasRecargo =  Number(HorasRecargo)/60;
-        var ValoresRecargo =  (Number(Recargo)/100) * Number(ValorHora);
-        ValoresRecargo = Number(HorasRecargo) * Number(ValoresRecargo);
-        $('#ServicioHRValor').val(ValoresRecargo);
+      swal("Error", "Hora DESDE LAS invalida, OBLIGATORIO 4 digitos", "error"); 
+      document.getElementById("CHKCalcularRecargo").checked = false;
+    }
+    else if ($('#ServicioHoraSalidaG').val().length!=4)
+    {
+      swal("Error", "Hora DE SALIDA invalida, OBLIGATORIO 4 digitos", "error"); 
+      document.getElementById("CHKCalcularRecargo").checked = false;
+    }
+    else if($('#ServicioValorHora').val())
+    {
+        var HoraLlegada       =   $('#ServicioHoraLlegadaG').val();
+        var HoraDesdeLas      =   $('#ServicioDesdeLas').val();
+        HoraLlegada           =   Number(HoraLlegada.substring(0,2)*60) + Number(HoraLlegada.substring(2,4)); 
+        HoraDesdeLas          =   Number(HoraDesdeLas.substring(0,2)*60) + Number(HoraDesdeLas.substring(2,4)); 
+        var HorasRecargo      =   Number(HoraLlegada)-Number(HoraDesdeLas);
+        HorasRecargo          =   Number(HorasRecargo)/60;
+        if((Math.ceil(HorasRecargo * 100)/100)<0)
+        {
+          $('#ServicioHR').val(Number(Math.ceil(HorasRecargo * 100)/100)*-1);
+        }
+        else
+        {
+          $('#ServicioHR').val(Math.ceil(HorasRecargo * 100)/100);
+        }
+        var ServicioValorHora           =    $('#ServicioValorHora').val();
+        var ServicioValorHoraRecargo    =    $('#ServicioValorHoraRecargo').val();
+        ServicioValorHora               =    Number(ServicioValorHoraRecargo)*Number(HorasRecargo);
+        ServicioValorHora               =    Math.ceil(ServicioValorHora * 1000)/1000;
+        $('#ServicioHRValor').val(ServicioValorHora);
         if($('#ServicioValorTotalNeto').val() && $('#ServicioValorTotalNeto').val()>0)
         {
           $('#ServicioValorTotalNeto').val(Number($('#ServicioValorTotalNeto').val())+Number($('#ServicioHRValor').val()) );
-        }   
+        } 
     }
     else
     {
-      swal("Error", "Debe ingresar las horas H.R y el valor hora de la grua", "error"); 
+      swal("Error", "Debe ingresar el valor hora de la grua, y la hora de llegada al garaje", "error"); 
       document.getElementById("CHKCalcularRecargo").checked = false;
-        
     }
   }
   else
@@ -969,23 +1158,48 @@ function CalcularRecargo()
 } 
 function CalcularValores()
 {
+  var ServicioHorarioMinimo = $('#ServicioHorarioMinimo').val();
   var DescuentoColacion = $('#ServicioDescuentoColacion').val();
   var ValorHora         = $('#ServicioValorHora').val();
   var HoraLlegada       = $('#ServicioHoraLlegadaG').val();
   var HoraSalida        = $('#ServicioHoraSalidaG').val();
-  if(HoraLlegada && HoraSalida && ValorHora)
+  var ServicioDesdeLas  = $('#ServicioDesdeLas').val(); 
+
+  if(HoraLlegada.length!=4 && ServicioDesdeLas.length!=4 )
+  {
+    swal("Error", "Debe ingresar un valor HORA DE LLEGADA o HORA DESDE LAS, para poder calcular has HN, OBLIGATORIO 4 digitos", "error");
+  }
+  else if(HoraLlegada.length!=4 || HoraSalida.length!=4 )
+  {
+    swal("Error", "Hora de llegada o hora salida garaje invalidas, OBLIGATORIO 4 digitos", "error");
+  }
+  else if(!ValorHora)
+  {
+    swal("Error", "Debe ingresar un valor de hora, OBLIGATORIO 4 digitos", "error");
+  }
+  else
   {
     $('#ServicioValorHora').removeClass('rellenar');
     $('#ServicioHoraLlegadaG').removeClass('rellenar');
     $('#ServicioHoraSalidaG').removeClass('rellenar');
-    var MinutosLlegada    = HoraLlegada.split(':');
-    var MinutosSalida     = HoraSalida.split(':');
-    var MinutosColacion   = DescuentoColacion.split(':');
-    HoraLlegada       = Number(MinutosLlegada[0]*60) +Number(MinutosLlegada[1]);
-    HoraSalida        =  Number(MinutosSalida[0]*60) + Number(MinutosSalida[1]);
-    if(DescuentoColacion) { DescuentoColacion =  Number(MinutosColacion[0]*60) + Number(MinutosColacion[1]); }
-    else { DescuentoColacion = 0; }
-    var ServicioHN = Number(HoraLlegada) - Number(HoraSalida) ;
+    HoraSalida           =   Number(HoraSalida.substring(0,2)*60) + Number(HoraSalida.substring(2,4));
+    if(ServicioDesdeLas)
+    {
+      var HoraTope   =   Number(ServicioDesdeLas.substring(0,2)*60) + Number(ServicioDesdeLas.substring(2,4));
+    }
+    else
+    {
+      var HoraTope           =   Number(HoraLlegada.substring(0,2)*60) + Number(HoraLlegada.substring(2,4));
+    }
+    if(DescuentoColacion)
+    {
+      DescuentoColacion    =   Number(DescuentoColacion.substring(0,2)*60) + Number(DescuentoColacion.substring(2,4));
+    }
+    else
+    {
+      DescuentoColacion = 0;
+    }
+    var ServicioHN = Number(HoraTope) - Number(HoraSalida) ;
     if(DescuentoColacion>ServicioHN)
     {
       swal("Error", "El descuento no puede ser superior a las horas HN", "error"); 
@@ -995,18 +1209,16 @@ function CalcularValores()
       ServicioHN = Number(ServicioHN) - Number(DescuentoColacion);
       ServicioHN = Number(ServicioHN)/60;
       ServicioHN = Math.round(Number(ServicioHN) * 100) / 100;
+      if (Number(ServicioHN)<Number(ServicioHorarioMinimo))
+      {
+        ServicioHN = ServicioHorarioMinimo;
+      }
       $('#ServicioHN').val(ServicioHN);
       $('#ServicioHNValor').val(Number(ServicioHN) * Number(ValorHora));
       $('#ServicioValorTotalNeto').val(Number($('#ServicioHNValor').val()) + Number($('#ServicioHRValor').val()));  
     }
   }
-  else
-  {
-    $('#ServicioValorHora').addClass('rellenar');
-    $('#ServicioHoraLlegadaG').addClass('rellenar');
-    $('#ServicioHoraSalidaG').addClass('rellenar');
-    swal("Error", "Debe ingresar los datos solicitados", "error");  
-  }
+
 }
 $(document).ready(function()
 {
