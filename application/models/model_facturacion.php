@@ -125,4 +125,18 @@ class Model_Facturacion extends CI_Model {
 	     return false;
 	   }
 	}
+
+	function buscar_cliente_autocomplete($dato)
+	{
+	   $this->db->like('Nombre',$dato);
+	   $query=$this->db->get('cliente');
+	   if($query -> num_rows() >0)
+	   {
+	     return $query->result();
+	   }
+	   else
+	   {
+	     return false;
+	   }
+	}
 }

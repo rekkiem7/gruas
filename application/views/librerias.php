@@ -12,6 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <link href="<?php echo base_url();?>plugins/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo base_url();?>plugins/sweetalert/dist/sweetalert.css" rel="stylesheet"/>
     <link href="<?php echo base_url();?>plugins/datepicker/datepicker3.css" rel="stylesheet"/>
+    <link href="<?php echo base_url();?>plugins/jquery-ui/jquery-ui.css" rel="stylesheet"/>
     <script src="<?php echo base_url();?>plugins/jquery/jquery-2.2.4.js"></script>
     <script src="<?php echo base_url();?>plugins/jquery/jquery-2.2.4.min.js"></script>
     <script src="<?php echo base_url();?>plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -20,4 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<script src="<?php echo base_url();?>plugins/datatables/dataTables.bootstrap.min.js"></script>
     <script src="<?php echo base_url();?>plugins/sweetalert/dist/sweetalert-dev.js"></script>
     <script src="<?php echo base_url();?>plugins/datepicker/bootstrap-datepicker.js"></script>
+    <script src="<?php echo base_url();?>plugins/jquery-ui/jquery-ui.js"></script>
+
+
 </head>

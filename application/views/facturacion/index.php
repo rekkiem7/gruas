@@ -41,7 +41,7 @@
 	    		<table width="100%">
 	    			<tr>
 	    				<td width="10%">Señores</td>
-	    				<td width="40%" colspan="3"><input type="text" class="form-control requerido" id="identidad" name="identidad" readonly/></td>
+	    				<td width="40%" colspan="3"><input type="text" class="form-control requerido" id="identidad" name="identidad" /></td>
 	    				<td width="15%" style="padding-left:10px">O. de Compra N°</td>
 	    				<td width="35%"><input type="text" class="form-control" id="orden_compra" name="orden_compra" /></td>
 	    			</tr>
@@ -541,6 +541,53 @@ $(document).ready(function()
     $('#total_final').val(total_final);
     /**************************************/
   });
+
+array_nom_auto=[];
+  /**************autocomplete**********************/
+  $( function() {
+    function log( message) {
+       for(var i=0;i<array_nom_auto.length;i++)
+       {
+       		if(array_nom_auto[i]['Nombre']==message)
+       		{
+       			
+       			$('#direccion').val(array_nom_auto[i]['Direccion']);
+       			$('#rut').val(array_nom_auto[i]['CodiClien']);
+       			$('#giro').val(array_nom_auto[i]['Giro']);
+       			$('#telefono').val(array_nom_auto[i]['Fono']);
+       			$('#ciudad').val(array_nom_auto[i]['CiudadDesp']);
+       			$('#identidad').val(message);
+       			break;
+       		}
+       }
+    }
+ 
+    $( "#identidad" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax( {
+          type:"POST",
+          url: "<?php echo site_url('Facturacion/buscar_cliente_autocomplete');?>",
+          dataType: "json",
+          data: {
+            q: request.term
+          },
+          success: function( data ) {
+ 			array_nom_auto=data;
+           response( $.map( data, function( item ) {
+								return {
+									label: item.Nombre,
+									value: item.Nombre,
+								}
+							}));
+          }
+        } );
+      },
+      minLength: 2,
+      select: function( event, ui ) {
+        log( ui.item.label );
+      }
+    } );
+  } );
 
 });
 </script>

@@ -139,4 +139,15 @@ class Facturacion extends CI_Controller {
 		}
 	}
 
+	public function buscar_cliente_autocomplete()
+	{
+		$dato=$_POST['q'];
+		$datos=$this->model_facturacion->buscar_cliente_autocomplete($dato);
+
+		if($datos)
+		{
+			echo json_encode($datos);
+		}
+	}
+
 }
