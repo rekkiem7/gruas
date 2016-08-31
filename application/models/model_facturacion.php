@@ -100,6 +100,7 @@ class Model_Facturacion extends CI_Model {
 			FROM facturas_emitidas f 
 			JOIN cliente c ON f.RutCliente=c.CodiClien
 			JOIN razonsocial r ON f.RazonSocial=r.Rut
+			WHERE f.Estado='V'
 			ORDER BY f.NumeroFactura DESC
 		");
 	   if($query -> num_rows() >0)
@@ -139,4 +140,21 @@ class Model_Facturacion extends CI_Model {
 	     return false;
 	   }
 	}
+
+	function update_facturaEmitida($data,$factura)
+	{
+		$this->db->where('NumeroFactura', $factura);
+		$update=$this->db->update('facturas_emitidas', $data);
+		return $update;
+	}
+
+	function update_ordendetrabajo2($id,$data)
+	{
+		$this->db->where('id', $id);
+		$update=$this->db->update('ordendetrabajo', $data);
+		return $update;
+	}
+
+
 }
+

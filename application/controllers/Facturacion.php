@@ -150,4 +150,30 @@ class Facturacion extends CI_Controller {
 		}
 	}
 
+	public function eliminar_factura()
+	{
+		$factura=$_POST['factura'];
+		$data=["Estado"=>'N'];
+		$update=$this->model_facturacion->update_facturaEmitida($data,$factura);
+		if($update)
+		{
+			$OTS=$this->model_facturacion->cargar_ot_factura($factura);
+			if($OTS)
+			{
+				for($i=0;$i<count($OTS);$i++)
+				{
+					$idot=$OTS[$i]->id;
+					$data2=["NumeroFactura"=>null];
+					$update=$this->model_facturacion->update_ordendetrabajo2($idot,$data2);
+				}
+			}
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+
+	}
+
 }

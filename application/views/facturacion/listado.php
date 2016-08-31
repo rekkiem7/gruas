@@ -47,6 +47,7 @@
                   <th>IVA</th>
                   <th>Valor Total</th>
                   <th>Detalle</th>
+                  <th>Eliminar</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -121,8 +122,9 @@ function cargar_facturas()
         			}
 
         			var botton='<button class="btn btn-primary" onclick="ver_detalle('+datos[i]['NumeroFactura']+')"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>';
+              var botton2='<button class="btn btn-danger" onclick="eliminar('+datos[i]['NumeroFactura']+')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>';
         			var descuento=parseInt(datos[i]['Descuento'])+parseInt(datos[i]['Anticipo']);
-        			var info=[datos[i]['NumeroFactura'],datos[i]['RutCliente'],datos[i]['nom_cliente'],"( "+datos[i]['RazonSocial']+" ) "+datos[i]['nom_razon'],datos[i]['TotalNeto'],descuento,datos[i]['IVA'],datos[i]['TotalFactura'],botton];
+        			var info=[datos[i]['NumeroFactura'],datos[i]['RutCliente'],datos[i]['nom_cliente'],"( "+datos[i]['RazonSocial']+" ) "+datos[i]['nom_razon'],datos[i]['TotalNeto'],descuento,datos[i]['IVA'],datos[i]['TotalFactura'],botton,botton2];
         			array_final.push(info);
         		}
         		t.rows.add(array_final).draw();
@@ -133,6 +135,33 @@ function cargar_facturas()
         	}
         }
     });
+}
+
+function eliminar(factura)
+{
+  swal({   title: "¿Desea eliminar la Factura N° "+factura+"?",   text: "La factura desaparecerá del sistema y las OT asociadas quedarán en libertad",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#CC0000",   confirmButtonText: "Eliminar",   cancelButtonText: "Cancelar",   closeOnConfirm: true,   closeOnCancel: true }, function(isConfirm){   if (isConfirm) {
+  $('#loading').modal();
+   $.ajax({
+        type:"POST",
+        url:"<?php echo site_url('Facturacion/eliminar_factura');?>",
+        data:{factura:factura},
+        success:function(data)
+        {
+          $('#loading').modal('hide');
+          if(data==1)
+          {
+            swal("Factura Eliminada", "La factura N° "+factura+"  ha sido eliminada correctamente", "success");
+                          setTimeout(function(){ swal.close(); window.open('<?php echo site_url('Facturacion/listado_factura')?>','_self'); }, 1500);
+          }
+          else
+          {
+            swal("Error", "Estimado(a) usuario(a), se ha producido un problema al intentar eliminar la factura, por favor inténtelo nuevamente", "danger");
+          }
+
+        }
+      });
+   }
+ });
 }
 
 function ver_detalle(factura)
