@@ -129,7 +129,7 @@
 	    					<td style="padding-left:10px"><input type="number" class="form-control" id="total_neto" name="total_neto" value="0" readonly/></td>
 	    				</tr>
 	    				<tr>
-	    					<td style="padding-top:10px"><strong>Descuento</strong></td>
+	    					<td style="padding-top:10px"><strong>Descuento (%)</strong></td>
 	    					<td style="padding-left:10px;padding-top:10px"><input type="number" id="descuento" name="descuento" class="form-control" value="0"/></td>
 	    				</tr>
 	    				<tr>
@@ -493,9 +493,15 @@ $(document).ready(function()
     {
     	$('#descuento').val(0);
     	descuento=0;
+    	var descuento_parcial=0;
+    }
+    else
+    {
+    	descuento=parseInt(descuento)/100;
+    	var descuento_parcial=total_neto*descuento;
     }
     var anticipo=$('#anticipo').val();
-    var total_desc=parseInt(descuento)+parseInt(anticipo);
+    var total_desc=parseInt(descuento_parcial)+parseInt(anticipo);
     $('#total_descuento').val(total_desc);
 
     var total_parcial=parseInt(total_neto)-parseInt(total_desc);
@@ -524,8 +530,20 @@ $(document).ready(function()
     	$('#anticipo').val(0);
     	anticipo=0;
     }
+
+    if(descuento=='')
+    {
+    	$('#descuento').val(0);
+    	descuento=0;
+    	var descuento_parcial=0;
+    }
+    else
+    {
+    	descuento=parseInt(descuento)/100;
+    	var descuento_parcial=total_neto*descuento;
+    }
     
-    var total_desc=parseInt(descuento)+parseInt(anticipo);
+    var total_desc=parseInt(descuento_parcial)+parseInt(anticipo);
     $('#total_descuento').val(total_desc);
 
     var total_parcial=parseInt(total_neto)-parseInt(total_desc);
