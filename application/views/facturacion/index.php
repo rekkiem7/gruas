@@ -158,7 +158,7 @@
 	    		<textarea cols="100" rows="10" id="observaciones" name="observaciones"></textarea>
 	  		</div>
 		</div><br><br>
-		<div class="col-lg-12 col-md-12"><center><button class="btn btn-primary" onclick="Guardar_Factura();">Guardar Factura</button></center></div>
+		<div class="col-lg-12 col-md-12"><center><button class="btn btn-primary" onclick="Guardar_Factura();" id="Guardar_Final" name="Guardar_Final">Guardar Factura</button></center></div>
 	</div>
 </div>
 <script>
@@ -198,6 +198,7 @@ function Guardar_Factura()
 		}
 		else
 		{
+			$('#Guardar_Final').attr('disabled',true);
 			$('#loading').modal();
 			var fecha_factura=$('#datepicker').val();
 			var razon=$('#razon_social').val();
@@ -228,6 +229,7 @@ function Guardar_Factura()
 					            	if(data!=0)
 					            	{
 					            		swal("Factura Emitida", "Se ha generado la factura N° "+data+ " correctamente", "success");
+					            		setTimeout(function(){ swal.close(); window.open('<?php echo site_url('Facturacion/index')?>','_self'); }, 1500);
 					            	}
 					            	else
 					            	{
