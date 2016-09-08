@@ -27,6 +27,10 @@
   background-color: #428bca;
   color:#ffffff;
 }
+.new{
+   background-color: #CC0000;
+  color:#ffffff;
+}
 </style>
 <body onload="cargar_facturas();">
 <div class="container">
@@ -125,9 +129,18 @@ function cargar_facturas()
               var botton2='<button class="btn btn-danger" onclick="eliminar('+datos[i]['NumeroFactura']+')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>';
         			var descuento=parseInt(datos[i]['Descuento'])+parseInt(datos[i]['Anticipo']);
         			var info=[datos[i]['NumeroFactura'],datos[i]['RutCliente'],datos[i]['nom_cliente'],"( "+datos[i]['RazonSocial']+" ) "+datos[i]['nom_razon'],datos[i]['TotalNeto'],descuento,datos[i]['IVA'],datos[i]['TotalFactura'],botton,botton2];
-        			array_final.push(info);
+
+              var clase='';
+
+              if(datos[i]['Estado']=='N')
+              {
+              var  clase="new";
+              }
+              
+              t.row.add(info).draw().nodes().to$().addClass(clase);
+        			//array_final.push(info);
         		}
-        		t.rows.add(array_final).draw();
+        		//t.rows.add(array_final).draw().nodes().to$().addClass('new');
         	}
         	else
         	{

@@ -96,11 +96,10 @@ class Model_Facturacion extends CI_Model {
 		$query=$this->db->get('facturas_emitidas');
 		$query = $this->db->query("
 			SELECT 
-			f.NumeroFactura, f.RazonSocial, f.Fecha,f.RutCliente,f.TotalNeto,f.IVA,f.TotalFactura,f.Descuento,f.Anticipo,c.Nombre as nom_cliente,r.Razonsocial as nom_razon
+			f.NumeroFactura, f.RazonSocial, f.Fecha,f.RutCliente,f.TotalNeto,f.IVA,f.TotalFactura,f.Descuento,f.Anticipo,c.Nombre as nom_cliente,r.Razonsocial as nom_razon,f.Estado
 			FROM facturas_emitidas f 
 			JOIN cliente c ON f.RutCliente=c.CodiClien
 			JOIN razonsocial r ON f.RazonSocial=r.Rut
-			WHERE f.Estado='V'
 			ORDER BY f.NumeroFactura DESC
 		");
 	   if($query -> num_rows() >0)

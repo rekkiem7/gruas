@@ -27,6 +27,11 @@
   background-color: #428bca;
   color:#ffffff;
 }
+
+.new{
+   background-color: #CC0000;
+  color:#ffffff;
+}
 </style>
 <body onload="cargar_facturas();">
 <div class="container">
@@ -86,7 +91,7 @@ function cargar_facturas()
         			var info=[datos[i]['NumeroFactura'],datos[i]['RutCliente'],datos[i]['nom_cliente'],"( "+datos[i]['RazonSocial']+" ) "+datos[i]['nom_razon'],datos[i]['TotalNeto'],descuento,datos[i]['IVA'],datos[i]['TotalFactura']];
         			array_final.push(info);
         		}
-        		t.rows.add(array_final).draw();
+        		t.rows.add(array_final).draw().addClass('new');
         	}
         	else
         	{
