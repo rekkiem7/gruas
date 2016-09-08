@@ -176,4 +176,26 @@ class Facturacion extends CI_Controller {
 
 	}
 
+	public function listado_facturas_anuladas()
+	{
+		$this->load->view('librerias');	
+		$this->load->view('menu/menu_principal');
+		$this->load->view('loading');
+		$this->load->view('facturacion/listado_facturas_anuladas');
+		$this->load->view('footer');
+	}
+
+	public function cargar_facturas_anuladas()
+	{
+		$datos=$this->model_facturacion->cargar_facturas_anuladas();
+		if($datos)
+		{
+			echo json_encode($datos);
+		}
+		else
+		{
+			echo 0;
+		}
+	}
+
 }
