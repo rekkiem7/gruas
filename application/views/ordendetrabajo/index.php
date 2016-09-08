@@ -92,6 +92,7 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
                                             <th>Fecha</th>
                                             <th>Razon Social</th>
                                             <th>Cliente</th>
+                                            <th>Factura</th>
                                             <th>Total</th>
                                             <th>Ver</th>
                                             <th>Pdf</th>
@@ -110,6 +111,13 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
                                             <td><?php echo $row->OTFecha?></td>
                                             <td><?php echo $row->OTRazonSocial?></td>
                                             <td><?php echo $row->OTNombre?></td>
+                                            <?php 
+                                            if($row->NumeroFactura=='' ||$row->NumeroFactura===null)
+                                            {
+                                              $row->NumeroFactura="Sin Factura";
+                                            }
+                                            ?>
+                                            <td><?php echo $row->NumeroFactura?></td>
                                             <td><?php echo $row->ServicioValorTotalNeto?></td>
                                             <td style="text-align:center">
                                                 <button class="btn btn-info" onclick="add_ordendetrabajo(<?=$row->id?>,'VerInfo')">
