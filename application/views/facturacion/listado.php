@@ -27,10 +27,33 @@
   background-color: #428bca;
   color:#ffffff;
 }
-.new{
-   background-color: #CC0000;
+th{
+  background-color: #ffffff;
+  color:#000000;
+}
+tr{
+  background-color: #ffffff;
+  color:#000000;
+}
+tr:hover{
+  background-color: #000000;
   color:#ffffff;
 }
+.new{
+  background-color: #E84747;
+  color:#ffffff;
+}
+.new:hover{
+   background-color: #E84747;
+   color:#000000;
+}
+
+tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+
 </style>
 <body onload="cargar_facturas();">
 <div class="container">
@@ -39,7 +62,7 @@
 	<div  class="animated fadeInRight">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 		<div class="table-responsive">
-		<table id="facturas" class="table table-bordered table-hover">
+		<table id="facturas" class="table table-bordered">
                 <thead>
                 <tr>
                   <th>Factura</th>
@@ -213,9 +236,9 @@ function ver_detalle(factura)
       });
 }
 
-
 $(document).ready(function()
 {
+
   $('#facturas').DataTable({
       "paging": true,
       "lengthChange": true,
@@ -257,5 +280,14 @@ $(document).ready(function()
             }
         },      
     });
+
+  $('#facturas tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="Buscar '+title+'" />' );
+    } );
+
+  
+
+  
 });
 </script>
