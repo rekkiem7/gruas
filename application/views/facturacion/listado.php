@@ -47,7 +47,10 @@ tr:hover{
    background-color: #E84747;
    color:#000000;
 }
-
+tr.sin_nada:hover{
+    background-color: #ffffff;
+    color:#ffffff;
+}
 tfoot input {
         width: 100%;
         padding: 3px;
@@ -61,6 +64,7 @@ tfoot input {
 	</div><br><br>
 	<div  class="animated fadeInRight">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <center><table><tr class="sin_nada"><td><input type="text" class="form-control" placeholder="Buscar por N° factura" name="factura_search" id="factura_search"/></td><td style="padding-left:15px;"><button class="btn btn-success" onclick="buscar_factura();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;&nbsp;Buscar</button></td></tr></table></center>
 		<div class="table-responsive">
 		<table id="facturas" class="table table-bordered">
                 <thead>
@@ -121,6 +125,63 @@ tfoot input {
 </div>
 </div>
 <script>
+function buscar_factura()
+{
+    var factura=$('#factura_search').val();
+    if(factura!='')
+    {
+        $('#loading').modal();
+        $.ajax({
+            type: "POST",
+            url: "<?php echo site_url('Facturacion/buscar_factura');?>",
+            data:{factura:factura},
+            success: function (data) {
+                $('#loading').modal('hide');
+                if(data!=0)
+                {
+                    var t = $('#facturas').DataTable();
+                    t.clear().draw();
+                    var datos=JSON.parse(data);
+                    var array_final=new Array();
+                    for(var i=0;i<datos.length;i++)
+                    {
+                        if(datos[i]['Descuento']===null)
+                        {
+                            datos[i]['Descuento']=0;
+                        }
+
+                        if(datos[i]['Anticipo']===null)
+                        {
+                            datos[i]['Anticipo']=0;
+                        }
+
+                        var botton='<button class="btn btn-primary" onclick="ver_detalle('+datos[i]['NumeroFactura']+')"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>';
+                        var botton2='<button class="btn btn-danger" onclick="eliminar('+datos[i]['NumeroFactura']+')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>';
+                        var descuento=parseInt(datos[i]['Descuento'])+parseInt(datos[i]['Anticipo']);
+                        var info=[datos[i]['NumeroFactura'],datos[i]['RutCliente'],datos[i]['nom_cliente'],"( "+datos[i]['RazonSocial']+" ) "+datos[i]['nom_razon'],datos[i]['TotalNeto'],descuento,datos[i]['IVA'],datos[i]['TotalFactura'],botton,botton2];
+
+                        var clase='';
+
+                        if(datos[i]['Estado']=='N')
+                        {
+                            var  clase="new";
+                        }
+
+                        t.row.add(info).draw().nodes().to$().addClass(clase);
+                        //array_final.push(info);
+                    }
+                }
+                else {
+                    swal("Sin Registros", "No se han encontrado registros de la factura solicitada", "info");
+                }
+            }
+        });
+    }
+    else
+    {
+        cargar_facturas();
+    }
+}
 function cargar_facturas()
 {
   $('#loading').modal();
@@ -242,7 +303,7 @@ $(document).ready(function()
   $('#facturas').DataTable({
       "paging": true,
       "lengthChange": true,
-      "searching": true,
+      "searching": false,
       "ordering": false,
       "info": true,
       "autoWidth": true,

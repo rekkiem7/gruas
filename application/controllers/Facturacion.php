@@ -198,4 +198,19 @@ class Facturacion extends CI_Controller {
 		}
 	}
 
+	public function buscar_factura()
+	{
+		$factura=$_POST['factura'];
+		$datos=$this->model_facturacion->select_factura($factura);
+		if($datos)
+		{
+			echo json_encode($datos);
+		}
+		else
+		{
+			echo 0;
+		}
+
+	}
+
 }
