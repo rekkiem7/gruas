@@ -19,10 +19,14 @@ class Maestro extends CI_Controller {
 
 	public function add_cliente()
 	{
-		$rut=$_POST['rut'];
+		$rut= str_replace(".", "", $_POST['rut']);
+		$rut= str_replace(".", "", $rut);
+		$rut= str_replace("-", "", $rut);
 		$nombre=$_POST['nombre'];
 		$direccion=$_POST['direccion'];
 		$giro=$_POST['giro'];
+		$email1=$_POST['email1'];
+		$email2=$_POST['email2'];
 		$fono=$_POST['fono'];
 		$fono2=$_POST['fono2'];
 		$fax=$_POST['fax'];
@@ -30,7 +34,7 @@ class Maestro extends CI_Controller {
 		$comuna=$_POST['comuna'];
 		$contacto=$_POST['contacto'];
 
-		$data=["CodiClien"=>$rut,"Nombre"=>$nombre,"Direccion"=>$direccion,"Giro"=>$giro,"Fono"=>$fono,"Fono2"=>$fono2,"Fax"=>$fax,"CiudadDesp"=>$ciudad,"Comuna"=>$comuna,"Contacto"=>$contacto];
+		$data=["CodiClien"=>$rut,"Nombre"=>$nombre,"Direccion"=>$direccion,"Giro"=>$giro,"Email1"=>$email1,"Email2"=>$email2,"Fono"=>$fono,"Fono2"=>$fono2,"Fax"=>$fax,"CiudadDesp"=>$ciudad,"Comuna"=>$comuna,"Contacto"=>$contacto];
 		$insert=$this->model_maestro->insert_cliente($data);
 		if($insert)
 		{
@@ -74,10 +78,14 @@ class Maestro extends CI_Controller {
 	public function update_cliente()
 	{
 		$id=$_POST['id'];
-		$rut=$_POST['rut'];
+		$rut= str_replace(".", "", $_POST['rut']);
+		$rut= str_replace(".", "", $rut);
+		$rut= str_replace("-", "", $rut);
 		$nombre=$_POST['nombre'];
 		$direccion=$_POST['direccion'];
 		$giro=$_POST['giro'];
+		$email1=$_POST['email1'];
+		$email2=$_POST['email2'];		
 		$fono=$_POST['fono'];
 		$fono2=$_POST['fono2'];
 		$fax=$_POST['fax'];
@@ -85,7 +93,7 @@ class Maestro extends CI_Controller {
 		$comuna=$_POST['comuna'];
 		$contacto=$_POST['contacto'];
 
-		$data=["CodiClien"=>$rut,"Nombre"=>$nombre,"Direccion"=>$direccion,"Giro"=>$giro,"Fono"=>$fono,"Fono2"=>$fono2,"Fax"=>$fax,"CiudadDesp"=>$ciudad,"Comuna"=>$comuna,"Contacto"=>$contacto];
+		$data=["CodiClien"=>$rut,"Nombre"=>$nombre,"Direccion"=>$direccion,"Giro"=>$giro,"Email1"=>$email1,"Email2"=>$email2,"Fono"=>$fono,"Fono2"=>$fono2,"Fax"=>$fax,"CiudadDesp"=>$ciudad,"Comuna"=>$comuna,"Contacto"=>$contacto];
 		$update=$this->model_maestro->update_cliente($id,$data);
 		if($update)
 		{
@@ -208,7 +216,9 @@ class Maestro extends CI_Controller {
 	}	
 	public function add_operario()
 	{
-		$rut=$_POST['rut'];
+		$rut= str_replace(".", "", $_POST['rut']);
+		$rut= str_replace(".", "", $rut);
+		$rut= str_replace("-", "", $rut);
 		$nombre=$_POST['nombre'];
 		$direccion=$_POST['direccion'];
 		$comuna=$_POST['comuna'];
@@ -230,7 +240,9 @@ class Maestro extends CI_Controller {
 	public function update_operario()
 	{
 		$id=$_POST['id'];
-		$rut=$_POST['rut'];
+		$rut= str_replace(".", "", $_POST['rut']);
+		$rut= str_replace(".", "", $rut);
+		$rut= str_replace("-", "", $rut);
 		$nombre=$_POST['nombre'];
 		$direccion=$_POST['direccion'];
 		$comuna=$_POST['comuna'];
@@ -287,7 +299,9 @@ class Maestro extends CI_Controller {
 	}	
 	public function add_razonsocial()
 	{
-		$rut=$_POST['rut'];
+		$rut= str_replace(".", "", $_POST['rut']);
+		$rut= str_replace(".", "", $rut);
+		$rut= str_replace("-", "", $rut);
 		$razonsocial=$_POST['razonsocial'];
 		$rubro=$_POST['rubro'];
 		$direccion=$_POST['direccion'];
@@ -310,7 +324,9 @@ class Maestro extends CI_Controller {
 	public function update_razonsocial()
 	{
 		$id=$_POST['id'];
-		$rut=$_POST['rut'];
+		$rut= str_replace(".", "", $_POST['rut']);
+		$rut= str_replace(".", "", $rut);
+		$rut= str_replace("-", "", $rut);
 		$razonsocial=$_POST['razonsocial'];
 		$rubro=$_POST['rubro'];
 		$direccion=$_POST['direccion'];

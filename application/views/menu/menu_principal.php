@@ -159,13 +159,19 @@ h1,
               <ul>
                 <li class="dropdown-header">Orden de Trabajo</li>
                 <li><a href="<?php echo site_url('Ordendetrabajo/index')?>">Ingresar Orden de Trabajo</a></li>
-                <li><a href="#">Modificar Orden de Trabajo</a></li>
-                <li><a href="#">Eliminar Orden de Trabajo</a></li>
                 <li><a href="<?php echo site_url('Ordendetrabajo/reporte1')?>">Reporte</a></li>
                 <li class="divider"></li>
                 <li class="dropdown-header">Facturación</li>
                 <li><a href="<?php echo site_url('Facturacion/index')?>">Facturación por OT</a></li>
-                <li><a href="<?php echo site_url('Facturacion/listado_factura')?>">Listado Facturas</a>
+                <li><a href="<?php echo site_url('Facturacion/listado_factura')?>">Listado Facturas Electrónicas</a>
+                <li><a href="<?php echo site_url('Facturacion/listado_factura2')?>">Listado Facturas Antiguas</a>
+              </ul>
+            </li>
+            <li class="col-sm-3">
+              <ul>
+                <li class="dropdown-header">Reportes</li>
+                <li><a href="<?php echo site_url('Reportes/horas_operario')?>">Horas Operario</a></li>
+                <li class="divider"></li>
               </ul>
             </li>
           </ul>

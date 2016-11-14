@@ -50,7 +50,7 @@
                 	foreach($operarios as $row)
                 	{?>
                 	<tr>
-                		<td><?php echo $row->Rut?></td>
+                		<td><?=rutPhp($row->Rut)?></td>
                 		<td><?php echo $row->Nombre?></td>
                 		<td style="text-align:center"><button class="btn btn-info" onclick="ver_operario(<?php echo $row->id?>)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                 		</td>
@@ -238,6 +238,49 @@
 <!--Modal-->
 </body>
 <script>
+$('#rut_edit').keydown(function(event)
+{
+	if (event.which == '13') 
+	{ 
+		var Rut = RutDigito ($('#rut_edit').val());
+		Rut = $('#rut_edit').val()+Rut;
+		if(ValidateRut(Rut)!=false)
+		{
+			$('#rut_edit').val(ValidateRut(Rut));
+		}
+		else
+		{
+			$('#rut_edit').val('');
+			alert('RUT INVALIDO');
+		}
+	}
+	else if (event.which == '9') 
+	{ 
+		return false; 
+	}
+});
+$('#rut').keydown(function(event)
+{
+	if (event.which == '13') 
+	{ 
+		var Rut = RutDigito ($('#rut').val());
+		Rut = $('#rut').val()+Rut;
+		if(ValidateRut(Rut)!=false)
+		{
+			$('#rut').val(ValidateRut(Rut));
+		}
+		else
+		{
+			$('#rut').val('');
+			alert('RUT INVALIDO');
+		}
+	}
+	else if (event.which == '9') 
+	{ 
+		return false; 
+	}
+});
+
 function update_operario()
 {
 	var id=$('#id_edit').val();
@@ -297,7 +340,7 @@ function editar_operario(id)
             	{
             		var datos=JSON.parse(data);
             		$('#id_edit').val(id);
-            		$('#rut_edit').val(datos[0]["Rut"]);
+            		$('#rut_edit').val(ValidateRut(datos[0]["Rut"]));
             		$('#nombre_edit').val(datos[0]["Nombre"]);
             		$('#direccion_edit').val(datos[0]["Direccion"]);
             		$('#comuna_edit').val(datos[0]["Comuna"]);
@@ -325,7 +368,7 @@ function ver_operario(id)
             	if(data!=0)
             	{
             		var datos=JSON.parse(data);
-            		$('#info_rut').append(datos[0]["Rut"]);
+            		$('#info_rut').append(ValidateRut(datos[0]["Rut"]));
             		$('#info_nombre').append(datos[0]["Nombre"]);
             		$('#info_direccion').append(datos[0]["Direccion"]);
             		$('#info_comuna').append(datos[0]["Comuna"]);

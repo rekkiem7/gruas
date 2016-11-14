@@ -1,5 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+function rutPhp( $rut ) {
+    return number_format( substr ( $rut, 0 , -1 ) , 0, "", ".") . '-' . substr ( $rut, strlen($rut) -1 , 1 );
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <script src="<?php echo base_url();?>plugins/sweetalert/dist/sweetalert-dev.js"></script>
     <script src="<?php echo base_url();?>plugins/datepicker/bootstrap-datepicker.js"></script>
     <script src="<?php echo base_url();?>plugins/jquery-ui/jquery-ui.js"></script>
+    <script src="<?php echo base_url();?>plugins/validarut.js"></script>
 
 
 </head>

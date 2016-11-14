@@ -23,7 +23,7 @@ class Model_Facturacion extends CI_Model {
 	   $this->db->where('OTNumero<=',$hasta);
 	   $this->db->where('OTRazonSocial',$razon);
 	   $this->db->where('OTRut',$rut);
-	   $this->db->where('NumeroFactura',null);
+	   $this->db->where('NumeroFactura',0);
 	   $query=$this->db->get('ordendetrabajo');
 	   if($query -> num_rows() >0)
 	   {
@@ -48,8 +48,9 @@ class Model_Facturacion extends CI_Model {
 	   }
 	}
 
-	function ultima_factura()
+	function ultima_factura($razon)
 	{
+	   $this->db->where("RazonSocial",$razon);
 	   $this->db->order_by('NumeroFactura', 'DESC');
 	   $this->db->limit(1);
 	   $query=$this->db->get('facturas_emitidas');
@@ -63,19 +64,7 @@ class Model_Facturacion extends CI_Model {
 	   }
 	}
 
-	function existe_factura($factura)
-	{
-	   $this->db->where('NumeroFactura',$factura);
-	   $query=$this->db->get('facturas_emitidas');
-	   if($query -> num_rows() >0)
-	   {
-	     return $query->result();
-	   }
-	   else
-	   {
-	     return false;
-	   }
-	}
+
 
 	function insert_factura($data)
 	{
@@ -91,16 +80,47 @@ class Model_Facturacion extends CI_Model {
 		return $update;
 	}
 
+	function existe_factura($factura,$razon,$modo)
+	{
+		/*$this->db->where("RazonSocial",$razon);
+		$this->db->where('NumeroFactura',$factura);
+		$query=$this->db->get('facturas_emitidas');*/
+		if($modo==1)
+		{
+			$query=$this->db->query("SELECT 
+			f.NumeroFactura, f.RazonSocial, f.Fecha,f.RutCliente,f.TotalNeto,f.IVA,f.TotalFactura,f.Descuento,f.Anticipo,c.Nombre as nom_cliente,r.Razonsocial as nom_razon,f.Estado,c.Giro,c.Direccion,c.Comuna,c.CiudadDesp,f.Observacion
+			FROM facturas_emitidas f 
+			JOIN cliente c ON f.RutCliente=c.CodiClien
+			JOIN razonsocial r ON f.RazonSocial=r.Rut WHERE f.NumeroFactura=".$factura." and f.RazonSocial=".$razon);
+		}else{
+			$query=$this->db->query("SELECT 
+			f.NumeroFactura, f.RazonSocial, f.Fecha,f.RutCliente,f.TotalNeto,f.IVA,f.TotalFactura,f.Descuento,f.Anticipo,c.Nombre as nom_cliente,r.Razonsocial as nom_razon,f.Estado,c.Giro,c.Direccion,c.Comuna,c.CiudadDesp,f.Observacion
+			FROM facturas_emitidas2 f 
+			JOIN cliente c ON f.RutCliente=c.CodiClien
+			JOIN razonsocial r ON f.RazonSocial=r.Rut WHERE f.NumeroFactura=".$factura." and f.RazonSocial=".$razon);
+		}
+		
+		if($query -> num_rows() >0)
+		{
+			return $query->result();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	function cargar_facturas()
 	{
 		$query=$this->db->get('facturas_emitidas');
+		ini_set('memory_limit', '-1');
 		$query = $this->db->query("
 			SELECT 
 			f.NumeroFactura, f.RazonSocial, f.Fecha,f.RutCliente,f.TotalNeto,f.IVA,f.TotalFactura,f.Descuento,f.Anticipo,c.Nombre as nom_cliente,r.Razonsocial as nom_razon,f.Estado
 			FROM facturas_emitidas f 
 			JOIN cliente c ON f.RutCliente=c.CodiClien
 			JOIN razonsocial r ON f.RazonSocial=r.Rut
-			ORDER BY f.NumeroFactura DESC
+			ORDER BY f.id DESC LIMIT 1000;
 		");
 	   if($query -> num_rows() >0)
 	   {
@@ -112,9 +132,32 @@ class Model_Facturacion extends CI_Model {
 	   }
 	}
 
-	function cargar_ot_factura($factura)
+	function cargar_facturas2()
+	{
+		$query=$this->db->get('facturas_emitidas2');
+		ini_set('memory_limit', '-1');
+		$query = $this->db->query("
+			SELECT 
+			f.NumeroFactura, f.RazonSocial, f.Fecha,f.RutCliente,f.TotalNeto,f.IVA,f.TotalFactura,f.Descuento,f.Anticipo,c.Nombre as nom_cliente,r.Razonsocial as nom_razon,f.Estado
+			FROM facturas_emitidas2 f 
+			JOIN cliente c ON f.RutCliente=c.CodiClien
+			JOIN razonsocial r ON f.RazonSocial=r.Rut
+			ORDER BY f.id DESC LIMIT 1000;
+		");
+	   if($query -> num_rows() >0)
+	   {
+	     return $query->result();
+	   }
+	   else
+	   {
+	     return false;
+	   }
+	}
+
+	function cargar_ot_factura($factura,$razon)
 	{
 	   $this->db->where('NumeroFactura',$factura);
+	   $this->db->where('OTRazonSocial',$razon);
 	   $query=$this->db->get('ordendetrabajo');
 	   if($query -> num_rows() >0)
 	   {
@@ -144,6 +187,13 @@ class Model_Facturacion extends CI_Model {
 	{
 		$this->db->where('NumeroFactura', $factura);
 		$update=$this->db->update('facturas_emitidas', $data);
+		return $update;
+	}
+
+	function update_facturaEmitida2($data,$factura)
+	{
+		$this->db->where('NumeroFactura', $factura);
+		$update=$this->db->update('facturas_emitidas2', $data);
 		return $update;
 	}
 
@@ -181,6 +231,26 @@ class Model_Facturacion extends CI_Model {
 			SELECT 
 			f.NumeroFactura, f.RazonSocial, f.Fecha,f.RutCliente,f.TotalNeto,f.IVA,f.TotalFactura,f.Descuento,f.Anticipo,c.Nombre as nom_cliente,r.Razonsocial as nom_razon,f.Estado
 			FROM facturas_emitidas f 
+			JOIN cliente c ON f.RutCliente=c.CodiClien
+			JOIN razonsocial r ON f.RazonSocial=r.Rut
+			WHERE f.NumeroFactura=".$factura."
+			ORDER BY f.NumeroFactura DESC");
+		if($query -> num_rows() >0)
+		{
+			return $query->result();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	function select_factura2($factura)
+	{
+		$query = $this->db->query("
+			SELECT 
+			f.NumeroFactura, f.RazonSocial, f.Fecha,f.RutCliente,f.TotalNeto,f.IVA,f.TotalFactura,f.Descuento,f.Anticipo,c.Nombre as nom_cliente,r.Razonsocial as nom_razon,f.Estado
+			FROM facturas_emitidas2 f 
 			JOIN cliente c ON f.RutCliente=c.CodiClien
 			JOIN razonsocial r ON f.RazonSocial=r.Rut
 			WHERE f.NumeroFactura=".$factura."

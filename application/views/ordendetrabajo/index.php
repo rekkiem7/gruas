@@ -1,4 +1,7 @@
-<style>
+﻿<style>
+
+.ui-autocomplete { z-index:2147483647; }
+
 input[type=checkbox].css-checkbox {
   position:absolute; 
   z-index:-1000; 
@@ -70,358 +73,162 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
 	background-color: #428bca;
 	color:#ffffff;
 }
+tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
 </style>
-<body>
+<body onload="generar_token();">
 <div class="container">
-        <input type="hidden" id="Dominio" name="Dominio" value="<?=site_url();?>">
-        <div class="animated fadeInRight"><center><h4>Ordenes De Trabajo</h4></center></div><br><br>
-            <center>
-                    <div>
-
-                            <button class="btn btn-success" onclick="agregar_ordendetrabajo();">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Agregar Orden De Trabajo
-                            </button>
-                    </div>
-            </center>
-            <br>
-            <div class="table-responsive">
-		                <table id="tablaOrdenDeTrabajo" class="table table-bordered table-hover">
-                            <thead>
-                                    <tr>
-                                            <th>N° OT</th>
-                                            <th>Fecha</th>
-                                            <th>Razon Social</th>
-                                            <th>Cliente</th>
-                                            <th>Factura</th>
-                                            <th>Total</th>
-                                            <th>Ver</th>
-                                            <th>Pdf</th>
-                                            <th>Editar</th>
-                                            <th>Eliminar</th>
-                                    </tr>
-                            </thead>
-                            <tbody>
-                            <?php
-                                if(!empty($ordenesdetrabajo))
-                                {
-                                      foreach($ordenesdetrabajo as $row)
-                                      {?>
-                                      <tr>
-                                            <td><?php echo $row->OTNumero?></td>
-                                            <td><?php echo $row->OTFecha?></td>
-                                            <td><?php echo $row->OTRazonSocial?></td>
-                                            <td><?php echo $row->OTNombre?></td>
-                                            <?php 
-                                            if($row->NumeroFactura=='' ||$row->NumeroFactura===null)
-                                            {
-                                              $row->NumeroFactura="Sin Factura";
-                                            }
-                                            ?>
-                                            <td><?php echo $row->NumeroFactura?></td>
-                                            <td><?php echo $row->ServicioValorTotalNeto?></td>
-                                            <td style="text-align:center">
-                                                <button class="btn btn-info" onclick="add_ordendetrabajo(<?=$row->id?>,'VerInfo')">
-                                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                                                </button>
-                                            </td>
-                                            <td style="text-align:center">
-                                                <button class="btn btn-warning" onclick="add_ordendetrabajo(<?=$row->id?>,'VerPdf')">
-                                                    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
-                                                </button>
-                                            </td>
-                                            <td style="text-align:center">
-                                                <button class="btn btn-primary" onclick="add_ordendetrabajo(<?=$row->id?>,'EditarInfo')">
-                                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                                </button>
-                                            </td>
-                                            <td style="text-align:center">
-                                                <button class="btn btn-danger" onclick="eliminar_ordendetrabajo(<?php echo $row->id?>)">
-                                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                                </button>
-                                            </td>
-                                      </tr>
-                                  <?php
-                                  }
-                              }
-                            ?> 
-                            </tbody>
-                    </table>
-	           </div>
+    <div class="animated fadeInRight">
+        <input type="hidden" id="Dominio" name="Dominio" value="<?=site_url();?>"><center><h4>Ordenes De Trabajo</h4></center><br><br>
+    </div>
+    <div>
+        <center><button class="btn btn-success" onclick="agregar_ordendetrabajo();"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Agregar Orden De Trabajo</button></center><br>
+    </div>
+     <div class="row">
+        <label  class="col-lg-2 col-md-2 col-sm-12">BUSCAR OT</label>
+        <div    class="col-lg-2 col-md-2 col-sm-12">
+            <input type="text" class="form-control" id="BuscarOtNumero" name="BuscarOtNumero"/>
         </div>
+        <div    class="col-lg-2 col-md-2 col-sm-12">
+           <button class="btn btn-info" onclick="BuscarOt();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;BUSCAR</button>
+        </div>
+        <div    class="col-lg-2 col-md-2 col-sm-12">
+           <button class="btn btn-danger" onclick="CerraReload();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;CERRAR ACTUALIZAR</button>
+        </div>
+      </div><br>
+    <div class="table-responsive" id="DetalleListado">
+        <table id="tablaOrdenDeTrabajo" class="table table-bordered table-hover"><thead><tr><th>N° OT</th><th>N° FACTURA</th><th>Fecha</th><th>Razon Social</th><th>Cliente</th><td><strong>Total</strong></td><td><strong>Ver</strong></td><td><strong>Pdf</strong></td><td><strong>Continuo</strong></td><td><strong>Html</strong></td><td><strong>Editar</strong></td><td><strong>Eliminar</strong></td></tr></thead><tfoot><tr><th>N° OT</th><th>N° FACTURA</th><th>Fecha</th><th>Razon Social</th><th>Cliente</th><th>Total</th><td></td><td></td><td></td><td></td></tr></tfoot><tbody><?php if(!empty($ordenesdetrabajo)) { foreach($ordenesdetrabajo as $row) 
+          {
+            if($row->OTEstado==0) { $Background = "#F78181"; } else { $Background = ""; }
+            ?> <tr bgcolor="<?=$Background?>"><td><?php echo $row->OTNumero?></td><td><?php echo $row->NumeroFactura?></td><td><?php echo $row->OTFecha?></td><td><?=rutPhp($row->OTRazonSocial)?></td><td><?php echo $row->OTNombre?></td><td><?php echo $row->ServicioValorTotalNeto?></td><td style="text-align:center"><button class="btn btn-info" onclick="add_ordendetrabajo(<?=$row->id?>,'VerInfo')"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></td>
+        <td style="text-align:center">
+        <?php if($row->OTEstado==1) { ?> 
+        <button class="btn btn-warning" onclick="add_ordendetrabajo(<?=$row->id?>,'VerPdf')"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button> <?php } ?></td>
+        <td style="text-align:center">
+        <?php if($row->OTEstado==1) { ?> 
+        <button class="btn btn-danger" onclick="add_ordendetrabajo(<?=$row->id?>,'VerPunto')"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button> <?php } ?></td>
+        <td style="text-align:center">
+        <?php if($row->OTEstado==1) { ?> 
+        <button class="btn btn-info" onclick="add_ordendetrabajo(<?=$row->id?>,'VerPuntoHtml')"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button> <?php } ?></td>
+        <td style="text-align:center">
+        <?php if($row->NumeroFactura==0) { ?> 
+        <button class="btn btn-primary" onclick="add_ordendetrabajo(<?=$row->id?>,'EditarInfo')"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button></td>
+        <?php } ?>
+        <td style="text-align:center">
+        <?php if($row->OTEstado==1 && $row->NumeroFactura==0) { ?> 
+        <button class="btn btn-danger" onclick="eliminar_ordendetrabajo(<?php echo $row->id?>)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button> <?php } ?></td></tr> <?php } } ?> </tbody> </table> 
+    </div> 
+</div>
+
 <!--Modal-->
 <div id="popup_AgregarOrdenDeTrabajo" class="modal modal-wide fade" role="dialog">
   <div class="modal-dialog">
+    <!-- Modal content-->
     <div class="modal-content">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
       <div class="modal-body">
-      	<div class="row">
-          <div class="modal-header col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <h4 class="modal-title">Agregar Orden De Trabajo</h4>
-          </div><div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><br></div>
+      <div class="row">
+        <label class="col-lg-1 col-md-1 col-sm-12">EDITAR OT</label>
+        <div    class="col-lg-2 col-md-2 col-sm-12">
+            <input type="text" class="form-control" id="EditarOtNumero" name="EditarOtNumero"/>
+          </div>
+          <div    class="col-lg-2 col-md-2 col-sm-12">
+            <select type="text" class="form-control" id="EditarOtRs" name="EditarOtRs" ><option value="">Seleccionar...</option><?php foreach($razonessociales as $lsRazonSocial) {?> <option value="<?=$lsRazonSocial->Rut?>"><?=$lsRazonSocial->Rut." - ".$lsRazonSocial->Razonsocial?></option> <?php } ?></select>
+        </div>
 
-         <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-            <input type="hidden" class="form-control required" id="IdEditar" name="IdEditar"/>
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Fecha </label>
-               <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <input type="date" class="form-control required requerido" id="OTFecha" name="OTFecha" value="<?=date("Y-m-d")?>" />
-               </div>
+        <div    class="col-lg-2 col-md-2 col-sm-12">
+           <button class="btn btn-success" onclick="add_ordendetrabajo('0', 'EditarInfo2');"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;BUSCAR</button>
         </div>
-        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Razon Social</label>
-               <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <select type="text" class="form-control required requerido" id="OTRazonSocial" name="OTRazonSocial" onchange="CargarNumeroOT();">
-           		          <option value="">Seleccionar...</option>
-                        <?php
-                            foreach($razonessociales as $lsRazonSocial)
-                            {?>
-                                <option value="<?=$lsRazonSocial->Rut?>"><?=$lsRazonSocial->Rut." - ".$lsRazonSocial->Razonsocial?></option>
-                            <?php
-                            }
-                        ?>
-                   </select>
-               </div>
-        </div>
-        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Numero OT</label>
-               <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <input type="text" class="form-control required requerido" id="OTNumero" name="OTNumero" onblur="ValidarOT();" />
-               </div>
-        </div>
-        <input type="text" class="form-control required requerido" id="OTNumeroqwqw" name="OTNumeroqwqw" onblur="ValidarRut();" />
-        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Cliente</label>
-               <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <select type="text" class="form-control required requerido" id="OTRut" name="OTRut">
-                        <option value="">Seleccionar...</option>
-                        <?php
-                            foreach($clientes as $lsClientes)
-                            {?>
-                                <option value="<?=$lsClientes->CodiClien?>"><?=$lsClientes->CodiClien."-".$lsClientes->Nombre?></option>
-                            <?php
-                            }
-                        ?>
-                   </select>
-               </div>
-        </div>
-        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Direccion </label>
-               <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <input type="text" class="form-control required requerido" id="OTDireccion" name="OTDireccion" placeholder="Direccion del cliente" />
-               </div>
-        </div>
-        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Ciudad </label>
-               <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <input type="text" class="form-control required requerido" id="OTCiudad" name="OTCiudad" placeholder="Ciudad del cliente" />
-               </div>
-        </div>
-        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Comuna </label>
-               <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <input type="text" class="form-control required requerido" id="OTComuna" name="OTComuna" placeholder="Comuna del cliente" />
-               </div>
-        </div>
-        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Telefono </label>
-               <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <input type="text" class="form-control required" id="OTTelefono" name="OTTelefono" placeholder="Telefono del cliente" />
-               </div>
-        </div> 
-          <div class="modal-header col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <h4 class="modal-title">Detalle Grua / Camion</h4>
-          </div><div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><br></div>
-                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Grua Folio</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required requerido" id="GruaFolio" name="GruaFolio" placeholder="Folio de la Grua" onblur="CargarGruaFolio();" />
-            </div>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Grua Patente</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required requerido" id="GruaPatente" name="GruaPatente" placeholder="Patente de la Grua" onblur="CargarGrua();" />
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-          <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Operador</label>
-          <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-           <select type="text" class="form-control required" id="GruaOperadorId" name="GruaOperadorId" onchange="CargarOperador();">
-                <option value="">Seleccionar...</option>
-                <?php
-                    foreach($operarios as $lsOperarios)
-                    {?>
-                        <option value="<?=$lsOperarios->Rut?>"><?=$lsOperarios->Rut."-".$lsOperarios->Nombre?></option>
-                    <?php
-                    }
-                ?>
-           </select>
-          </div>
-        </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-          <label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Ayudante</label>
-          <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-           <select type="text" class="form-control required" id="GruaAyudanteId" name="GruaAyudanteId">
-                <option value="">Seleccionar...</option>
-                <?php
-                    foreach($operarios as $lsOperarios)
-                    {?>
-                        <option value="<?=$lsOperarios->Rut?>"><?=$lsOperarios->Rut." - ".$lsOperarios->Nombre?></option>
-                    <?php
-                    }
-                ?>
-           </select>
-          </div>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Camion Patente</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="CamionPatente" name="CamionPatente" placeholder="Patente del camion"/>
-            </div>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Chofer</label>
-          <div class="col-lg-8  col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-           <select type="text" class="form-control required" id="CamionChoferId" name="CamionChoferId"">
-                <option value="">Seleccionar...</option>
-                <?php
-                    foreach($operarios as $lsOperarios)
-                    {?>
-                        <option value="<?=$lsOperarios->Rut?>"><?=$lsOperarios->Rut."-".$lsOperarios->Nombre?></option>
-                    <?php
-                    }
-                ?>
-           </select>
-          </div>
-        </div>
-        <div class="modal-header col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <h4 class="modal-title">Detalle del Servicio</h4>
-          </div><div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><br></div>
-          <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Horario Minimo</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="number" class="form-control required" id="ServicioHorarioMinimo" name="ServicioHorarioMinimo" placeholder="En Horas"/>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Recargo</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioRecargo" name="ServicioRecargo" placeholder="%" onblur="CarcularHoraDeRecargo();" / >
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Desde Las</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="number" class="form-control required" id="ServicioDesdeLas" name="ServicioDesdeLas" placeholder="Horas"/>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Condicion De Pago</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioCondicionPago" name="ServicioCondicionPago" placeholder="Detalle"/>
-            </div>
-        </div>
-        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Solicitado Por Sr(a) </label>
-               <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <input type="text" class="form-control required" id="ServicioSolicitadoPor" name="ServicioSolicitadoPor" placeholder="Nombre" />
-               </div>
-        </div> 
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Lugar De La Faena </label>
-               <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <input type="text" class="form-control required" id="ServicioLugarDeLaFaena" name="ServicioLugarDeLaFaena" placeholder="Direccion de la faena" />
-               </div>
-        </div>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Tipo De Faena </label>
-               <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <input type="text" class="form-control required" id="ServicioTipoDeFaena" name="ServicioTipoDeFaena" placeholder="Detalle de la faena" />
-               </div>
-        </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Valor Hora</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="number" class="form-control required" id="ServicioValorHora" name="ServicioValorHora" placeholder="Valor" onblur="CalcularValorHora()" />
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Valor Hora Recargo</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="number" class="form-control required" id="ServicioValorHoraRecargo" name="ServicioValorHoraRecargo" placeholder="Valor" readonly="readonly" onb />
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Salida Garaje</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="number" class="form-control required" id="ServicioHoraSalidaG" name="ServicioHoraSalidaG" placeholder="HHMM"/>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Llegada Garaje</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="number" class="form-control required" id="ServicioHoraLlegadaG" name="ServicioHoraLlegadaG" placeholder="HHMM"/>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Llegada Faena</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="number" pattern=".{4,4}" class="form-control required" id="ServicioHoraLlegadaF" name="ServicioHoraLlegadaF" placeholder="HHMM"/>
-            </div>
-        </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Termino Faena</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="number" pattern=".{4,4}"  class="form-control required" id="ServicioHoraTerminoF" name="ServicioHoraTerminoF" placeholder="HHMM"/>
-            </div>
-        </div>  
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Descuento Colacion</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="number" class="form-control required" id="ServicioDescuentoColacion" name="ServicioDescuentoColacion" placeholder="HHMM"/>
-            </div>
-        </div> 
-       <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.R</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="number" class="form-control required" id="ServicioHR" name="ServicioHR" readonly="" />
-            </div>
-            </div>
-        </div> 
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.N</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="number" class="form-control required requerido" id="ServicioHN" name="ServicioHN" readonly="readonly"/>
-            </div>
-        </div>  
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.N Valor</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="text" class="form-control required" id="ServicioHNValor" name="ServicioHNValor" readonly="" />
-            </div>
-        </div>   
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            
-            <input type="checkbox" name="CHKCalcularRecargo" id="CHKCalcularRecargo" class="css-checkbox checkbox" onclick="CalcularRecargo();">
-                <label for="CHKCalcularRecargo" class="css-label checkbox" >Calcular Recargo</label>
-        </div>   
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.R Valor</label>
-            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-              <input type="number" class="form-control required requerido" id="ServicioHRValor" name="ServicioHRValor" readonly="readonly"/>
-            </div>
-        </div>   
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label"><button id="Divguardar" type="button" class="btn btn-warning" onclick="CalcularValores()"><span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>&nbsp;Total Neto</button></label>
-               <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
-                   <input type="text" class="form-control" id="ServicioValorTotalNeto" name="ServicioValorTotalNeto" placeholder="Total Neto"  readonly="readonly" />
-               </div>
+         <div    class="col-lg-2 col-md-2 col-sm-12">
+           <button class="btn btn-danger" onclick="CerraReload();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;CERRAR ACTUALIZAR</button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button id="Divguardar" type="button" class="btn btn-primary" onclick="add_ordendetrabajo('0', 'GuardarNuevo')"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" ></span>&nbsp;Guardar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;Cerrar</button>
+          <div class="row">
+          <!-- -->
+          <div class="col-lg-12 col-md-12 col-sm-12"><br><br><h4 class="modal-title">Agregar Orden De Trabajo</h4><br><br></div>
+
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12"><input type="hidden" class="form-control required" id="IdEditar" name="IdEditar"/><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Fecha </label><div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="date" class="form-control required requerido" id="OTFecha" name="OTFecha" value="<?=date("Y-m-d")?>" /></div></div>
+
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Razon Social</label><div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><select type="text" class="form-control required requerido" id="OTRazonSocial" name="OTRazonSocial" onchange="CargarNumeroOT();"><option value="">Seleccionar...</option><?php foreach($razonessociales as $lsRazonSocial) {?> <option value="<?=$lsRazonSocial->Rut?>"><?=$lsRazonSocial->Rut." - ".$lsRazonSocial->Razonsocial?></option> <?php } ?></select></div></div>
+
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Numero OT</label><div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required requerido" id="OTNumero" name="OTNumero" onblur="ValidarOT();" /></div></div>
+
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Rut</label><div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control requerido" id="OTRut" name="OTRut" /></div></div>
+
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Cliente</label><div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control requerido" id="OTNombre" name="OTNombre" /></div></div>
+
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Direccion </label><div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required requerido" id="OTDireccion" name="OTDireccion" placeholder="Direccion del cliente" /></div></div>
+
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Ciudad </label><div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required requerido" id="OTCiudad" name="OTCiudad" placeholder="Ciudad del cliente" /></div></div>
+
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Comuna </label><div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required requerido" id="OTComuna" name="OTComuna" placeholder="Comuna del cliente" /></div></div>
+
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Telefono </label><div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="OTTelefono" name="OTTelefono" placeholder="Telefono del cliente" /></div></div> 
+
+        <div class="modal-header col-lg-12 col-md-12 col-sm-12 col-xs-12"><h4 class="modal-title">Detalle Grua / Camion</h4></div>
+
+        <!-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Grua Folio</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="GruaFolio" name="GruaFolio" placeholder="Folio de la Grua" onblur="CargarGruaFolio();" /></div></div> -->
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Grua Patente</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required requerido" id="GruaPatente" name="GruaPatente" placeholder="Patente de la Grua" onblur="CargarGrua();" /></div></div>
+
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Operador</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control" id="GruaOperadorId" name="GruaOperadorId" /></div></div>
+
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Ayudante</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control" id="GruaAyudanteId" name="GruaAyudanteId" /></div></div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Camion Patente</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="CamionPatente" name="CamionPatente" placeholder="Patente del camion"/></div></div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 control-label">Chofer</label><div class="col-lg-8  col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control" id="CamionChoferId" name="CamionChoferId" /></div></div>
+
+        <div class="modal-header col-lg-12 col-md-12 col-sm-12 col-xs-12"><h4 class="modal-title">Detalle del Servicio</h4></div>
+
+        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Horario Minimo</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioHorarioMinimo" name="ServicioHorarioMinimo" placeholder="En Horas"/></div></div>
+
+        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Recargo</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioRecargo" name="ServicioRecargo" placeholder="%" onblur="CarcularHoraDeRecargo();" / ></div></div>
+
+        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Desde Las</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioDesdeLas" name="ServicioDesdeLas" placeholder="Horas"/></div></div>
+
+        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Condicion De Pago</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioCondicionPago" name="ServicioCondicionPago" placeholder="Detalle"/></div></div>
+
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Solicitado Por Sr(a) </label><div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioSolicitadoPor" name="ServicioSolicitadoPor" placeholder="Nombre" /></div></div> 
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Lugar De La Faena </label><div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioLugarDeLaFaena" name="ServicioLugarDeLaFaena" placeholder="Direccion de la faena" /></div></div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Tipo De Faena </label><div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioTipoDeFaena" name="ServicioTipoDeFaena" placeholder="Detalle de la faena" /></div></div>
+
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Valor Hora</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioValorHora" name="ServicioValorHora" placeholder="Valor" onblur="CalcularValorHora()" /></div></div>
+
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Valor Hora Recargo</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioValorHoraRecargo" name="ServicioValorHoraRecargo" placeholder="Valor" readonly="readonly" onb /></div></div>
+
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Salida Garaje</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioHoraSalidaG" name="ServicioHoraSalidaG" placeholder="HHMM"/></div></div>
+
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Llegada Faena</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" pattern=".{4,4}" class="form-control required" id="ServicioHoraLlegadaF" name="ServicioHoraLlegadaF" placeholder="HHMM"/></div></div>
+
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Termino Faena</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" pattern=".{4,4}"  class="form-control required" id="ServicioHoraTerminoF" name="ServicioHoraTerminoF" placeholder="HHMM"/></div></div> 
+
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Hora Llegada Garaje</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioHoraLlegadaG" name="ServicioHoraLlegadaG" placeholder="HHMM"/></div></div>
+ 
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">Descuento Colacion</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioDescuentoColacion" name="ServicioDescuentoColacion" placeholder="HHMM"/></div>
+        </div> 
+
+       <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.R</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioHR" name="ServicioHR" readonly="" /></div></div></div> 
+
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.N</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioHN" name="ServicioHN" readonly="readonly"/></div></div> 
+
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.N Valor</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioHNValor" name="ServicioHNValor" readonly="" /></div></div>  
+
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12"><input type="checkbox" name="CHKCalcularRecargo" id="CHKCalcularRecargo" class="css-checkbox checkbox" onclick="CalcularRecargo();"><label for="CHKCalcularRecargo" class="css-label checkbox" >Calcular Recargo</label></div> 
+
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-4 col-md-4 col-sm-12 col-xs-12 control-label">H.R Valor</label><div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control required" id="ServicioHRValor" name="ServicioHRValor" readonly="readonly"/></div></div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label"><button id="Divguardar" type="button" class="btn btn-warning" onclick="CalcularValores()"><span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>&nbsp;Total Neto</button></label><div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px"><input type="text" class="form-control" id="ServicioValorTotalNeto" name="ServicioValorTotalNeto" placeholder="Total Neto"  readonly="readonly" /></div></div>
+          <!-- -->
+          </div>
+         <!-- 
+         -->
       </div>
+       <div class="modal-footer"><button id="Divguardar" type="button" class="btn btn-primary" onclick="add_ordendetrabajo('0', 'GuardarNuevo')"><span class="glyphicon glyphicon-floppy-saved" aria-hidden="true" ></span>&nbsp;Guardar</button><button type="button" class="btn btn-danger" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>&nbsp;Cerrar</button></div>
     </div>
 
   </div>
@@ -429,6 +236,105 @@ input.rellenar,select.rellenar, .sanciones .rellenar, .sanciones tr:hover .relle
 <!--Modal-->
 </body>
 <script>
+function CerraReload()
+{
+	window.open("<?php echo site_url('Ordendetrabajo/index');?>","_self");
+}
+function generar_token()
+    {
+        var data = {
+            grant_type: "password",
+  username: "21946504-1",
+  password: "1234"
+        };
+        $.ajax({
+            type: "POST",
+            url: 'http://api.facturasonline.cl/token',
+            contentType: "x-www-form-urlencoded",
+            dataType:"json",
+            data:data,
+            success: function(data)
+            {
+                alert(data);
+                console.log(token);
+            }
+        });
+
+    }
+function BuscarOt()
+{
+  if(!$('#BuscarOtNumero').val())
+  {
+     swal("Error", "Debe ingresar un numero de OT a buscar", "error"); 
+  }
+  else
+  {
+    $.ajax({
+        url:"<?php echo site_url('Ordendetrabajo/CargarOrdenBuscada');?>",
+        type: 'POST',
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        data:{OTNumero:$('#BuscarOtNumero').val()},
+        success:function(data)
+        {
+            if(data=="[]")
+            {
+                SwalOnlyConfirmFunction('ERROR', 'No se encontro información', 'error', 'CC0000', 'CONTINUAR', '');
+            }
+            else
+            { 
+                $('#DetalleListado').html("");
+
+                var datos=JSON.parse(data);
+                var salida = '<table id="tablaOrdenDeTrabajo" class="table table-bordered table-hover"><thead><tr><th>N° OT</th><th>N° FACTURA</th><th>Fecha</th><th>Razon Social</th><th>Cliente</th><td><strong>Total</strong></td><td><strong>Ver</strong></td><td><strong>Pdf</strong></td><td><strong>Continuo</strong></td><td><strong>Editar</strong></td><td><strong>Eliminar</strong></td></tr></thead><tbody>';
+                  var funcion = "";
+                  for (var Aux=0; Aux<datos.length; Aux++ )
+                  {
+                  if(datos[Aux]['OTEstado']==0) { var Background = "#F78181"; } else { var Background = ""; }
+                  salida +='<tr bgcolor="'+Background+'">';
+                  salida +='<td>'+datos[Aux]['OTNumero']+'</td>';
+                  salida +='<td>'+datos[Aux]['NumeroFactura']+'</td>';
+                  salida +='<td>'+datos[Aux]['OTFecha']+'</td>';
+                  salida +='<td>'+datos[Aux]['OTRazonSocial']+'</td>';
+                  salida +='<td>'+datos[Aux]['OTNombre']+'</td>';
+                  if(!datos[Aux]['ServicioValorTotalNeto']) { datos[Aux]['ServicioValorTotalNeto']=0; }
+                  salida +='<td>'+datos[Aux]['ServicioValorTotalNeto']+'</td>';
+                  funcion = "add_ordendetrabajo('"+datos[Aux]['id']+"','VerInfo')";
+                  salida +='<td style="text-align:center"><button class="btn btn-info" onclick="'+funcion+'"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></td>';
+                  salida +='<td style="text-align:center">';
+                  funcion = "add_ordendetrabajo('"+datos[Aux]['id']+"','VerPdf')";
+                  if(datos[Aux]['OTEstado']==1)
+                  {
+                   salida +='<button class="btn btn-warning" onclick="'+funcion+'"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>';
+                  }
+                  salida +='</td>';
+                  salida +='<td style="text-align:center">';
+                  funcion = "add_ordendetrabajo('"+datos[Aux]['id']+"','VerPunto')";
+                  if(datos[Aux]['OTEstado']==1)
+                  {
+                    salida +='<button class="btn btn-danger" onclick="'+funcion+'"><span class="glyphicon glyphicon-download" aria-hidden="true"></span></button>';
+                  }
+                  salida +='</td>';
+                  salida +='<td style="text-align:center">';
+                  funcion = "add_ordendetrabajo('"+datos[Aux]['id']+"','EditarInfo')";
+                  if(datos[Aux]['NumeroFactura']==0) 
+                  { 
+                    salida +='<button class="btn btn-primary" onclick="'+funcion+'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>';
+                  }
+                  salida +='</td>';
+                  salida +='<td style="text-align:center">';
+                  if(datos[Aux]['OTEstado']==1 && datos[Aux]['NumeroFactura']==0)
+                  {
+                    salida +='<button class="btn btn-danger" onclick="eliminar_ordendetrabajo('+datos[Aux]['id']+')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>';
+                  }
+                  salida +='</td></tr>';
+                }
+                   salida +='</tbody></table>';
+                $('#DetalleListado').html(salida);
+            }
+        }, error: function() { ErrorProceso(); }
+    });
+  }
+}
 function ValidarRut( form )
 {
     var cedula = $('#OTNumeroqwqw').val();
@@ -561,7 +467,11 @@ function CargarGruaFolio()
           data:{GruaFolio:GruaFolio},
           success:function(data)
           {
-              if(data!="ERROR")
+              if(data=="ERRORSESSION")
+              {
+                window.location.href = "http://gruas.titan.cl/index.php/Welcome/logout";
+              }
+              else if(data!="ERROR")
               {
                 var datos=JSON.parse(data);
                 $('#GruaPatente').val(datos[0]["Patente"]);
@@ -617,7 +527,11 @@ function CargarGrua()
           data:{GruaPatente:GruaPatente},
           success:function(data)
           {
-              if(data!="ERROR")
+              if(data=="ERRORSESSION")
+              {
+                window.location.href = "http://gruas.titan.cl/index.php/Welcome/logout";
+              }
+              else if(data!="ERROR")
               {
                 var datos=JSON.parse(data);
                 $('#ServicioValorHora').val(datos[0]["ValorHora"]);
@@ -663,7 +577,11 @@ function ValidarOT()
         data:{IdEditar:IdEditar, OT:OT, RazonSocial:RazonSocial},
         success:function(data)
         {
-          if(data=="OK")
+          if(data=="ERRORSESSION")
+              {
+                window.location.href = "http://gruas.titan.cl/index.php/Welcome/logout";
+              }
+              else if(data=="OK")
             {
                swal("Orden De Trabajo Eliminada", "La Orden De Trabajo ha sido eliminada correctamente", "success");
                setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Ordendetrabajo/index');?>","_self");}, 1500);
@@ -704,6 +622,7 @@ function limpiar()
   if (day < 10) day = "0" + day;
   var today = year + "-" + month + "-" + day; 
  
+ $('#EditarOtNumero').val('');
  $('#IdEditar').val('');
  $('#OTFecha').val(today);
  $('#OTRazonSocial').val('');
@@ -749,7 +668,11 @@ function eliminar_ordendetrabajo(id)
             data:{id:id},
             success:function(data)
             {
-            	if(data==1)
+            	if(data=="ERRORSESSION")
+              {
+                window.location.href = "http://gruas.titan.cl/index.php/Welcome/logout";
+              }
+              else if(data==1)
 	              {
 	                 swal("Orden De Trabajo Eliminada", "La Orden De Trabajo ha sido eliminada correctamente", "success");
 	                 setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Ordendetrabajo/index');?>","_self");}, 1500);
@@ -776,24 +699,47 @@ function add_ordendetrabajo(Id, Accion)
           success:function(data)
           {
             $('#popup_AgregarOrdenDeTrabajo').modal('show');
-            if(data!="ERROR")
+            if(data=="ERRORSESSION")
+              {
+                window.location.href = "http://gruas.titan.cl/index.php/Welcome/logout";
+              }
+              else if(data!="ERROR")
             {
                 var datos=JSON.parse(data);
+
+
+                if (datos[0]["ServicioHoraSalidaG"].length==3)
+                {
+                  datos[0]["ServicioHoraSalidaG"] = "0"+datos[0]["ServicioHoraSalidaG"];  
+                }
+                if (datos[0]["ServicioHoraLlegadaG"].length==3)
+                {
+                  datos[0]["ServicioHoraLlegadaG"] = "0"+datos[0]["ServicioHoraLlegadaG"];  
+                }
+                if (datos[0]["ServicioHoraLlegadaF"].length==3)
+                {
+                  datos[0]["ServicioHoraLlegadaF"] = "0"+datos[0]["ServicioHoraLlegadaF"];  
+                }
+                if (datos[0]["ServicioHoraTerminoF"].length==3)
+                {
+                  datos[0]["ServicioHoraTerminoF"] = "0"+datos[0]["ServicioHoraTerminoF"];  
+                }
+
                 $('#IdEditar').val(Id);
                 $('#OTFecha').val(datos[0]["OTFecha"]);
                 $('#OTRazonSocial').val(datos[0]["OTRazonSocial"]);
                 $('#OTNumero').val(datos[0]["OTNumero"]);
-                $('#OTRut').val(datos[0]["OTRut"]);
+                $('#OTRut').val(ValidateRut(datos[0]["OTRut"]));
                 $('#OTNombre').val(datos[0]["OTNombre"]);
                 $('#OTDireccion').val(datos[0]["OTDireccion"]);
                 $('#OTCiudad').val(datos[0]["OTCiudad"]);
                 $('#OTComuna').val(datos[0]["OTComuna"]);
                 $('#OTTelefono').val(datos[0]["OTTelefono"]);
                 $('#GruaPatente').val(datos[0]["GruaPatente"]);
-                $('#GruaOperadorId').val(datos[0]["GruaOperadorId"]);
-                $('#GruaAyudanteId').val(datos[0]["GruaAyudanteId"]);
+                $('#GruaOperadorId').val(datos[0]["GruaOperadorNombre"]);
+                $('#GruaAyudanteId').val(datos[0]["GruaAyudanteNombre"]);
                 $('#CamionPatente').val(datos[0]["CamionPatente"]);
-                $('#CamionChoferId').val(datos[0]["CamionChoferId"]);
+                $('#CamionChoferId').val(datos[0]["CamionChoferNombre"]);
                 $('#ServicioHorarioMinimo').val(datos[0]["ServicioHorarioMinimo"]);
                 $('#ServicioRecargo').val(datos[0]["ServicioRecargo"]);
                 $('#ServicioDesdeLas').val(datos[0]["ServicioDesdeLas"]);
@@ -824,6 +770,96 @@ function add_ordendetrabajo(Id, Accion)
               limpiar();
           }
         });
+  }
+  else if(Accion=='EditarInfo2')
+  {
+      if(!$('#EditarOtNumero').val())
+      {
+          swal("Error", "Debe ingresar una ot a editar", "error");
+      }
+      else
+      {
+        var OTNumero = $('#EditarOtNumero').val();
+        var EditarOtRs = $('#EditarOtRs').val();
+
+        limpiar();
+        QuitarReadOnly();
+        $.ajax({
+            type:"POST",
+            url:"<?php echo site_url('Ordendetrabajo/VerInfo2');?>",
+            data:{OTNumero:OTNumero, EditarOtRs:EditarOtRs},
+            success:function(data)
+            {
+              $('#popup_AgregarOrdenDeTrabajo').modal('show');
+              if(data=="ERRORSESSION")
+                {
+                  window.location.href = "http://gruas.titan.cl/index.php/Welcome/logout";
+                }
+                else if(data!="ERROR")
+              {
+                  var datos=JSON.parse(data);
+                  if (datos[0]["ServicioHoraSalidaG"].length==3)
+                {
+                  datos[0]["ServicioHoraSalidaG"] = "0"+datos[0]["ServicioHoraSalidaG"];  
+                }
+                if (datos[0]["ServicioHoraLlegadaG"].length==3)
+                {
+                  datos[0]["ServicioHoraLlegadaG"] = "0"+datos[0]["ServicioHoraLlegadaG"];  
+                }
+                if (datos[0]["ServicioHoraLlegadaF"].length==3)
+                {
+                  datos[0]["ServicioHoraLlegadaF"] = "0"+datos[0]["ServicioHoraLlegadaF"];  
+                }
+                if (datos[0]["ServicioHoraTerminoF"].length==3)
+                {
+                  datos[0]["ServicioHoraTerminoF"] = "0"+datos[0]["ServicioHoraTerminoF"];  
+                }
+                  $('#IdEditar').val(datos[0]["id"]);
+                  $('#OTFecha').val(datos[0]["OTFecha"]);
+                  $('#OTRazonSocial').val(datos[0]["OTRazonSocial"]);
+                  $('#OTNumero').val(datos[0]["OTNumero"]);
+                  $('#OTRut').val(ValidateRut(datos[0]["OTRut"]));
+                  $('#OTNombre').val(datos[0]["OTNombre"]);
+                  $('#OTDireccion').val(datos[0]["OTDireccion"]);
+                  $('#OTCiudad').val(datos[0]["OTCiudad"]);
+                  $('#OTComuna').val(datos[0]["OTComuna"]);
+                  $('#OTTelefono').val(datos[0]["OTTelefono"]);
+                  $('#GruaPatente').val(datos[0]["GruaPatente"]);
+                  $('#GruaOperadorId').val(datos[0]["GruaOperadorNombre"]);
+                  $('#GruaAyudanteId').val(datos[0]["GruaAyudanteNombre"]);
+                  $('#CamionPatente').val(datos[0]["CamionPatente"]);
+                  $('#CamionChoferId').val(datos[0]["CamionChoferNombre"]);
+                  $('#ServicioHorarioMinimo').val(datos[0]["ServicioHorarioMinimo"]);
+                  $('#ServicioRecargo').val(datos[0]["ServicioRecargo"]);
+                  $('#ServicioDesdeLas').val(datos[0]["ServicioDesdeLas"]);
+                  $('#ServicioCondicionPago').val(datos[0]["ServicioCondicionPago"]);
+                  $('#ServicioSolicitadoPor').val(datos[0]["ServicioSolicitadoPor"]);
+                  $('#ServicioLugarDeLaFaena').val(datos[0]["ServicioLugarDeLaFaena"]);
+                  $('#ServicioTipoDeFaena').val(datos[0]["ServicioTipoDeFaena"]);
+                  $('#ServicioValorHora').val(datos[0]["ServicioValorHora"]);
+                  $('#ServicioHoraSalidaG').val(datos[0]["ServicioHoraSalidaG"]);
+                  $('#ServicioHoraLlegadaG').val(datos[0]["ServicioHoraLlegadaG"]);
+                  $('#ServicioHoraLlegadaF').val(datos[0]["ServicioHoraLlegadaF"]);
+                  $('#ServicioHoraTerminoF').val(datos[0]["ServicioHoraTerminoF"]);
+                  $('#ServicioDescuentoColacion').val(datos[0]["ServicioDescuentoColacion"]);
+                  $('#ServicioHN').val(datos[0]["ServicioHN"]);
+                  $('#ServicioHNValor').val(datos[0]["ServicioHNValor"]);
+                  $('#ServicioHR').val(datos[0]["ServicioHR"]);
+                  $('#ServicioHRValor').val(datos[0]["ServicioHRValor"]);
+                  $('#ServicioValorTotalNeto').val(datos[0]["ServicioValorTotalNeto"]);
+              }
+              else
+              {
+                 swal("Error", "No se encontro información del cliente seleccionado", "error");
+                  limpiar();
+              }
+            },
+            error: function() {
+                swal("Error", "No se pudo realizar el proceso", "error");
+                limpiar();
+            }
+          });
+      }
   }
   else if(Accion=='VerInfo')
   {
@@ -835,24 +871,28 @@ function add_ordendetrabajo(Id, Accion)
           success:function(data)
           {
             $('#popup_AgregarOrdenDeTrabajo').modal('show');
-            if(data!="ERROR")
+            if(data=="ERRORSESSION")
+              {
+                window.location.href = "http://gruas.titan.cl/index.php/Welcome/logout";
+              }
+              else if(data!="ERROR")
             {
                 CargarReadOnly();
                 var datos=JSON.parse(data);
                 $('#OTFecha').val(datos[0]["OTFecha"]);
                 $('#OTRazonSocial').val(datos[0]["OTRazonSocial"]);
                 $('#OTNumero').val(datos[0]["OTNumero"]);
-                $('#OTRut').val(datos[0]["OTRut"]);
+                $('#OTRut').val(ValidateRut(datos[0]["OTRut"]));
                 $('#OTNombre').val(datos[0]["OTNombre"]);
                 $('#OTDireccion').val(datos[0]["OTDireccion"]);
                 $('#OTCiudad').val(datos[0]["OTCiudad"]);
                 $('#OTComuna').val(datos[0]["OTComuna"]);
                 $('#OTTelefono').val(datos[0]["OTTelefono"]);
                 $('#GruaPatente').val(datos[0]["GruaPatente"]);
-                $('#GruaOperadorId').val(datos[0]["GruaOperadorId"]);
-                $('#GruaAyudanteId').val(datos[0]["GruaAyudanteId"]);
+                $('#GruaOperadorId').val(datos[0]["GruaOperadorNombre"]);
+                $('#GruaAyudanteId').val(datos[0]["GruaAyudanteNombre"]);
                 $('#CamionPatente').val(datos[0]["CamionPatente"]);
-                $('#CamionChoferId').val(datos[0]["CamionChoferId"]);
+                $('#CamionChoferId').val(datos[0]["CamionChoferNombre"]);
                 $('#ServicioHorarioMinimo').val(datos[0]["ServicioHorarioMinimo"]);
                 $('#ServicioRecargo').val(datos[0]["ServicioRecargo"]);
                 $('#ServicioDesdeLas').val(datos[0]["ServicioDesdeLas"]);
@@ -884,18 +924,31 @@ function add_ordendetrabajo(Id, Accion)
           }
         });
   }
+  else if(Accion=='VerPunto')
+  {
+      var dominio = $('#Dominio').val();
+      //window.location.replace(dominio+'/Ordendetrabajo/VerPunto?id='+Id);
+      window.open(dominio+'/Ordendetrabajo/VerPunto?id='+Id,'_blank');
+  }
+  else if(Accion=='VerPuntoHtml')
+  {
+      var dominio = $('#Dominio').val();
+      //window.location.replace(dominio+'/Ordendetrabajo/VerPunto?id='+Id);
+      window.open(dominio+'/Ordendetrabajo/VerPuntoHtml?id='+Id,'_blank');
+  }
   else if(Accion=='VerPdf')
   {
       var dominio = $('#Dominio').val();
-      window.location.replace(dominio+'/Ordendetrabajo/VerPdf?id='+Id);
+      //window.location.replace(dominio+'/Ordendetrabajo/VerPdf?id='+Id);
+      window.open(dominio+'/Ordendetrabajo/VerPdf?id='+Id,'_blank');
   }
   else if(Accion=="GuardarNuevo")
   {
       var IdEditar = $('#IdEditar').val();
       if(!IdEditar)
       {
-          CalcularRecargo();
-          CalcularValores();
+          /*CalcularRecargo();
+          CalcularValores();*/
           var OTFecha = $('#OTFecha').val();
           var OTRazonSocial = $('#OTRazonSocial').val();
           var OTNumero = $('#OTNumero').val();
@@ -936,10 +989,17 @@ function add_ordendetrabajo(Id, Accion)
               data:{OTFecha:OTFecha, OTRazonSocial:OTRazonSocial, OTNumero:OTNumero, OTRut:OTRut, OTNombre:OTNombre, OTDireccion:OTDireccion, OTCiudad:OTCiudad, OTComuna:OTComuna, OTTelefono:OTTelefono, GruaPatente:GruaPatente, GruaOperadorId:GruaOperadorId, GruaAyudanteId:GruaAyudanteId, CamionPatente:CamionPatente, CamionChoferId:CamionChoferId, ServicioHorarioMinimo:ServicioHorarioMinimo, ServicioRecargo:ServicioRecargo, ServicioDesdeLas:ServicioDesdeLas, ServicioCondicionPago:ServicioCondicionPago, ServicioSolicitadoPor:ServicioSolicitadoPor, ServicioLugarDeLaFaena:ServicioLugarDeLaFaena, ServicioTipoDeFaena:ServicioTipoDeFaena, ServicioValorHora:ServicioValorHora, ServicioHoraSalidaG:ServicioHoraSalidaG, ServicioHoraLlegadaG:ServicioHoraLlegadaG, ServicioHoraLlegadaF:ServicioHoraLlegadaF, ServicioHoraTerminoF:ServicioHoraTerminoF, ServicioDescuentoColacion:ServicioDescuentoColacion, ServicioHN:ServicioHN, ServicioHNValor:ServicioHNValor, ServicioHR:ServicioHR, ServicioHRValor:ServicioHRValor, ServicioValorTotalNeto:ServicioValorTotalNeto},
               success:function(data)
               {
-                if(data==1)
+                if(data=="ERRORSESSION")
+              {
+                window.location.href = "http://gruas.titan.cl/index.php/Welcome/logout";
+              }
+              else if(data!=0)
                 {
+                	var dominio = $('#Dominio').val();
+      			  window.open(dominio+'/Ordendetrabajo/VerPunto?id='+data,'_blank');
                   swal("Orden De Trabajo Registrada", "La orden de trabajo ha sido ingresada correctamente", "success");
                   $('#popup_AgregarOrdenDeTrabajo').modal('hide');
+                 
                   setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Ordendetrabajo/index');?>","_self");}, 1500);
                   
                 }
@@ -1001,11 +1061,18 @@ function add_ordendetrabajo(Id, Accion)
               data:{IdEditar:IdEditar, OTFecha:OTFecha, OTRazonSocial:OTRazonSocial, OTNumero:OTNumero, OTRut:OTRut, OTNombre:OTNombre, OTDireccion:OTDireccion, OTCiudad:OTCiudad, OTComuna:OTComuna, OTTelefono:OTTelefono, GruaPatente:GruaPatente, GruaOperadorId:GruaOperadorId,  GruaAyudanteId:GruaAyudanteId, CamionPatente:CamionPatente, CamionChoferId:CamionChoferId, ServicioHorarioMinimo:ServicioHorarioMinimo, ServicioRecargo:ServicioRecargo, ServicioDesdeLas:ServicioDesdeLas, ServicioCondicionPago:ServicioCondicionPago, ServicioSolicitadoPor:ServicioSolicitadoPor, ServicioLugarDeLaFaena:ServicioLugarDeLaFaena, ServicioTipoDeFaena:ServicioTipoDeFaena, ServicioValorHora:ServicioValorHora, ServicioHoraSalidaG:ServicioHoraSalidaG, ServicioHoraLlegadaG:ServicioHoraLlegadaG, ServicioHoraLlegadaF:ServicioHoraLlegadaF, ServicioHoraTerminoF:ServicioHoraTerminoF, ServicioDescuentoColacion:ServicioDescuentoColacion, ServicioHN:ServicioHN, ServicioHNValor:ServicioHNValor, ServicioHR:ServicioHR, ServicioHRValor:ServicioHRValor, ServicioValorTotalNeto:ServicioValorTotalNeto},
               success:function(data)
               {
-                if(data==1)
+                if(data=="ERRORSESSION")
+              {
+                window.location.href = "http://gruas.titan.cl/index.php/Welcome/logout";
+              }
+              else if(data!=0)
                 {
-                  swal("Orden De Trabajo Actualizada", "La orden de trabajo ha sido actualizada correctamente", "success");
-                  $('#popup_AgregarOrdenDeTrabajo').modal('hide');
-                  setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Ordendetrabajo/index');?>","_self");}, 1500);
+                  limpiar();
+                	 //var dominio = $('#Dominio').val();
+      			       //window.open(dominio+'/Ordendetrabajo/VerPunto?id='+data,'_blank');
+                  //swal("Orden De Trabajo Actualizada", "La orden de trabajo ha sido actualizada correctamente", "success");
+                  //$('#popup_AgregarOrdenDeTrabajo').modal('hide');
+                  //setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Ordendetrabajo/index');?>","_self");}, 1500);
                   
                 }
                 else
@@ -1025,8 +1092,6 @@ function add_ordendetrabajo(Id, Accion)
           }
       }
   }
-
-  
 }
 function agregar_ordendetrabajo()
 {
@@ -1046,7 +1111,13 @@ function CargarNumeroOT()
           data:{OTRazonSocial:OTRazonSocial, IdEditar:IdEditar},
           success:function(data)
           {
+            if(data=="ERRORSESSION")
+              {
+                window.location.href = "http://gruas.titan.cl/index.php/Welcome/logout";
+              }
+              else {
             $('#OTNumero').val(data);
+          }
           }
       });
   }
@@ -1056,6 +1127,7 @@ function CargarNumeroOT()
       $('#OTNumero').val('');
   }
 }
+/*
 function CargarInfoCliente()
 {
   var OTRut = $('#OTRut').val();
@@ -1108,6 +1180,7 @@ function CargarInfoCliente()
       $('#OTTelefono').val('');
   }
 }
+*/
 function CalcularRecargo()
 {
   if($('#CHKCalcularRecargo').is(':checked')) 
@@ -1159,9 +1232,9 @@ function CalcularRecargo()
     $('#ServicioHR').val('');
     $('#ServicioHRValor').val('0');
     if($('#ServicioValorTotalNeto').val() && $('#ServicioValorTotalNeto').val()>0)
-      {
-        CalcularValores();
-      }
+    {
+      CalcularValores();
+    }
   }
 } 
 function CalcularValores()
@@ -1169,10 +1242,20 @@ function CalcularValores()
   var ServicioHorarioMinimo = $('#ServicioHorarioMinimo').val();
   var DescuentoColacion = $('#ServicioDescuentoColacion').val();
   var ValorHora         = $('#ServicioValorHora').val();
-  var HoraLlegada       = $('#ServicioHoraLlegadaG').val();
+  var HoraLlegada1       = $('#ServicioHoraLlegadaG').val();
   var HoraSalida        = $('#ServicioHoraSalidaG').val();
   var ServicioDesdeLas  = $('#ServicioDesdeLas').val(); 
 
+  if (HoraLlegada1<=HoraSalida)
+  {
+    var Diferencia  = 2400 - Number(HoraSalida);
+    var HoraLlegada = Number(HoraSalida)+Number(HoraLlegada1)+Number(Diferencia);
+    HoraLlegada     = HoraLlegada.toString();
+  }
+  else
+  {
+     var HoraLlegada = HoraLlegada1;
+  }
   if(HoraLlegada.length!=4 && ServicioDesdeLas.length!=4 )
   {
     swal("Error", "Debe ingresar un valor HORA DE LLEGADA o HORA DESDE LAS, para poder calcular has HN, OBLIGATORIO 4 digitos", "error");
@@ -1197,9 +1280,22 @@ function CalcularValores()
     }
     else
     {
-      var HoraTope           =   Number(HoraLlegada.substring(0,2)*60) + Number(HoraLlegada.substring(2,4));
+      var HoraTope   =   Number(HoraLlegada.substring(0,2)*60) + Number(HoraLlegada.substring(2,4));
     }
-    if(DescuentoColacion)
+    if(HoraLlegada<1800 && $('#ServicioHR').val() && HoraLlegada1>=HoraSalida && $('#ServicioHR').val()!=0 &&  $('#ServicioHR').val()!="" &&  $('#ServicioHRValor').val()!=0 && $('#ServicioHRValor').val()!="") 
+    { 
+      HoraLlegada = "1800"; 
+    }
+    if ($('#ServicioHR').val()!=0 && $('#ServicioHR').val()!="")
+    {
+        var MinutosRecargo  =   Number($('#ServicioHR').val())*60;
+    }
+    else
+    {
+        var MinutosRecargo  =   0;
+    }  
+
+    if(DescuentoColacion!=0 && DescuentoColacion!="")
     {
       DescuentoColacion    =   Number(DescuentoColacion.substring(0,2)*60) + Number(DescuentoColacion.substring(2,4));
     }
@@ -1207,14 +1303,18 @@ function CalcularValores()
     {
       DescuentoColacion = 0;
     }
-    var ServicioHN = Number(HoraTope) - Number(HoraSalida) ;
+    var ServicioHN = Number(HoraTope) - Number(HoraSalida);
     if(DescuentoColacion>ServicioHN)
     {
       swal("Error", "El descuento no puede ser superior a las horas HN", "error"); 
     }
     else
     {
-      ServicioHN = Number(ServicioHN) - Number(DescuentoColacion);
+      if(DescuentoColacion!=0 && DescuentoColacion!="")
+      {
+        ServicioHN = Number(ServicioHN) - Number(DescuentoColacion);
+      }
+
       ServicioHN = Number(ServicioHN)/60;
       ServicioHN = Math.round(Number(ServicioHN) * 100) / 100;
       if (Number(ServicioHN)<Number(ServicioHorarioMinimo))
@@ -1234,30 +1334,267 @@ $(document).ready(function()
   {   
     CargarNumeroOT();
   });
+  /*
   $('#OTRut').change(function(event)
   {   
     CargarInfoCliente();
   });  
-  
-  $('#tablaOrdenDeTrabajo').DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": true,
-      "ordering": false,
-      "info": true,
-      "autoWidth": true,
-      "language": {
-            "search":"Buscar:",
-            "lengthMenu": "Ver _MENU_ registros por página",
-            "zeroRecords": "<center>No se encontraron registros</center>",
-            "info": "_END_ de _TOTAL_ registros",
-            "infoEmpty": "No se encontraron registros",
-            "infoFiltered": "(Filtrados _TOTAL_ de _MAX_ total registros)",
-            "paginate":{
-              "previous":"Anterior",
-              "next":"Siguiente"
+  */
+  /*
+  $('#tablaOrdenDeTrabajo thead th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="'+title+'" />' );
+    } );
+
+  var table = $('#tablaOrdenDeTrabajo').DataTable();
+ 
+    // Apply the search
+    table.columns().every( function () {
+        var that = this;
+ 
+        $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+                that
+                    .search( this.value )
+                    .draw();
             }
-        },      
-    });
+        } );
+    } );
+    */
+    $('#tablaOrdenDeTrabajo thead th').each( function () {
+        var title = $('#tablaOrdenDeTrabajo thead th').eq( $(this).index() ).text();
+        $(this).html( '<input type="text" placeholder="'+title+'" size="8px" />' );
+});
+$("#tablaOrdenDeTrabajo thead input").on( 'keyup change', function () {
+        var table=$('#tablaOrdenDeTrabajo').DataTable();
+        table
+            .column( $(this).parent().index()+':visible' )
+            .search( this.value )
+            .draw();
+});
+/******************************************************************************************/
+/******************************************************************************************/
+array_nom_auto=[];
+
+  $( function() 
+  {
+    function log( message) {
+       for(var i=0;i<array_nom_auto.length;i++)
+       {
+          if(array_nom_auto[i]['CodiClien']+' - '+array_nom_auto[i]['Nombre']==message)
+          {
+            if(ValidateRut(array_nom_auto[i]["CodiClien"])!=false)
+            {
+              $('#OTRut').val(ValidateRut(array_nom_auto[i]["CodiClien"]));
+              $('#OTNombre').val(array_nom_auto[i]["Nombre"]);
+              $('#OTDireccion').val(array_nom_auto[i]["Direccion"]);
+              $('#OTCiudad').val(array_nom_auto[i]["CiudadDesp"]);
+              $('#OTComuna').val(array_nom_auto[i]["Comuna"]);
+              $('#OTTelefono').val(array_nom_auto[i]["Fono"]);
+              break;
+            }
+            else
+            {
+              swal("Error", "Rut invalidop", "error"); 
+            }
+          }
+       }
+    }
+     $( "#OTNombre" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax( {
+          type:"POST",
+          url: "<?php echo site_url('Ordendetrabajo/select_clienteinfo');?>",
+          dataType: "json",
+          data: {
+            Texto: request.term
+          },
+          success: function( data ) {
+      array_nom_auto=data;
+           response( $.map( data, function( item ) {
+                return {
+                  label: item.CodiClien+' - '+item.Nombre,
+                  value: item.Nombre,
+                }
+              }));
+          }
+        } );
+      },
+      minLength: 1,
+      select: function( event, ui ) {
+        log( ui.item.label );
+      }
+    } );
+  } );
+/******************************************************************************************/
+/******************************************************************************************/
+array_nom_auto=[];
+
+  $( function() 
+  {
+    function log( message) {
+       for(var i=0;i<array_nom_auto.length;i++)
+       {
+          if(array_nom_auto[i]['Nombre']==message)
+          {
+            $('#GruaOperadorId').val(message);
+            break;
+          }
+       }
+    }
+     $( "#GruaOperadorId" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax( {
+          type:"POST",
+          url: "<?php echo site_url('Ordendetrabajo/select_operarioinfo');?>",
+          dataType: "json",
+          data: {
+            Texto: request.term
+          },
+          success: function( data ) {
+      array_nom_auto=data;
+           response( $.map( data, function( item ) {
+                return {
+                  label: item.Nombre,
+                  value: item.Nombre,
+                }
+              }));
+          }
+        } );
+      },
+      minLength: 1,
+      select: function( event, ui ) {
+        log( ui.item.label );
+      }
+    } );
+  } );
+/******************************************************************************************/
+/******************************************************************************************/
+array_nom_auto=[];
+
+  $( function() 
+  {
+    function log( message) {
+       for(var i=0;i<array_nom_auto.length;i++)
+       {
+          if(array_nom_auto[i]['Nombre']==message)
+          {
+            $('#GruaAyudanteId').val(message);
+            break;
+          }
+       }
+    }
+     $( "#GruaAyudanteId" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax( {
+          type:"POST",
+          url: "<?php echo site_url('Ordendetrabajo/select_operarioinfo');?>",
+          dataType: "json",
+          data: {
+            Texto: request.term
+          },
+          success: function( data ) {
+      array_nom_auto=data;
+           response( $.map( data, function( item ) {
+                return {
+                  label: item.Nombre,
+                  value: item.Nombre,
+                }
+              }));
+          }
+        } );
+      },
+      minLength: 1,
+      select: function( event, ui ) {
+        log( ui.item.label );
+      }
+    } );
+  } );
+/******************************************************************************************/
+/******************************************************************************************/
+array_nom_auto=[];
+
+  $( function() 
+  {
+    function log( message) {
+       for(var i=0;i<array_nom_auto.length;i++)
+       {
+          if(array_nom_auto[i]['Nombre']==message)
+          {
+            $('#CamionChoferId').val(message);
+            break;
+          }
+       }
+    }
+     $( "#CamionChoferId" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax( {
+          type:"POST",
+          url: "<?php echo site_url('Ordendetrabajo/select_operarioinfo');?>",
+          dataType: "json",
+          data: {
+            Texto: request.term
+          },
+          success: function( data ) {
+      array_nom_auto=data;
+           response( $.map( data, function( item ) {
+                return {
+                  label: item.Nombre,
+                  value: item.Nombre,
+                }
+              }));
+          }
+        } );
+      },
+      minLength: 1,
+      select: function( event, ui ) {
+        log( ui.item.label );
+      }
+    } );
+  } );
+/******************************************************************************************/
+/******************************************************************************************/
+array_nom_auto=[];
+
+  $( function() 
+  {
+    function log( message) {
+       for(var i=0;i<array_nom_auto.length;i++)
+       {
+          if(array_nom_auto[i]['Tipo']==message)
+          {
+            $('#GruaFolio').val(message);
+            break;
+          }
+       }
+    }
+     $( "#GruaPatente" ).autocomplete({
+      source: function( request, response ) {
+        $.ajax( {
+          type:"POST",
+          url: "<?php echo site_url('Ordendetrabajo/select_maquinainfo');?>",
+          dataType: "json",
+          data: {
+            Texto: request.term
+          },
+          success: function( data ) {
+      array_nom_auto=data;
+           response( $.map( data, function( item ) {
+                return {
+                  label: item.Patente+' - '+item.Tipo+' - '+item.Capacidad,
+                  value: item.Patente,
+                }
+              }));
+          }
+        } );
+      },
+      minLength: 1,
+      select: function( event, ui ) {
+        log( ui.item.label );
+      }
+    } );
+  } );
+/******************************************************************************************/
+/******************************************************************************************/
 });
 </script>

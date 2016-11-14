@@ -50,7 +50,7 @@
                 	foreach($clientes as $row)
                 	{?>
                 	<tr>
-                		<td><?php echo $row->CodiClien?></td>
+                		<td><?=rutPhp($row->CodiClien)?></td>
                 		<td><?php echo $row->Nombre?></td>
                 		<td style="text-align:center"><button class="btn btn-info" onclick="ver_cliente(<?php echo $row->id?>)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                 		</td>
@@ -102,6 +102,18 @@
 	           <input type="text" class="form-control required" id="giro" name="giro" placeholder="Giro del cliente"/> 
 	          </div>
 	        </div>
+	        <div class="col-lg-12 ">
+	          <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Email Principal</label>
+	          <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
+	           <input type="text" class="form-control required" id="email1" name="email1" placeholder="Email principal"/> 
+	          </div>
+	        </div>
+	        <div class="col-lg-12 ">
+	          <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Email Secundario</label>
+	          <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
+	           <input type="text" class="form-control required" id="email2" name="email2" placeholder="Email secundario"/> 
+	          </div>
+	        </div>	        	        
 	        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
 	          <label class="col-lg-3 col-md-4 col-sm-12 col-xs-12 control-label">Fono</label>
 	          <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
@@ -179,6 +191,14 @@
       		<td id="info_giro" colspan="5" class="infox"></td>		
       	</tr>
       	<tr>
+      		<td class="brand-primary">Email Principal</td>
+      		<td id="info_email1" colspan="5" class="infox"></td>		
+      	</tr>      	
+      	<tr>
+      		<td class="brand-primary">Email Secundario</td>
+      		<td id="info_email2" colspan="5" class="infox"></td>		
+      	</tr>      	
+      	<tr>
       		<td class="brand-primary">Fono</td>
       		<td  id="info_fono" class="infox"></td>	
       		<td class="brand-primary">Fono 2</td>
@@ -240,6 +260,17 @@
 	           <input type="text" class="form-control required" id="giro_edit" name="giro_edit" placeholder="Giro del cliente"/> 
 	          </div>
 	        </div>
+	        <div class="col-lg-12 ">
+	          <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Email Principal</label>
+	          <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
+	           <input type="text" class="form-control required" id="email1_edit" name="email1_edit" placeholder="Email principal"/> 
+	          </div>
+	        </div>	        <div class="col-lg-12 ">
+	          <label class="col-lg-2 col-md-4 col-sm-12 col-xs-12 control-label">Email Secundario</label>
+	          <div class="col-lg-10 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
+	           <input type="text" class="form-control" id="email2_edit" name="email2_edit" placeholder="Email secundario"/> 
+	          </div>
+	        </div>	        
 	        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
 	          <label class="col-lg-3 col-md-4 col-sm-12 col-xs-12 control-label">Fono</label>
 	          <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12 input-group" style="margin-bottom: 25px">
@@ -294,6 +325,48 @@
 <!--Modal-->
 </body>
 <script>
+$('#rut').keydown(function(event)
+{
+	if (event.which == '13') 
+	{ 
+		var Rut = RutDigito ($('#rut').val());
+		Rut = $('#rut').val()+Rut;
+		if(ValidateRut(Rut)!=false)
+		{
+			$('#rut').val(ValidateRut(Rut));
+		}
+		else
+		{
+			$('#rut').val('');
+			alert('RUT INVALIDO');
+		}
+	}
+	else if (event.which == '9') 
+	{ 
+		return false; 
+	}
+});
+$('#rut_edit').keydown(function(event)
+{
+	if (event.which == '13') 
+	{ 
+		var Rut = RutDigito ($('#rut_edit').val());
+		Rut = $('#rut_edit').val()+Rut;
+		if(ValidateRut(Rut)!=false)
+		{
+			$('#rut_edit').val(ValidateRut(Rut));
+		}
+		else
+		{
+			$('#rut_edit').val('');
+			alert('RUT INVALIDO');
+		}
+	}
+	else if (event.which == '9') 
+	{ 
+		return false; 
+	}
+});
 function update_cliente()
 {
 	var id=$('#id_edit').val();
@@ -301,6 +374,8 @@ function update_cliente()
 	var nombre=$('#nombre_edit').val();
 	var direccion=$('#direccion_edit').val();
 	var giro=$('#giro_edit').val();
+	var email1=$('#email1_edit').val();
+	var email2=$('#email2_edit').val();
 	var fono=$('#fono_edit').val();
 	var fono2=$('#fono2_edit').val();
 	var fax=$('#fax_edit').val();
@@ -344,25 +419,32 @@ function update_cliente()
 						}
 						else
 						{
-							$.ajax({
-			                    type:"POST",
-			                    url:"<?php echo site_url('Maestro/update_cliente');?>",
-			                    data:{id:id,rut:rut,nombre:nombre,direccion:direccion,giro:giro,fono:fono,fono2:fono2,fax:fax,ciudad:ciudad,comuna:comuna,contacto:contacto},
-			                    success:function(data)
-			                    {
-			                      if(data==1)
-			                      {
-			                        swal("Cliente Actualizado", "El cliente ha sido actualizado correctamente", "success");
-			                        $('#popup_EditarCliente').modal('hide');
-			                        setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Maestro/clientes');?>","_self");}, 1500);
-			                        
-			                      }
-			                      else
-			                      {
-			                          swal("Error", "Problema al intentar actualizar el cliente, por favor inténtelo nuevamente", "error");
-			                      }
-			                    }
-			                });	
+							if(email1=='')
+							{
+								swal("Correo Faltante", "Debe ingresar un correo principal", "info");
+							}
+							else
+							{
+								$.ajax({
+				                    type:"POST",
+				                    url:"<?php echo site_url('Maestro/update_cliente');?>",
+				                    data:{id:id,rut:rut,nombre:nombre,direccion:direccion,giro:giro,email1:email1,email2:email2,fono:fono,fono2:fono2,fax:fax,ciudad:ciudad,comuna:comuna,contacto:contacto},
+				                    success:function(data)
+				                    {
+				                      if(data==1)
+				                      {
+				                        swal("Cliente Actualizado", "El cliente ha sido actualizado correctamente", "success");
+				                        $('#popup_EditarCliente').modal('hide');
+				                        setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Maestro/clientes');?>","_self");}, 1500);
+				                        
+				                      }
+				                      else
+				                      {
+				                          swal("Error", "Problema al intentar actualizar el cliente, por favor inténtelo nuevamente", "error");
+				                      }
+				                    }
+				                });	
+				            }
 						}
 					}
 				}
@@ -385,10 +467,12 @@ function editar_cliente(id)
             	{
             		var datos=JSON.parse(data);
             		$('#id_edit').val(id);
-            		$('#rut_edit').val(datos[0]["CodiClien"]);
+            		$('#rut_edit').val(ValidateRut(datos[0]["CodiClien"]));
             		$('#nombre_edit').val(datos[0]["Nombre"]);
             		$('#direccion_edit').val(datos[0]["Direccion"]);
             		$('#giro_edit').val(datos[0]["Giro"]);
+            		$('#email1_edit').val(datos[0]["Email1"]);
+            		$('#email2_edit').val(datos[0]["Email2"]);
             		$('#fono_edit').val(datos[0]["Fono"]);
             		$('#fono2_edit').val(datos[0]["Fono2"]);
             		$('#fax_edit').val(datos[0]["Fax"]);
@@ -416,10 +500,12 @@ function ver_cliente(id)
             	if(data!=0)
             	{
             		var datos=JSON.parse(data);
-            		$('#info_rut').append(datos[0]["CodiClien"]);
+            		$('#info_rut').append(ValidateRut(datos[0]["CodiClien"]));
             		$('#info_nombre').append(datos[0]["Nombre"]);
             		$('#info_direccion').append(datos[0]["Direccion"]);
             		$('#info_giro').append(datos[0]["Giro"]);
+            		$('#info_email1').append(datos[0]["Email1"]);
+            		$('#info_email2').append(datos[0]["Email2"]);
             		$('#info_fono').append(datos[0]["Fono"]);
             		$('#info_fono2').append(datos[0]["Fono2"]);
             		$('#info_fax').append(datos[0]["Fax"]);
@@ -466,6 +552,8 @@ function add_cliente()
 	var nombre=$('#nombre').val();
 	var direccion=$('#direccion').val();
 	var giro=$('#giro').val();
+	var email1=$('#email1').val();
+	var email2=$('#email2').val();
 	var fono=$('#fono').val();
 	var fono2=$('#fono2').val();
 	var fax=$('#fax').val();
@@ -509,25 +597,32 @@ function add_cliente()
 						}
 						else
 						{
-							$.ajax({
-			                    type:"POST",
-			                    url:"<?php echo site_url('Maestro/add_cliente');?>",
-			                    data:{rut:rut,nombre:nombre,direccion:direccion,giro:giro,fono:fono,fono2:fono2,fax:fax,ciudad:ciudad,comuna:comuna,contacto:contacto},
-			                    success:function(data)
-			                    {
-			                      if(data==1)
-			                      {
-			                        swal("Cliente Registrado", "El cliente ha sido ingresado correctamente", "success");
-			                        $('#popup_AgregarCliente').modal('hide');
-			                        setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Maestro/clientes');?>","_self");}, 1500);
-			                        
-			                      }
-			                      else
-			                      {
-			                          swal("Error", "Problema al intentar registrar el cliente, por favor inténtelo nuevamente", "error");
-			                      }
-			                    }
-			                });
+							if(email1=='')
+							{
+								swal("Correo Faltante", "Debe ingresar un email principal", "info");
+							}
+							else
+							{
+								$.ajax({
+				                    type:"POST",
+				                    url:"<?php echo site_url('Maestro/add_cliente');?>",
+				                    data:{rut:rut,nombre:nombre,direccion:direccion,giro:giro,email1:email1,email2:email2,fono:fono,fono2:fono2,fax:fax,ciudad:ciudad,comuna:comuna,contacto:contacto},
+				                    success:function(data)
+				                    {
+				                      if(data==1)
+				                      {
+				                        swal("Cliente Registrado", "El cliente ha sido ingresado correctamente", "success");
+				                        $('#popup_AgregarCliente').modal('hide');
+				                        setTimeout(function(){ swal.close(); window.open("<?php echo site_url('Maestro/clientes');?>","_self");}, 1500);
+				                        
+				                      }
+				                      else
+				                      {
+				                          swal("Error", "Problema al intentar registrar el cliente, por favor inténtelo nuevamente", "error");
+				                      }
+				                    }
+				                });
+				             }
 						}
 					}
 				}

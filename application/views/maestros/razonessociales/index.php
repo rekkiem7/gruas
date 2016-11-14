@@ -50,7 +50,7 @@
                 	foreach($razonessociales as $row)
                 	{?>
                 	<tr>
-                		<td><?php echo $row->Rut?></td>
+                		<td><?=rutPhp($row->Rut)?></td>
                 		<td><?php echo $row->Razonsocial?></td>
                 		<td style="text-align:center"><button class="btn btn-info" onclick="ver_razonsocial(<?php echo $row->id?>)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                 		</td>
@@ -236,7 +236,48 @@
 <!--Modal-->
 </body>
 <script>
-
+$('#rut').keydown(function(event)
+{
+	if (event.which == '13') 
+	{ 
+		var Rut = RutDigito ($('#rut').val());
+		Rut = $('#rut').val()+Rut;
+		if(ValidateRut(Rut)!=false)
+		{
+			$('#rut').val(ValidateRut(Rut));
+		}
+		else
+		{
+			$('#rut').val('');
+			alert('RUT INVALIDO');
+		}
+	}
+	else if (event.which == '9') 
+	{ 
+		return false; 
+	}
+});
+$('#rut_edit').keydown(function(event)
+{
+	if (event.which == '13') 
+	{ 
+		var Rut = RutDigito ($('#rut_edit').val());
+		Rut = $('#rut_edit').val()+Rut;
+		if(ValidateRut(Rut)!=false)
+		{
+			$('#rut_edit').val(ValidateRut(Rut));
+		}
+		else
+		{
+			$('#rut_edit').val('');
+			alert('RUT INVALIDO');
+		}
+	}
+	else if (event.which == '9') 
+	{ 
+		return false; 
+	}
+});
 function update_razonsocial()
 {
 	var id 			=$('#id_edit').val();
@@ -325,7 +366,7 @@ function editar_razonsocial(id)
             	{
             		var datos=JSON.parse(data);
             		$('#id_edit').val(id);
-            		$('#rut_edit').val(datos[0]["Rut"]);
+            		$('#rut_edit').val(ValidateRut(datos[0]["Rut"]));
             		$('#razonsocial_edit').val(datos[0]["Razonsocial"]);
             		$('#rubro_edit').val(datos[0]["Rubro"]);
             		$('#direccion_edit').val(datos[0]["Direccion"]);
@@ -353,7 +394,7 @@ function ver_razonsocial(id)
             	if(data!=0)
             	{
             		var datos=JSON.parse(data);
-            		$('#info_rut').append(datos[0]["Rut"]);
+            		$('#info_rut').append(ValidateRut(datos[0]["Rut"]));
             		$('#info_razonsocial').append(datos[0]["Razonsocial"]);
             		$('#info_rubro').append(datos[0]["Rubro"]);
             		$('#info_direccion').append(datos[0]["Direccion"]);

@@ -22,7 +22,9 @@ class Facturacion extends CI_Controller {
 
 	public function verifica_cliente()
 	{
-		$rut=$_POST['rut'];
+		$rut= str_replace(".", "", $_POST['rut']);
+		$rut= str_replace(".", "", $rut);
+		$rut= str_replace("-", "", $rut);
 		$datos=$this->model_facturacion->select_cliente($rut);
 		if($datos)
 		{
@@ -38,8 +40,12 @@ class Facturacion extends CI_Controller {
 	{
 		$desde=$_POST['desde'];
 		$hasta=$_POST['hasta'];
-		$razon=$_POST['razon'];
-		$rut  =$_POST['rut'];
+		$razon= str_replace(".", "", $_POST['razon']);
+		$razon= str_replace(".", "", $razon);
+		$razon= str_replace("-", "", $razon);
+		$rut= str_replace(".", "", $_POST['rut']);
+		$rut= str_replace(".", "", $rut);
+		$rut= str_replace("-", "", $rut);
 		$ot=$this->model_facturacion->select_ordenes($desde,$hasta,$razon,$rut);
 		if($ot)
 		{
@@ -53,11 +59,15 @@ class Facturacion extends CI_Controller {
 
 	public function guardar_factura()
 	{
-		$razon=$_POST['razon'];
+		$razon= str_replace(".", "", $_POST['razon']);
+		$razon= str_replace(".", "", $razon);
+		$razon= str_replace("-", "", $razon);
 		$fecha_factura=$_POST['fecha_factura'];
-		$f=explode('/',$fecha_factura);
-		$fecha_factura=$f[2].'-'.$f[1].'-'.$f[0];
-		$rut=$_POST['rut'];
+		//$f=explode('/',$fecha_factura);
+		//$fecha_factura=$f[2].'-'.$f[1].'-'.$f[0];
+		$rut= str_replace(".", "", $_POST['rut']);
+		$rut= str_replace(".", "", $rut);
+		$rut= str_replace("-", "", $rut);
 		$total_neto=$_POST['total_neto'];
 		$iva=$_POST['iva'];
 		$total_final=$_POST['total_final'];
@@ -65,36 +75,42 @@ class Facturacion extends CI_Controller {
 		$descuento=$_POST['descuento'];
 		$anticipo=$_POST['anticipo'];
 		$array_ot=$_POST['array_ot'];
-		$nuevo_nro_factura=$this->genera_ultimo_numero();
-
-		$data=["NumeroFactura"=>$nuevo_nro_factura,"RazonSocial"=>$razon,"Fecha"=>$fecha_factura,"RutCliente"=>$rut,"TotalNeto"=>$total_neto,"IVA"=>$iva,"TotalFactura"=>$total_final,"FacturadoPor"=>$facturado_por,"Descuento"=>$descuento,"Anticipo"=>$anticipo];	
+		$factura=$_POST['numerofactura'];
+		$nombreCliente=$_POST['nombre_cliente'];
+		$observaciones=$_POST['observaciones'];
+		$giro=$_POST["giro"];
+		$direccion=$_POST["direccion"];
+		$comuna=$_POST["comuna"];
+		$ciudad=$_POST["ciudad"];
+		$condicion_venta=$_POST["condicion_venta"];
+		$data=["NumeroFactura"=>$factura,"RazonSocial"=>$razon,"Fecha"=>$fecha_factura,"RutCliente"=>$rut,"TotalNeto"=>$total_neto,"IVA"=>$iva,"TotalFactura"=>$total_final,"FacturadoPor"=>$facturado_por,"Descuento"=>$descuento,"Anticipo"=>$anticipo,"Observacion"=>$observaciones,"NombreCliente"=>$nombreCliente,"Giro"=>$giro,"Direccion"=>$direccion,"Comuna"=>$comuna,"Ciudad"=>$ciudad,"CondicionPago"=>$condicion_venta];
 		$insert=$this->model_facturacion->insert_factura($data);
 		if($insert)
 		{
 			for($i=0;$i<count($array_ot);$i++)
 			{
 				$OT=$array_ot[$i];
-				$data2=["NumeroFactura"=>$nuevo_nro_factura];
+				$data2=["NumeroFactura"=>$factura];
 				$update2=$this->model_facturacion->update_ordendetrabajo($OT,$data2,$razon);
 			}
-			echo $nuevo_nro_factura;
+			echo $factura;
 		}
 		else
 		{
 			echo 0;
-		}	
+		}
 	}
 
-	public function genera_ultimo_numero()
+	public function genera_ultimo_numero($razon)
 	{
-		$ultima_factura=$this->model_facturacion->ultima_factura();
+		$ultima_factura=$this->model_facturacion->ultima_factura($razon);
 		$nuevo_nro_factura=$ultima_factura[0]->NumeroFactura+1;
 		
 		//verifico que no exista una factura con el mismo numero generado
-		$existe=$this->model_facturacion->existe_factura($nuevo_nro_factura);
+		$existe=$this->model_facturacion->existe_factura($nuevo_nro_factura,$razon);
 		if($existe)
 		{
-			$this->genera_ultimo_numero();
+			$this->genera_ultimo_numero($razon);
 		}
 		else
 		{
@@ -111,6 +127,15 @@ class Facturacion extends CI_Controller {
 		$this->load->view('footer');
 	}
 
+	public function listado_factura2()
+	{
+		$this->load->view('librerias');	
+		$this->load->view('menu/menu_principal');
+		$this->load->view('loading');
+		$this->load->view('facturacion/listado2');
+		$this->load->view('footer');
+	}
+
 	public function cargar_facturas()
 	{
 		$datos=$this->model_facturacion->cargar_facturas();
@@ -124,11 +149,24 @@ class Facturacion extends CI_Controller {
 		}
 	}
 
+	public function cargar_facturas2()
+	{
+		$datos=$this->model_facturacion->cargar_facturas2();
+		if($datos)
+		{
+			echo json_encode($datos);
+		}
+		else
+		{
+			echo 0;
+		}
+	}
+
 	public function cargar_ot_facturas()
 	{
 		$factura=$_POST['factura'];
-
-		$datos=$this->model_facturacion->cargar_ot_factura($factura);
+		$razon=$_POST['razon'];
+		$datos=$this->model_facturacion->cargar_ot_factura($factura,$razon);
 		if($datos)
 		{
 			echo json_encode($datos);
@@ -155,6 +193,32 @@ class Facturacion extends CI_Controller {
 		$factura=$_POST['factura'];
 		$data=["Estado"=>'N'];
 		$update=$this->model_facturacion->update_facturaEmitida($data,$factura);
+		if($update)
+		{
+			$OTS=$this->model_facturacion->cargar_ot_factura($factura);
+			if($OTS)
+			{
+				for($i=0;$i<count($OTS);$i++)
+				{
+					$idot=$OTS[$i]->id;
+					$data2=["NumeroFactura"=>null];
+					$update=$this->model_facturacion->update_ordendetrabajo2($idot,$data2);
+				}
+			}
+			echo 1;
+		}
+		else
+		{
+			echo 0;
+		}
+
+	}
+
+	public function eliminar_factura2()
+	{
+		$factura=$_POST['factura'];
+		$data=["Estado"=>'N'];
+		$update=$this->model_facturacion->update_facturaEmitida2($data,$factura);
 		if($update)
 		{
 			$OTS=$this->model_facturacion->cargar_ot_factura($factura);
@@ -210,7 +274,56 @@ class Facturacion extends CI_Controller {
 		{
 			echo 0;
 		}
+	}
 
+	public function buscar_factura2()
+	{
+		$factura=$_POST['factura'];
+		$datos=$this->model_facturacion->select_factura2($factura);
+		if($datos)
+		{
+			echo json_encode($datos);
+		}
+		else
+		{
+			echo 0;
+		}
+	}
+
+	public function VerPdf($factura,$razonsocial,$modo)
+	{
+		if($this->session->userdata('logged_in')){
+
+			$encabezado = $this->model_facturacion->existe_factura($factura,$razonsocial,$modo);
+			$detalle =$this->model_facturacion->cargar_ot_factura($factura,$razonsocial);
+			$data["encabezado"]=json_encode($encabezado);
+			$data["detalle"]=json_encode($detalle);
+			$data["modo"]=json_encode($modo);
+			if($encabezado[0]->RazonSocial=="116474999")
+			{
+				$this->load->view('facturacion/VerPdf', $data);
+			}else{
+				if($encabezado[0]->RazonSocial=="760173967")
+				{
+					$this->load->view('facturacion/VerPdf2', $data);
+				}else{
+					if($encabezado[0]->RazonSocial=="763208265")
+					{
+						$this->load->view('facturacion/VerPdf3', $data);
+					}
+				}
+			}
+
+		}else { echo "ERRORSESSION"; }
+	}
+
+	public function test_facturacion()
+	{
+		$this->load->view('librerias');
+		$this->load->view('menu/menu_principal');
+		$this->load->view('loading');
+		$this->load->view('facturacion/test');
+		$this->load->view('footer');
 	}
 
 }

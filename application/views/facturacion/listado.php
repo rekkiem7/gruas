@@ -56,17 +56,26 @@ tfoot input {
         padding: 3px;
         box-sizing: border-box;
     }
+.modal-dialog{
+    overflow-y: initial !important
+}
+.body_detalle{
+    height: 250px;
+    overflow-y: auto;
+}
 
 </style>
 <body onload="cargar_facturas();">
 <div class="container">
-	<div class="animated fadeInRight"><center><h4>Listado de Facturas</h4></center>
-	</div><br><br>
-	<div  class="animated fadeInRight">
-	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+  <div class="animated fadeInRight"><center><h4>Listado de Facturas Electrónicas</h4></center>
+  </div><br><br>
+  <div  class="animated fadeInRight">
+      <input type="hidden" id="Dominio" name="Dominio" value="<?=site_url();?>">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <center><table><tr class="sin_nada"><td><input type="text" class="form-control" placeholder="Buscar por N° factura" name="factura_search" id="factura_search"/></td><td style="padding-left:15px;"><button class="btn btn-success" onclick="buscar_factura();"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>&nbsp;&nbsp;Buscar</button></td></tr></table></center>
-		<div class="table-responsive">
-		<table id="facturas" class="table table-bordered">
+    <br>
+        <div class="table-responsive">
+    <table id="facturas" class="table table-bordered">
                 <thead>
                 <tr>
                   <th>Factura</th>
@@ -78,15 +87,15 @@ tfoot input {
                   <th>IVA</th>
                   <th>Valor Total</th>
                   <th>Detalle</th>
-                  <th>Eliminar</th>
+                  <th>Imprimir</th>
                 </tr>
                 </thead>
                 <tbody>
                 </tbody>
         </table>
-    	</div>
-	</div>
-	</div>
+      </div>
+  </div>
+  </div>
 
   <!--Modal-->
 <div id="popup_Factura" class="modal modal-wide fade" role="dialog">
@@ -97,7 +106,7 @@ tfoot input {
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title" ><div id="titulo_detalle"></div></h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body body_detalle" >
           <table id="detalle" class="table table-bordered table-hover">
                   <thead>
                   <tr>
@@ -125,6 +134,11 @@ tfoot input {
 </div>
 </div>
 <script>
+    function imprimir(factura,razonsocial)
+    {
+        var dominio = $('#Dominio').val();
+        window.open(dominio+'/Facturacion/VerPdf/'+factura+'/'+razonsocial+'/'+1,'_blank');
+    }
 function buscar_factura()
 {
     var factura=$('#factura_search').val();
@@ -139,8 +153,9 @@ function buscar_factura()
                 $('#loading').modal('hide');
                 if(data!=0)
                 {
-                    var t = $('#facturas').DataTable();
-                    t.clear().draw();
+                   // var t = $('#facturas').DataTable();
+                   // t.clear().draw();
+                    $("#facturas > tbody").empty();
                     var datos=JSON.parse(data);
                     var array_final=new Array();
                     for(var i=0;i<datos.length;i++)
@@ -155,19 +170,20 @@ function buscar_factura()
                             datos[i]['Anticipo']=0;
                         }
 
-                        var botton='<button class="btn btn-primary" onclick="ver_detalle('+datos[i]['NumeroFactura']+')"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>';
+                        var botton='<button class="btn btn-primary" onclick="ver_detalle('+datos[i]['NumeroFactura']+','+datos[i]['RazonSocial']+')"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>';
                         var botton2='<button class="btn btn-danger" onclick="eliminar('+datos[i]['NumeroFactura']+')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>';
                         var descuento=parseInt(datos[i]['Descuento'])+parseInt(datos[i]['Anticipo']);
-                        var info=[datos[i]['NumeroFactura'],datos[i]['RutCliente'],datos[i]['nom_cliente'],"( "+datos[i]['RazonSocial']+" ) "+datos[i]['nom_razon'],datos[i]['TotalNeto'],descuento,datos[i]['IVA'],datos[i]['TotalFactura'],botton,botton2];
+                        var boton='<button class="btn btn-warning" onclick="imprimir('+datos[i]['NumeroFactura']+','+datos[i]['RazonSocial']+')"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></button>';
+                        // var info=[datos[i]['NumeroFactura'],ValidateRut(datos[i]['RutCliente']),datos[i]['nom_cliente'],"( "+datos[i]['RazonSocial']+" ) "+datos[i]['nom_razon'],datos[i]['TotalNeto'],descuento,datos[i]['IVA'],datos[i]['TotalFactura'],botton,botton2];
 
                         var clase='';
 
                         if(datos[i]['Estado']=='N')
                         {
-                            var  clase="new";
+                            var  clase="new"; 
                         }
-
-                        t.row.add(info).draw().nodes().to$().addClass(clase);
+                        $("#facturas > tbody").append('<tr class="'+clase+'"><td>'+datos[i]['NumeroFactura']+'</td><td>'+ValidateRut(datos[i]['RutCliente'])+'</td><td>'+datos[i]['nom_cliente']+'</td><td> ('+datos[i]['RazonSocial']+')'+datos[i]['nom_razon']+'</td><td>'+datos[i]['TotalNeto']+'</td><td>'+descuento+'</td><td>'+datos[i]['IVA']+'</td><td>'+datos[i]['TotalFactura']+'</td><td>'+botton+'</td><td>'+boton+'</td></tr>');
+                        //t.row.add(info).draw().nodes().to$().addClass(clase);
                         //array_final.push(info);
                     }
                 }
@@ -185,34 +201,37 @@ function buscar_factura()
 function cargar_facturas()
 {
   $('#loading').modal();
-	$.ajax({
+  $.ajax({
         type:"POST",
         url:"<?php echo site_url('Facturacion/cargar_facturas');?>",
         success:function(data)
         {
           $('#loading').modal('hide');
-        	if(data!=0)
-        	{
-        		var t = $('#facturas').DataTable();
-    			t.clear().draw();
-        		var datos=JSON.parse(data);
-        		var array_final=new Array();
-        		for(var i=0;i<datos.length;i++)
-        		{
-        			if(datos[i]['Descuento']===null)
-        			{
-        				datos[i]['Descuento']=0;
-        			}
+          if(data!=0)
+          {
+            //var t = $('#facturas').DataTable();
+        //  t.clear().draw();
+                $("#facturas > tbody").empty();
+            var datos=JSON.parse(data);
+            var array_final=new Array();
+            for(var i=0;i<datos.length;i++)
+            {
+              if(datos[i]['Descuento']===null)
+              {
+                datos[i]['Descuento']=0;
+              }
 
-        			if(datos[i]['Anticipo']===null)
-        			{
-        				datos[i]['Anticipo']=0;
-        			}
+              if(datos[i]['Anticipo']===null)
+              {
+                datos[i]['Anticipo']=0;
+              }
 
-        			var botton='<button class="btn btn-primary" onclick="ver_detalle('+datos[i]['NumeroFactura']+')"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>';
+
+              var botton='<button class="btn btn-primary" onclick="ver_detalle('+datos[i]['NumeroFactura']+','+datos[i]['RazonSocial']+')"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>';
               var botton2='<button class="btn btn-danger" onclick="eliminar('+datos[i]['NumeroFactura']+')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>';
-        			var descuento=parseInt(datos[i]['Descuento'])+parseInt(datos[i]['Anticipo']);
-        			var info=[datos[i]['NumeroFactura'],datos[i]['RutCliente'],datos[i]['nom_cliente'],"( "+datos[i]['RazonSocial']+" ) "+datos[i]['nom_razon'],datos[i]['TotalNeto'],descuento,datos[i]['IVA'],datos[i]['TotalFactura'],botton,botton2];
+              var descuento=parseInt(datos[i]['Descuento'])+parseInt(datos[i]['Anticipo']);
+                var boton='<button class="btn btn-warning" onclick="imprimir('+datos[i]['NumeroFactura']+','+datos[i]['RazonSocial']+')"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></button>';
+                //var info=[datos[i]['NumeroFactura'],ValidateRut(datos[i]['RutCliente']),datos[i]['nom_cliente'],"( "+datos[i]['RazonSocial']+" ) "+datos[i]['nom_razon'],datos[i]['TotalNeto'],descuento,datos[i]['IVA'],datos[i]['TotalFactura'],botton,botton2];
 
               var clase='';
 
@@ -220,16 +239,17 @@ function cargar_facturas()
               {
               var  clase="new";
               }
-              
-              t.row.add(info).draw().nodes().to$().addClass(clase);
-        			//array_final.push(info);
-        		}
-        		//t.rows.add(array_final).draw().nodes().to$().addClass('new');
-        	}
-        	else
-        	{
-        		swal("Sin Registros", "No se han encontrado registros de facturas en el sistema", "info");
-        	}
+
+                    $("#facturas > tbody").append('<tr class="'+clase+'"><td>'+datos[i]['NumeroFactura']+'</td><td>'+ValidateRut(datos[i]['RutCliente'])+'</td><td>'+datos[i]['nom_cliente']+'</td><td> ('+datos[i]['RazonSocial']+')'+datos[i]['nom_razon']+'</td><td>'+datos[i]['TotalNeto']+'</td><td>'+descuento+'</td><td>'+datos[i]['IVA']+'</td><td>'+datos[i]['TotalFactura']+'</td><td align="center">'+botton+'</td><td align="center">'+boton+'</td></tr>');
+             // t.row.add(info).draw().nodes().to$().addClass(clase);
+              //array_final.push(info);
+            }
+            //t.rows.add(array_final).draw().nodes().to$().addClass('new');
+          }
+          else
+          {
+            swal("Sin Registros", "No se han encontrado registros de facturas en el sistema", "info");
+          }
         }
     });
 }
@@ -261,13 +281,13 @@ function eliminar(factura)
  });
 }
 
-function ver_detalle(factura)
+function ver_detalle(factura,razon)
 {
   $('#loading').modal();
   $.ajax({
         type:"POST",
         url:"<?php echo site_url('Facturacion/cargar_ot_facturas');?>",
-        data:{factura:factura},
+        data:{factura:factura,razon:razon},
         success:function(data)
         {
           $('#loading').modal('hide');
@@ -299,7 +319,7 @@ function ver_detalle(factura)
 
 $(document).ready(function()
 {
-
+/*
   $('#facturas').DataTable({
       "paging": true,
       "lengthChange": true,
@@ -318,8 +338,8 @@ $(document).ready(function()
               "previous":"Anterior",
               "next":"Siguiente"
             }
-        },      
-    });
+        }
+    });*/
 
   $('#detalle').DataTable({
       "paging": false,
@@ -342,10 +362,7 @@ $(document).ready(function()
         },      
     });
 
-  $('#facturas tfoot th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input type="text" placeholder="Buscar '+title+'" />' );
-    } );
+
 
   
 
